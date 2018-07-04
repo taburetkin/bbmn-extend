@@ -1,4 +1,4 @@
-import getProperty from './get-property';
+import getProperty from '../get-by-path/get-property';
 import isModel from '../../bb/is-model';
 function setProperty(context, name, value, options) {
 	if (isModel(context)) {
