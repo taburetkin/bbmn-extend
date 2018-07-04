@@ -1,0 +1,8 @@
+{
+  "name": "bbmn-extend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/taburetkin/bbmn-extend.git",
+  "author": "dimtabu <dima.taburetkin@gmail.com>",
+  "license": "MIT"
+}
