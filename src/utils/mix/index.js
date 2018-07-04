@@ -1,7 +1,7 @@
 import defaultOptions from './options';
 import withMethod from './with';
 
-import extend from '../../bb/extend';
+import extend from '../extend';
 
 
 
