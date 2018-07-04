@@ -8,6 +8,6 @@ export default function withMethod(...args) {
     let Mixed = this.class;
     if(!mixins.length) return Mixed;
     else
-        return _.reduce(ctors, (Memo, Ctor) => Ctor(Memo), Mixed);
+        return _.reduce(mixins, (Memo, Ctor) => Ctor(Memo), Mixed);
 
 }

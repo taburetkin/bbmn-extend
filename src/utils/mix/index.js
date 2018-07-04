@@ -6,6 +6,7 @@ import extend from '../../bb/extend';
 
 
 export default function mix(_ctor, options) {
+
     let opts = _.extend({}, defaultOptions, options);
 
     let ctor;    
@@ -14,7 +15,7 @@ export default function mix(_ctor, options) {
     }
     else if (_.isObject(_ctor)) {
         ctor = function(){};
-        _.extend(ctor.prototype,_ctor);
+        _.extend(ctor.prototype, _ctor);
     } else {
         throw new Error('Mix argument should be a class or a plain object');
     }
