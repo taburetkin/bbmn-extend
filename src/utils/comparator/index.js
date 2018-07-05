@@ -1,3 +1,4 @@
+import compareAB from '../compare-ab';
 export default function comparator(...args){
 	var result = 0;
 
