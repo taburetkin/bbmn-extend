@@ -1,6 +1,7 @@
 import Model from '../../../bb/model';
 import getNestedResult from './get-nested-result';
 import getPropertySchema from './get-property-schema';
+import getDisplayConfig from './get-display-config';
 import getByPath from '../../../utils/get-by-path';
 export default Base => {
 	const originalGet = Model.prototype.get;
