@@ -17,7 +17,7 @@ export default Base => {
 			
 			let value = 'value' in opts 
 				? opts.value
-					: this.getByPath.call(this, key);
+				: this.getByPath.call(this, key);
 
 			if (!_.size(opts)) {
 				return value;
@@ -39,7 +39,7 @@ export default Base => {
 
 			if(opts.display === true){
 
-				let display = getDisplayConfig(key, context, prop);
+				let display = getDisplayConfig(key, this, prop);
 
 				if(opts.alternative){
 					value = _.isFunction(display.alternative) && display.alternative.call(this, value, _.extend({},opts,prop), this);
@@ -60,4 +60,4 @@ export default Base => {
 	});
 
 	return Mixed;
-}
+};
