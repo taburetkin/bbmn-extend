@@ -23,4 +23,4 @@ export default function compareAB(a, b, func){
 		
 		return result;
 	}
-};
+}

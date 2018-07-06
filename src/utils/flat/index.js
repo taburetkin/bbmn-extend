@@ -5,4 +5,4 @@ export default function flattenObject(obj) {
 	var res = {};
 	traverse.call(obj, res);
 	return res;
-};
+}
