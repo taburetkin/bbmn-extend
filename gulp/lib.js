@@ -11,13 +11,26 @@ let babelConfig = {
 	plugins: ['external-helpers']
 }
 
+let rollupGlobals = {
+	'backbone': 'Backbone',
+	'backbone.marionette': 'Mn',
+	'jquery': '$',
+	'underscore': '_',
+}
+
 let rollupConfig = {	
 	plugins: [
 		resolve({
 			module:true,
 		}),
 		babel(babelConfig)
-	]
+	],
+	external: ['backbone', 'backbone.marionette', 'underscore'],
+	output:{
+		format: 'umd',
+		name: 'bbmn',
+		"globals": rollupGlobals
+	}
 }
 
 function lib(){
