@@ -9,5 +9,5 @@ export default function createMixinFromObject(arg) {
 			};
 		}
 		return Base.extend(obj);
-	}
+	};
 }
