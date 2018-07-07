@@ -1,12 +1,12 @@
 import getByPathArray from './get-by-path-array';
 
-export default function getByPath (obj, path) {
+export default function getByPath(obj, path) {
 
-	if(obj == null || !_.isObject(obj) || path == null || path == '') return;
+	if (obj == null || !_.isObject(obj) || path == null || path == '') return;
 
-	var pathArray = _.isString(path) ? path.split('.') 
-						: _.isArray(path) ? [].slice.call(path)
-							: [path];
+	var pathArray = _.isString(path) ? path.split('.')
+		: _.isArray(path) ? [].slice.call(path)
+			: [path];
 
 	var prop = pathArray.shift();
 

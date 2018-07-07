@@ -1,11 +1,9 @@
 ## isKnownCtor(argument)
-returns true if passed argument is a well known constructor.
-
+returns true if passed argument is a well known constructor.  
 in general was implemented for `getOption` mixin.
 
 ### returns: 
-`true` if a given argument is a well known constructor.
-
+`true` if a given argument is a well known constructor.  
 `false` if its not.
 
 ### arguments:

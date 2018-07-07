@@ -5,7 +5,7 @@ returns wrapper object: `{ with, options, class}`.
 
 ### arguments:
 * **arg**: class definition or plain object, required
-* **options**: options object, optional
+* **options**: object, optional
 
 ### options:
 * **mergeObjects**: true | false (default value is **true**)
@@ -69,7 +69,7 @@ this will create mixin for every argument will be applied to the base class in g
 
 ````
 
-## usage:
+### usage:
 ````javascript
 import mix from 'bbmn-extend/src/utils/mix';
 import GetOptionMixin from 'bbmn-extend/src/mixins/common/get-option';
