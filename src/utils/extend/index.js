@@ -1,2 +1,2 @@
 //import Mn from 'backbone.marionette';
-export default Mn.Object;
+export default Mn.extend;
