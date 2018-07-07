@@ -1,9 +1,17 @@
-## isKnownCtor
+## isKnownCtor(argument)
 returns true if passed argument is a well known constructor.
 
-`Model`, `Collection`, `View` and so on.
+in general was implemented for `getOption` mixin.
 
-### examples
+### returns: 
+`true` if a given argument is a well known constructor.
+
+`false` if its not.
+
+### arguments:
+accepts one argument of any type.
+
+### examples:
 ```js
 import isKnownCtor from 'utils/is-known-ctor';
 import { View } from 'backbone.marionette';

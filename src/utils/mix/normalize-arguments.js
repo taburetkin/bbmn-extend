@@ -1,27 +1,41 @@
 
-export default function normalizeArguments(args, opts = {})
-{
-    let raw = {};
-    let wrap = opts.wrapObjectWithConstructor == true;
-    let merge = opts.mergeObjects == true;    
-    let ctors = [];
-    _(args).each(arg => {
-        if (_.isFunction(arg)) {
-            ctors.push(arg);
-            return;
-        }
+import createMixinFromObject from './create-mixin-from-object';
 
-        if (!_.isObject(arg)) return;
+export default function normalizeArguments(args, opts = {}) {
+	let raw = {};
+	let wrap = opts.wrapObjectWithConstructor == true;
+	let merge = opts.mergeObjects == true;
+	let mixins = [];
+	_(args).each(arg => {
+		
+		//if argument is function just put it to mixins array
+		//and continue;
+		if (_.isFunction(arg)) {
+			mixins.push(arg);
+			return;
+		}
 
-        if (!merge || (wrap && _.isFunction(arg.constructor))) {
-            ctors.push(Base => Base.extend(arg));
-        } else {
-            _.extend(raw, arg);
-        }
-    });
+		//if argument is not an object just skip it
+		if (!_.isObject(arg)) return;
 
-    if(_.size(raw))
-        ctors.unshift(Base => Base.extend(raw));
+		//if mergeObjects == false or wrapObjectWithConstructor == true 
+		//and there is a constructor function
+		//converting to a mixin function
+		//otherwise extend rawObject
+		if (!merge || (wrap && _.isFunction(arg.constructor))) {
+			mixins.push(createMixinFromObject(arg));
+		} 
+		else {
+			_.extend(raw, arg);
+		}
+	
+	});
 
-    return ctors;
+	//if rawObject is not empty
+	//convert it to a mixin function
+	//and put it to the begin of mixins array
+	if (_.size(raw))
+		mixins.unshift(createMixinFromObject(raw));
+
+	return mixins;
 }

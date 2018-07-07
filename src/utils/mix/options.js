@@ -1,4 +1,4 @@
 export default {
-    mergeObjects: true,
-    wrapObjectWithConstructor: true,
-}
+	mergeObjects: true,
+	wrapObjectWithConstructor: true,
+};
