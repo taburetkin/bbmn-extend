@@ -9,14 +9,14 @@ let babelConfig = {
 	presets: [['env', { modules: false }]],
 	babelrc: false,
 	plugins: ['external-helpers']
-}
+};
 
 let rollupGlobals = {
 	'backbone': 'Backbone',
 	'backbone.marionette': 'Mn',
 	'jquery': '$',
 	'underscore': '_',
-}
+};
 
 let rollupConfig = {
 	allowRealFiles: true,
