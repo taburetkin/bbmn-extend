@@ -9,7 +9,7 @@ import mix from './mix';
 import setByPath from './set-by-path';
 import unflat from './unflat';
 
-export default {
+export {
 	comparator, compareAB, extend,
 	flat, getByPath, getProperty, isKnownCtor, 
 	mix, setByPath, unflat

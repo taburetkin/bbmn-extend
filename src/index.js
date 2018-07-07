@@ -1,6 +1,6 @@
-import mixins from './mixins';
-import utils from './utils';
+import * as mixins from './mixins';
+import * as utils from './utils';
 
-export default {
+export {
 	mixins, utils
 };
