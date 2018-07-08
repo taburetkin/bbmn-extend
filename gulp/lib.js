@@ -18,7 +18,7 @@ let rollupGlobals = {
 	'underscore': '_',
 };
 
-let rollupConfig = {
+let getRollupConfig = (format) => ({
 	allowRealFiles: true,
 	plugins: [
 		resolve({
@@ -28,22 +28,25 @@ let rollupConfig = {
 	],
 	external: ['backbone', 'backbone.marionette', 'underscore'],
 	output: {
-		format: 'umd',
+		format,
 		name: 'bbmn',
 		'globals': rollupGlobals
 	},
 	input:'src/index.js'
-};
+});
 
-function lib() {
+function lib(format) {
+	let rollupConfig = getRollupConfig(format);
 	gulp.src('src/index.js')
 		.pipe(sourcemaps.init())
 		// note that UMD and IIFE format requires `name` but it will be inferred from the source file name `mylibrary.js`
-		.pipe(rollup(rollupConfig, 'es'))
+		.pipe(rollup(rollupConfig))
 		// save sourcemap as separate file (in the same folder)
 		.pipe(sourcemaps.write(''))
 		.pipe(size())
-		.pipe(gulp.dest('lib'));
+		.pipe(gulp.dest('lib/' + format));
 }
 
-gulp.task('lib', lib);
+gulp.task('lib-iife', () => lib('iife'));
+gulp.task('lib-umd', ['lib-iife'], () => lib('umd'));
+gulp.task('lib', ['lib-umd'], () => lib('es'));
