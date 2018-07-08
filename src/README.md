@@ -1,5 +1,5 @@
 # utils 
-## getByPath(object, path)
+## getByPath(object, path) [utils/get-by-path](https://github.com/taburetkin/bbmn-extend/src/utils/get-by-path)
 ### returns: 
 value from object by given path.
 
