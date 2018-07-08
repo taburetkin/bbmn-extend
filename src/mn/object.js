@@ -1,2 +1,3 @@
 import Mn from 'backbone.marionette';
-export default Mn.Object;
+const MnObject = Mn.Object || Mn.MnObject;
+export default MnObject;
