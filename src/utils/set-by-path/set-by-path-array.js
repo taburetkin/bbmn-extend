@@ -1,4 +1,4 @@
-import getProperty from '../get-by-path/get-property'
+import getProperty from '../get-by-path/get-property';
 import setProperty from './set-property';
 
 export default function setByPathArr(context, propertyName, pathArray, value, options) {
