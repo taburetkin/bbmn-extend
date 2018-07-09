@@ -1,6 +1,6 @@
 import triggerControlEvent from './trigger-control-event';
 import getTriggerValue from './get-trigger-value';
-import getOption from './get-option';
+import getOption from '../../../utils/get-option';
 
 export default Base => Base.extend({	
 
@@ -58,4 +58,6 @@ export default Base => Base.extend({
 
 
 
+}, {
+	ControlMixin: true
 });

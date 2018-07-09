@@ -1,4 +1,4 @@
-import getProperty from '../../../utils/get-property';
+import getProperty from '../get-property';
 export default function getOption(context, key, opts = {}) {
 	if (_.isFunction(context.getOption)) {
 		return context.getOption(key, opts);
