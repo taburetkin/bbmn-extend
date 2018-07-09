@@ -20,7 +20,7 @@ export default Base => Base.extend({
 	},
 	triggerChildControlEvent(eventName, ...args){
 		let events = getOption(this, 'childControlEvents', { args:[this]}) || {};
-		if (eventName in events) {
+		if (_.isFunction(events[eventName])) {
 			events[eventName].apply(this, args);
 		}
 	},
