@@ -32,5 +32,68 @@ describe('utils • set-by-path',function(){
 		expect(test.path.attributes.path).to.equal(123);
 	});
 
+	it('should trigger change event on model', function(){
+		const stub1 = this.sinon.stub();
+		const stub2 = this.sinon.stub();
+		const stub3 = this.sinon.stub();
+		let test = new Model();
+		test.on('change', stub1);
+		test.on('change:test', stub2);
+		test.on('change:test:foo:bar', stub3);
+
+		setByPath(test, 'test.foo.bar', 123);
+		expect(stub1).to.have.been.calledOnce;
+		expect(stub2).to.have.been.calledOnce;
+		expect(stub3).to.have.been.calledOnce;
+	});
+
+	it('should trigger change event on nested model', function(){
+		const stub1 = this.sinon.stub();
+		const stub2 = this.sinon.stub();
+		const stub3 = this.sinon.stub();
+
+		let test = new Model();
+		let hash = { test };
+		test.on('change', stub1);
+		test.on('change:foo', stub2);
+		test.on('change:foo:bar', stub3);
+
+		setByPath(hash, 'test.foo.bar', 123);
+		expect(stub1).to.have.been.calledOnce;
+		expect(stub2).to.have.been.calledOnce;
+		expect(stub3).to.have.been.calledOnce;
+	});	
+
+	it('should trigger change event on all nested model', function(){
+		const stub1 = this.sinon.stub();
+		const stub2 = this.sinon.stub();
+		const stub3 = this.sinon.stub();
+		const stub4 = this.sinon.stub();
+		const stub5 = this.sinon.stub();
+		const stub6 = this.sinon.stub();
+
+		let test = new Model();
+		let shmest = new Model();		
+		test.set('foo',{shmest});
+		let hash = { test };
+
+		test.on('change', stub1);
+		test.on('change:foo', stub2);
+		test.on('change:foo:shmest:bar:baz', stub3);
+
+		shmest.on('change', stub4);
+		shmest.on('change:bar', stub5);
+		shmest.on('change:bar:baz', stub6);
+
+
+		setByPath(hash, 'test.foo.shmest.bar.baz', 123);
+
+		expect(stub1).to.have.been.calledOnce;
+		expect(stub2).to.have.been.calledOnce;
+		expect(stub3).to.have.been.calledOnce;
+		expect(stub4).to.have.been.calledOnce;
+		expect(stub5).to.have.been.calledOnce;
+		expect(stub6).to.have.been.calledOnce;
+	});	
 
 });

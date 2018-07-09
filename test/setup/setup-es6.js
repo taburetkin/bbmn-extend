@@ -8,7 +8,10 @@ global._ = _;
 global.expect = global.chai.expect;
 
 
-
+beforeEach(function() {
+	//this.sinon = global.sinon.sandbox.create();
+	this.sinon = global.sinon.createSandbox();
+});
 
 
 
@@ -48,9 +51,7 @@ global.expect = global.chai.expect;
 // 		this.clearFixtures = clearFixtures;
 // 	});
 
-// 	beforeEach(function() {
-// 		this.sinon = global.sinon.sandbox.create();
-// 	});
+
 
 // 	afterEach(function() {
 // 		this.sinon.restore();
