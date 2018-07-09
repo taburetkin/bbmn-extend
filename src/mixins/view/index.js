@@ -1,4 +1,4 @@
 import cssClassModifiers from './css-class-modifiers';
-export default {
+export {
 	cssClassModifiers
 };

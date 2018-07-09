@@ -1,6 +1,7 @@
-import common from './common';
-import model from './model';
-import view from './view';
+import * as common from './common';
+import * as model from './model';
+import * as view from './view';
+import * as controls from './controls';
 export {
-	common, model, view
+	common, model, view, controls
 };

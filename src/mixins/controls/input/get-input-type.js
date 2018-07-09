@@ -1,7 +1,8 @@
-import getOption from '../../../utils/get-option';
-export default function getInputType(inputView){
+import notInitializedOption from './_get-option';
+
+export default function getInputType(inputView, opts = {}){
 	
-	let valueType = getOption(inputView, 'valueType', { args:[inputView.model, inputView] });
+	let valueType = notInitializedOption.call(inputView, 'valueType', opts);
 	if (valueType == null) {
 		let value = inputView.getControlValue();
 		if ( value == null) {
@@ -13,18 +14,18 @@ export default function getInputType(inputView){
 				valueType = 'datetime';
 			else
 				valueType = 'string';
-		}
+		}		
 	}
 
 	if (valueType == 'number') {
 		inputView._valueIsNumber = true;
 	}
 
-	let type = getOption(inputView, 'inputType', { args:[inputView.model, inputView] });
+	let type = notInitializedOption.call(inputView, 'inputType', opts);
 
 	if (!type) {
 		if (inputView._valueIsNumber) {
-			type = getOption(inputView, 'inputNumberType', { args:[inputView.model, inputView] }) || 'number';
+			type = notInitializedOption.call(inputView, 'inputNumberType', opts) || 'number';
 		} else if (valueType == 'string') {
 			type = 'text';
 		} else if (valueType == 'datetime') {
@@ -33,6 +34,7 @@ export default function getInputType(inputView){
 			type = 'text';
 		}
 	}
-	
+	inputView.inputType = type;
+	inputView.valueType = valueType;
 	return type;
 }

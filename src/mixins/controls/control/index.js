@@ -1,6 +1,7 @@
 import triggerControlEvent from './trigger-control-event';
 import getTriggerValue from './get-trigger-value';
 import getOption from '../../../utils/get-option';
+import camelCase from '../../../utils/camel-case';
 
 export default Base => Base.extend({	
 
@@ -37,10 +38,16 @@ export default Base => Base.extend({
 	triggerControlDone(){
 		this._triggerControlEvent('done', arguments);
 	},
-	_triggerControlEvent(eventName, args){
+	_triggerControlEvent(eventName, args) {
+
 		let triggerValue = getTriggerValue(this, args);
+		let previousTriggerName = camelCase('_previous:' + eventName);
+		if (previousTriggerName in this && this[previousTriggerName] === triggerValue) {
+			return;
+		}
 		let errors = this.tryValidateControl(triggerValue);
 		if (!errors) {
+			this[previousTriggerName] = triggerValue;
 			triggerControlEvent(this, eventName, triggerValue);
 		} else {
 			this.triggerControlInvalid(errors);

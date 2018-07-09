@@ -1,4 +1,4 @@
 import smartGet from './smart-get';
-export default {
+export {
 	smartGet
 };
