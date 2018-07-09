@@ -25,6 +25,12 @@ export default Base => Base.extend({
 		}
 	},
 
+	tryValidateControl(value){
+		let validate = getOption(this, 'validateControlValue', { force: false });
+		if(_.isFunction(validate))
+			return validate.call(this, value, this);
+	},
+
 	triggerControlChange(){
 		this._triggerControlEvent('change', arguments);
 	},
