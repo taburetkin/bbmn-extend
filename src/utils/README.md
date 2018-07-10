@@ -33,9 +33,13 @@ used by [utils/comparator](https://github.com/taburetkin/bbmn-extend/tree/master
 	
 ### getter: `function`
 should return value to be compared  
-will be applied to each argument to extract compare value
+will be applied to each argument to extract compare value  
 `this` is equal to given argument and also two arguments passed: `model` and `view`  
 > getter(model, view)
+
+### getter: `[function, function, ...]`
+does multiple compare of `a` and `b` by given array of getters.  
+if getter returns '0' then next getter applied.
 
 ### usage:
 ````javascript
