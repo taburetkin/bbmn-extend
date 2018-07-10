@@ -2,6 +2,7 @@ import ControlMixin from '../control';
 import setInputAttributes from './set-attributes';
 import setInputEvents from './set-events';
 import getOption from '../../../utils/get-option';
+import convert from '../../../utils/convert-string';
 
 export default Base => {
 
@@ -15,45 +16,118 @@ export default Base => {
 			if (!_.isFunction(this.getOption)) {
 				this.getOption = _.partial(getOption, this, _, { args: [this.model, this]});
 			}
-			let value = this.getOption('value');
-			
+
+			this.buildRestrictions();
+			let value = this.getOption('value');			
 			this.el.value = value;
 			this.setControlValue(value);
 		},
 		tagName:'input',
 		template: false,
-		setControlValue(value)
+		buildRestrictions(){
+			let attrs = _.result(this, 'attributes');
+			let pickNumbers = ['maxlength', 'min', 'max'];
+			let pickStrings = ['pattern'];
+			let pickBools = ['required'];
+			let restrictions = {};
+			_(attrs).each((value, key) => {
+				let pick = false;
+				key = key.toLowerCase();
+				if (pickNumbers.indexOf(key) > -1) {
+					value = convert(value, 'number');
+					pick = true;
+				} else if (pickStrings.indexOf(key) > -1) {
+					pick = true;
+				} else if (pickBools.indexOf(key) > -1) {
+					pick = true;
+					value = convert(value, 'boolean', { returnNullAndEmptyAs: true, returnOtherAs: true });
+				}
+				pick && (restrictions[key] = value);
+			});
+			this.restrictions = restrictions;		
+		},
+		setControlValue(value, opts = {})
 		{
-			let newvalue = value;
+			this.value = this.prepareValueBeforeSet(value);
+			if(!opts.silent)
+				this.triggerControlChange();
+			return this.value;
+		},
+		prepareValueBeforeSet(value){
+			if (value == null || value === '') return value;
+			
 			let len = this.getMaxLength();
 			if (len > 0) {
-				newvalue = (value || '').substring(0, len);
+				value = value.toString().substring(0, len);
 			}
-			this.value = newvalue;
-			return newvalue;
+			if (this._valueIsNumber) {
+				let num = convert(value, 'number');
+				if(isNaN(num))
+					return;
+				let min = this.restrictions.min;
+				let max = this.restrictions.max;
+				!isNaN(min) && num < min && (num = min);
+				!isNaN(max) && num > max && (num = max);
+				return num;
+			}
+			return value;
 		},
 		getValueType(){
 			return this.valueType;
 		},
-
-		
+		convertValue(value){
+			return convert(value, this.getValueType());
+		},		
 		getMaxLength()
 		{
-			let len = parseInt(this.getOption('maxLength'),10);
-			return !isNaN(len) && len;
+			return this.restrictions.maxlength;
+
 		},
 		isLengthValid(){
 			let value = this.getControlValue();
 			let len = this.getMaxLength();
 			return len == null || value.length < len;
 		},
-		isCharValid(char) {
+		isEnteredCharValid(char) {
 			let type = this.getValueType();
 
 			if (type == 'number') {
-				return char == '.' || !isNaN(parseInt(char, 10));
+				return ['.','-'].indexOf(char) > -1 || !isNaN(parseInt(char, 10));
 			} else {
 				return true;
+			}
+		},
+		isValueValid(value){
+			let type = this.getValueType();
+			if (type == 'number') {
+				return !isNaN(parseFloat(value, 10));
+			} else {
+				return true;
+			}
+		},
+		validateControlValue(value){
+			if (value == null || value === '') {
+				if(this.restrictions.required)
+					return 'required';
+				else
+					return;
+			}
+			let strValue = value.toString();
+			if (_.isNumber(this.restrictions.maxlength) && strValue.length > this.restrictions.maxlength)
+				return 'length:big';
+			if (this._valueIsNumber) {
+				if (!_.isNumber(value))
+					return 'not:number';
+				if (_.isNumber(this.restrictions.min) && value < this.restrictions.min)
+					return 'less:than:min';
+				if (_.isNumber(this.restrictions.max) && value > this.restrictions.max)
+					return 'greater:than:max';
+			}
+			if (this.restrictions.pattern) {
+				let pattern = RegExp(this.restrictions.pattern);
+				if (pattern.test(strValue)) {
+					return 'pattern:mismatch';
+				}
 			}
 		}
 	});

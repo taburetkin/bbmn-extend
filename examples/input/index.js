@@ -12,10 +12,12 @@ $(() => {
 		},
 	});
 	var input = new Input({
-		value:'',
-		maxLength: 10,
+		value:'-23',
+		maxLength: 2,
+		minValue: 0,
+		maxValue: 23,
 		valueType:'number',
-		inputType: 'text',
+		//inputType: 'number',
 	});
 	input.render();
 	console.log(input);

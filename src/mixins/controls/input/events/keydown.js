@@ -6,7 +6,7 @@ export default function(eventContext) {
 	let stop = false;
 
 	if (isChar(event)) {
-		if (!context.isCharValid(event.key)) {
+		if (!context.isEnteredCharValid(event.key)) {
 			prevent = true;
 		}
 	}

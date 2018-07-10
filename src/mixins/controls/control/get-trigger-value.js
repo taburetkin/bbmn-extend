@@ -1,7 +1,9 @@
 export default function getTriggerValue(control, args = []){
-	if (args.length) {
-		return args[0];
-	} else {
-		return control.getControlValue();
-	}
+
+	let value = args.length ? args[0] : control.getControlValue();
+
+	if(_.isFunction(control.convertValue))
+		value = control.convertValue(value);
+		
+	return value;
 }
