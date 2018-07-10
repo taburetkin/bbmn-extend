@@ -34,7 +34,9 @@ export default Base => Base.extend({
 
 		if (!_.isFunction(context.region) && _.isObject(context.region)) {
 			let regionHash = context.region;
+
 			context.region = () => {
+
 				if (regionHash.updateDom) {
 					if (_.isFunction(regionHash.updateDom)) {
 						regionHash.updateDom.call(this, this.$el);
@@ -44,10 +46,12 @@ export default Base => Base.extend({
 						regionHash.el = '.' + selector;
 					}
 				}
+
 				let region = this.getRegion(regionHash.name || context.name);
 				if (!region) {
 					region = this.addRegion(regionHash.name || context.name, regionHash);
 				}
+				
 				return region;
 			};
 		}
@@ -85,25 +89,22 @@ export default Base => Base.extend({
 	},
 
 
-	_buildNestedView(name){
+	buildNestedView(name){
 		let cfg = this.getNestedViewContext(name);
 		if(!cfg) return;
+
 		let View = cfg.View;
-		let options = result(cfg, 'options', { context: this, args: [this, this.model], default:{} });
+		let options = this.buildNestedViewOptions(result(cfg, 'options', { context: this, args: [this, this.model], default:{} }));
+		
 		return new View(options);
 	},
-	buildNestedView(name){
-		return this._buildNestedView(name);
+	buildNestedViewOptions(opts){
+		return opts;
 	},
 	getNestedViewRegion(name){
 		let cfg = this.getNestedViewContext(name);
-		if(!cfg && cfg.region)
-			return;
-		let region = cfg.region;
-		if(_.isFunction(region))
-			region = region();
-
-		return region;
+		return cfg && cfg.region 
+			&& _.result(cfg, 'region');
 	}
 	
 });
