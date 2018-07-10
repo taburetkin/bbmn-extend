@@ -17,15 +17,16 @@ global.sinon = sinon;
 if (!global.document || !global.window) {
 	let jsdom = require('jsdom');
 	const { JSDOM } = jsdom;
-	global.window = new JSDOM('<html><head><script></script></head><body></body></html>', {
+	let dom = new JSDOM('<html><head><script></script></head><body></body></html>', {
 		FetchExternalResources: ['script'],
 		ProcessExternalResources: ['script']
 	});
-	global.document = global.window.document;
+	global.window = dom.window;
+	global.document = dom.window.document;
 
 	//global.window = document.defaultView;
-	global.navigator = global.window.navigator;
-
+	global.navigator = dom.window.navigator;
+	
 }
 
 // var setup = require('./setup.js');

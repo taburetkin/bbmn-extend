@@ -1,10 +1,12 @@
 import _ from 'underscore';
 import Backbone from 'backbone';
 import Mn from 'backbone.marionette';
-
+import $ from 'jquery';
+Backbone.$ = $;
 global.Backbone = Backbone;
 global.Mn = Mn;
 global._ = _;
+global.$ = $;
 global.expect = global.chai.expect;
 
 

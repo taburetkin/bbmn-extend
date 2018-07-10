@@ -14,7 +14,7 @@ module.exports = function(){
 	global.Backbone = Backbone;
 	global.Mn = Backbone.Marionette = Mn;
 	global.expect = global.chai.expect;
-
+	
 	var $fixtures;
 
 	function setFixtures() {

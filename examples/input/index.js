@@ -21,4 +21,7 @@ $(() => {
 	});
 	input.render();
 	console.log(input);
+
+	var v = new Mn.View();
+
 });
