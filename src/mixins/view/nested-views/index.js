@@ -1,4 +1,5 @@
 import result from '../../../utils/better-result';
+import normalizeRegion from './normalize-region';
 export default Base => Base.extend({
 	constructor(){
 		this._nestedViews = {};
@@ -16,7 +17,7 @@ export default Base => Base.extend({
 		let nesteds = this.getOption('nestedViews', { args:[this.model, this]});
 		_(nesteds).each((context, index) => {
 
-			let name = _.isString(index) ? index : context.name;
+			let name = _.isString(index) ? index : context.name;			
 			this.addNestedView(name, context);
 
 		});
@@ -25,40 +26,19 @@ export default Base => Base.extend({
 
 		this._nestedViewsInitialized = true;
 	},
-	_normalizeNestedContext(context){
+	_normalizeNestedContext(name, context){
+		//unwrap to plain object
 		if (_.isFunction(context)) {
 			context = context.call(this, this.model, this);
 		}
 
+		//fix name if its not provided
 		if (context.name == null)
-			context.name = _.uniqueId('nested');
+			context.name = name || _.uniqueId('nested');
 
-		if (!_.isFunction(context.region) && _.isObject(context.region)) {
-			let regionHash = context.region;
+		//convert region to valid function
+		context = normalizeRegion.call(this, context);		
 
-			context.region = () => {
-
-				if (regionHash.updateDom) {
-					if (_.isFunction(regionHash.updateDom)) {
-						regionHash.updateDom.call(this, this.$el);
-					} else if(regionHash.updateDom === true) {
-						let selector = 'region-' + context.name;
-						this.$el.append($('<div>').addClass(selector));
-						regionHash.el = '.' + selector;
-					}
-				}
-
-				let region = this.getRegion(regionHash.name || context.name);
-				if (!region) {
-					region = this.addRegion(regionHash.name || context.name, regionHash);
-				}
-				
-				return region;
-			};
-		}
-
-		if(!context.region && context.regionName)
-			context.region = () => this.getRegion(context.regionName);
 
 		return context;
 	},
@@ -70,8 +50,9 @@ export default Base => Base.extend({
 	addNestedView(name, context){
 		if (_.isObject(name)) {
 			context = name;
+			name = undefined;
 		}
-		context = this._normalizeNestedContext(context);
+		context = this._normalizeNestedContext(name, context);
 		this._createNestedContext(context);
 		if(this.getOption('showNestedViewOnAdd') && this.isRendered()){
 			this.showNestedView(context);
