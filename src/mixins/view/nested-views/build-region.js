@@ -17,7 +17,7 @@ export default function buildRegionFunc(view, hash, context){
 	
 	let region = view.getRegion(name);
 
-	if ((el == null && !updateDom && autoCreateRegion !== false) || updateDom === true) {
+	if (el == null && autoCreateRegion !== false) {
 		if(!region || (!$el.find(region.el).length))
 			regionEl = defaultUpdateDom(name, $el);
 

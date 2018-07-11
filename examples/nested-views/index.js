@@ -2,7 +2,10 @@ console.log('bbmn', bbmn);
 $(() => {
 
 	const Child = Mn.View.extend({
-		template:() => 'child view'
+		template:_.template('child view: <%= cid %>'),
+		templateContext(){
+			return {cid: this.cid }
+		}
 	});
 
 	const Test = bbmn.mixins.view.nestedViews(Mn.View).extend({
@@ -35,8 +38,7 @@ $(() => {
 			viewD:{
 				View: Child,
 				region: {
-					updateDom: true,
-					replaceElement: true,
+					replaceElement: false,
 				}
 			},			
 			testC:{
