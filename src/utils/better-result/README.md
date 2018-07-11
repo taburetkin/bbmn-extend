@@ -73,14 +73,17 @@ getting not initialized option:
 const View = Marionette.View.extend({
 	constructor(options){
 
-		//at this point options is not yet initialized, so you can not use getOption here, but you can do it like this
+		// at this point options is not yet initialized, 
+		// so you can not use getOption here, but you can do it like this
 		let value1 = betterResult(options, 'optionsValue', { checkAlso: this})
 
 		let value2 = betterResult(options, 'instanceValue', { checkAlso: this})
 
-		//with get-option mixin you can just use this.getOption() for the same result. check mixin readme
+		// with get-option mixin you can just use this.getOption() 
+		// for the same result. check mixin readme
 
-		console.log(value);
+		console.log(value1);
+		console.log(value2);
 
 		Marionette.View.apply(this, arguments);
 		// at this ppoint options is initialized and getOption will work as intended
