@@ -1,3 +1,4 @@
+import '../../setup/node';
 import isKnownCtor from '../../../src/utils/is-known-ctor';
 import ctors from '../../../src/utils/is-known-ctor/ctors';
 import Model from '../../../src/bb/model';

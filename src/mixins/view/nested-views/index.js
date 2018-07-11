@@ -6,31 +6,32 @@ export default Base => Base.extend({
 		this.initializeNestedViews();
 	},
 	showAllNestedViewsOnRender: false,
+	showNestedViewOnAdd: false,
 	initializeNestedViews(){
-
+		if (this._nestedViewsInitialized) return;
 		if(this.getOption('showAllNestedViewsOnRender')) {
 			this.on('render', () => this.showAllNestedViews());
 		}
 
 		let nesteds = this.getOption('nestedViews', { args:[this.model, this]});
 		_(nesteds).each((context, index) => {
-			context = this._normalizeNestedContext(context, index);
-			this._createNestedContext(context);
+
+			let name = _.isString(index) ? index : context.name;
+			this.addNestedView(name, context);
+
 		});
 
 		this.once('destroy',() => delete this._nestedViews);
+
+		this._nestedViewsInitialized = true;
 	},
-	_normalizeNestedContext(context, index){
+	_normalizeNestedContext(context){
 		if (_.isFunction(context)) {
 			context = context.call(this, this.model, this);
 		}
 
-		let name = _.isString(index) ? index 
-			: _.isString(context.name) ? context.name
-				: _.uniqueId('nested');
-
-		if(context.name != name)
-			context.name = name;
+		if (context.name == null)
+			context.name = _.uniqueId('nested');
 
 		if (!_.isFunction(context.region) && _.isObject(context.region)) {
 			let regionHash = context.region;
@@ -66,6 +67,16 @@ export default Base => Base.extend({
 		contexts[context.name] = context;
 	},
 
+	addNestedView(name, context){
+		if (_.isObject(name)) {
+			context = name;
+		}
+		context = this._normalizeNestedContext(context);
+		this._createNestedContext(context);
+		if(this.getOption('showNestedViewOnAdd') && this.isRendered()){
+			this.showNestedView(context);
+		}		
+	},
 
 	showNestedView(name){
 		let region = this.getNestedViewRegion(name);
@@ -78,7 +89,7 @@ export default Base => Base.extend({
 	},
 	showAllNestedViews(){
 		let contexts = this.getNestedViewContext();
-		_(contexts).each(context => this.showNestedView(context.name));
+		_(contexts).each(context => this.showNestedView(context));
 	},
 	getNestedViewContext(name){
 		let contexts = this._nestedViews;
@@ -90,11 +101,15 @@ export default Base => Base.extend({
 
 
 	buildNestedView(name){
-		let cfg = this.getNestedViewContext(name);
-		if(!cfg) return;
 
-		let View = cfg.View;
-		let options = this.buildNestedViewOptions(result(cfg, 'options', { context: this, args: [this, this.model], default:{} }));
+		let context = _.isObject(name) ? name
+			: _.isString(name) ? this.getNestedViewContext(name)
+				: null;
+
+		if(!context) return;
+
+		let View = context.View;
+		let options = this.buildNestedViewOptions(result(context, 'options', { context: this, args: [this, this.model], default:{} }));
 		
 		return new View(options);
 	},
@@ -102,9 +117,10 @@ export default Base => Base.extend({
 		return opts;
 	},
 	getNestedViewRegion(name){
-		let cfg = this.getNestedViewContext(name);
-		return cfg && cfg.region 
-			&& _.result(cfg, 'region');
+		let context = _.isObject(name) ? name
+			: _.isString(name) ? this.getNestedViewContext(name)
+				: null;
+		return context && _.result(context, 'region');
 	}
 	
 });

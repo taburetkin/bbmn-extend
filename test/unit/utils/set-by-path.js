@@ -1,3 +1,4 @@
+import '../../setup/node';
 import setByPath from '../../../src/utils/set-by-path';
 import Model from '../../../src/bb/model';
 describe('utils • set-by-path',function(){

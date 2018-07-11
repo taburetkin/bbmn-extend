@@ -1,3 +1,4 @@
+import '../../setup/node';
 import camelCase from '../../../src/utils/camel-case';
 
 describe('utils • camel-case',function(){

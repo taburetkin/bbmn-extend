@@ -1,3 +1,4 @@
+import '../../setup/node';
 import mix from '../../../src/utils/mix';
 import extend from '../../../src/utils/extend';
 

@@ -1,7 +1,7 @@
 import isKnownCtor from '../is-known-ctor';
 export default function betterResult(obj, key, opts = {})
 {
-	let { context, args, checkAlso } = opts;
+	let { context, args, checkAlso, force } = opts;
 	let defaultValue = opts.default;
 
 	if(!_.isString(key) || key === '') return;
@@ -11,7 +11,7 @@ export default function betterResult(obj, key, opts = {})
 	if (value != null && (!_.isFunction(value) || isKnownCtor(value)))
 		return value;
 		
-	let result = _.isFunction(value) && value.apply(context || obj, args);
+	let result = force !== false && _.isFunction(value) ? value.apply(context || obj, args) : value;
 
 	if (result == null && _.isObject(checkAlso)) {
 		let alsoOptions = _.omit(opts, 'checkAlso');

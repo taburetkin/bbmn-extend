@@ -1,3 +1,4 @@
+import '../../setup/node';
 import getByPath from '../../../src/utils/get-by-path';
 
 describe('utils • get-by-path',function(){
