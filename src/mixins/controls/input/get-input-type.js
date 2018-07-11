@@ -1,8 +1,9 @@
-import notInitializedOption from './_get-option';
+import getOption from '../../../utils/get-option';
+const _getOption = (context, key, checkAlso) => getOption(context, key, { args:[context], checkAlso });
 
 export default function getInputType(inputView, opts = {}){
 	
-	let valueType = notInitializedOption.call(inputView, 'valueType', opts);
+	let valueType = _getOption(inputView, 'valueType', opts);
 	if (valueType == null) {
 		let value = inputView.getControlValue();
 		if ( value == null) {
@@ -21,11 +22,11 @@ export default function getInputType(inputView, opts = {}){
 		inputView._valueIsNumber = true;
 	}
 
-	let type = notInitializedOption.call(inputView, 'inputType', opts);
+	let type = _getOption(inputView, 'inputType', opts);
 
 	if (!type) {
 		if (inputView._valueIsNumber) {
-			type = notInitializedOption.call(inputView, 'inputNumberType', opts) || 'number';
+			type = _getOption(inputView, 'inputNumberType', opts) || 'number';
 		} else if (valueType == 'string') {
 			type = 'text';
 		} else if (valueType == 'datetime') {

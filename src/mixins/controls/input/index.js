@@ -10,11 +10,13 @@ export default Base => {
 
 	return Mixin.extend({
 		constructor(opts){
+			
 			setInputAttributes(this, opts);
 			setInputEvents(this, opts);
 			Mixin.apply(this, arguments);
+
 			if (!_.isFunction(this.getOption)) {
-				this.getOption = _.partial(getOption, this, _, { args: [this.model, this]});
+				this.getOption = _.partial(getOption, this, _, { args: [this]});
 			}
 
 			this.buildRestrictions();

@@ -12,7 +12,7 @@ export default Base => Base.extend({
 			this.on('render', () => this.showAllNestedViews());
 		}
 
-		let nesteds = this.getOption('nestedViews',{ args:[this.model, this]});
+		let nesteds = this.getOption('nestedViews', { args:[this.model, this]});
 		_(nesteds).each((context, index) => {
 			context = this._normalizeNestedContext(context, index);
 			this._createNestedContext(context);

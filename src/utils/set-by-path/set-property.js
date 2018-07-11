@@ -8,15 +8,6 @@ function setProperty(context, name, value) {
 		context[name] = value;
 	}
 
-	// if(isModel(value)){
-	// 	options.models.push({
-	// 		path: options.passPath.join(':'),
-	// 		property: name,
-	// 		model: value
-	// 	});		
-	// }
-	// options.passPath.push(name);
-
 	return getProperty(context, name);
 }
 

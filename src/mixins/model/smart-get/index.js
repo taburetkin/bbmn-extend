@@ -13,7 +13,7 @@ export default Base => {
 				return originalGet.call(this, key);
 		},
 		get(key, opts = {}){
-			if(key == null) return;	
+			if(key == null || key == '') return;	
 			
 			let value = 'value' in opts 
 				? opts.value
