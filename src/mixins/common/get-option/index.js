@@ -27,8 +27,8 @@ const Mixin = (Base) => Base.extend({
 	getOption(key, opts){
 		let defaultGetArguments = result(this, '_getOptionArguments', { args:[this], default:[this] });
 		let options = _.extend({
-			deep: Base.GetOptionMixin.deep,
-			force: Base.GetOptionMixin.force,
+			deep: Mixin.defaults.deep,
+			force: Mixin.defaults.force,
 			args: defaultGetArguments
 		}, opts);
 
