@@ -8,6 +8,8 @@ $(() => {
 		}
 	});
 
+	let Input = bbmn.mixins.controls.input(Mn.View)
+
 	const Test = bbmn.mixins.view.nestedViews(Mn.View).extend({
 		template:() => '<div class="content-a"><div class="test-a"></div></div><div class="content-c"><div class="test-c"></div></div>',
 		showAllNestedViewsOnRender: true,
@@ -19,7 +21,7 @@ $(() => {
 		},
 		nestedViews:{
 			viewA:{
-				View: Child,
+				View: Input,
 				region:{
 					el:'.content-a .test-a'
 				}

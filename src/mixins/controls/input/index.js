@@ -20,7 +20,7 @@ export default Base => {
 			}
 
 			this.buildRestrictions();
-			let value = this.getOption('value');			
+			let value = this.getOption('value') || '';			
 			this.el.value = value;
 			this.setControlValue(value);
 		},
