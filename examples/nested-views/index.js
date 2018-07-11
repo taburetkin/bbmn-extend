@@ -6,14 +6,14 @@ $(() => {
 	});
 
 	const Test = bbmn.mixins.view.nestedViews(Mn.View).extend({
-		template:() => '<div class="content-a"><div class="test-a"></div></div>',
+		template:() => '<div class="content-a"><div class="test-a"></div></div><div class="content-c"><div class="test-c"></div></div>',
 		showAllNestedViewsOnRender: true,
 		initialize(){
 			this.$el.appendTo($('body'));
 		},
-		// regions:{
-		// 	'viewE':{el:'.content-a .test-a'}
-		// },
+		regions:{
+			'testC':{el:'.content-c .test-c'}
+		},
 		nestedViews:{
 			viewA:{
 				View: Child,
@@ -39,6 +39,9 @@ $(() => {
 					replaceElement: true,
 				}
 			},			
+			testC:{
+				View: Child,				
+			},				
 		}
 	});
 	var test = new Test();
