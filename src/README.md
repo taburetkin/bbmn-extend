@@ -1,4 +1,3 @@
-# utils 
 ## betterResult(context, key, options) [utils/better-result](https://github.com/taburetkin/bbmn-extend/tree/master/src/utils/better-result)
 Acts almost as underscore [`_.result`](https://underscorejs.org/#result) but can invoke result function if its not one of well known constructors.  
 > note:  

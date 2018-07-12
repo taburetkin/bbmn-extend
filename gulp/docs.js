@@ -1,44 +1,45 @@
 import gulp from 'gulp';
-import concat from 'gulp-concat-util';
-import del from 'del';
+import fs from 'fs';
+import path from 'path';
 import _ from 'underscore';
 import gulpSequence from 'gulp-sequence';
+import merge from 'merge-stream';
+import concat from 'gulp-concat-util';
+import del from 'del';
 
-const folders = ['mixins','utils'];
-const getFolderTask = folder => `docs:folder:${folder}`;
-const foldersTasks = _(folders).map(getFolderTask);
-
-function clean()
-{
-	let readmes = _(folders).map(folder => `src/${folder}/README.md`);
-	readmes.push('src/README.md');
-	return del(readmes);
-}
-gulp.task('clean:docs', clean);
-
-_(folders).each(folder => {
-	gulp.task(getFolderTask(folder), function(){ return buildFolder(folder); });
-});
-
-
-function buildFolder(folder){
-	return gulp.src(`src/${folder}/**/README.md`)
-		.pipe(concat('README.md'))
-		.pipe(concat.header(`# ${folder} \r\n`))
-		.pipe(gulp.dest(`src/${folder}`));
+function getFolders(dir) {
+    return fs.readdirSync(dir)
+      .filter(function(file) {
+        return fs.statSync(path.join(dir, file)).isDirectory();
+      });
 }
 
-gulp.task('concat:docs', function(){
-	let paths = _(folders).map(folder => `src/${folder}/README.md`);
-	return gulp.src(paths)
-		.pipe(concat('README.md'))	
-		.pipe(gulp.dest('src/'));
+function processFolder(folderPath, level = 1, tasks = []) {
+	tasks.push(
+		gulp.src(folderPath + '/**/_README.md')
+			.pipe(concat('README.md'))
+			.pipe(gulp.dest(folderPath))
+	);
+	let subFolders = getFolders(folderPath);
+	_(subFolders).each(subFolder => processFolder(folderPath + '/' + subFolder, level + 1, tasks));
+	return tasks;
+}
+
+
+gulp.task('docs:clean', function(){
+	return del(['README.md','src/**/README.md']);
 });
 
-gulp.task('compile:docs',() => {
+gulp.task('docs:folders', ['docs:clean'], function(done) {
+	let tasks = processFolder('src');	
+	console.log('docs tasks: ', tasks.length);
+	return merge(...tasks);
+});
+
+gulp.task('compile:docs',['docs:folders'], () => {
 	return gulp.src(['./header.md', 'src/README.md'])
 		.pipe(concat('README.md'))	
 		.pipe(gulp.dest('./'));
 });
 
-gulp.task('docs', gulpSequence('clean:docs', foldersTasks, 'concat:docs', 'compile:docs'));
+gulp.task('docs', ['compile:docs'])
