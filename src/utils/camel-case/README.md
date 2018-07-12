@@ -1,5 +1,4 @@
 ## utils/camel-case
-## camelCase(text, affectFirstLetter) [utils/camel-case](https://github.com/taburetkin/bbmn-extend/tree/master/src/utils/came-case)
 converts `:` separated string to `camelCase`.
 ### returns: 
 string

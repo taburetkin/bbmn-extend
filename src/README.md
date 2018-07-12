@@ -1,16 +1,22 @@
 # contents: 
-* [utils](utils)
-	* [utils/better-result](utilsbetter-result)
-	* [utils/camel-case](utilscamel-case)
-	* [utils/compare-ab](utilscompare-ab)
-	* [utils/get-by-path](utilsget-by-path)
-	* [utils/is-known-ctor](utilsis-known-ctor)
-	* [utils/mix](utilsmix)
-	* [utils/set-by-path](utilsset-by-path)
+* [utils](#utils)
+	* [utils/better-result](#utilsbetter-result)
+	* [utils/camel-case](#utilscamel-case)
+	* [utils/compare-ab](#utilscompare-ab)
+	* [utils/get-by-path](#utilsget-by-path)
+	* [utils/is-known-ctor](#utilsis-known-ctor)
+	* [utils/mix](#utilsmix)
+	* [utils/set-by-path](#utilsset-by-path)
 # utils
+# contents: 
+* [utils/better-result](#utilsbetter-result)
+* [utils/camel-case](#utilscamel-case)
+* [utils/compare-ab](#utilscompare-ab)
+* [utils/get-by-path](#utilsget-by-path)
+* [utils/is-known-ctor](#utilsis-known-ctor)
+* [utils/mix](#utilsmix)
+* [utils/set-by-path](#utilsset-by-path)
 ## utils/better-result
-> betterResult(context, key, options)
-
 Acts almost as underscore [`_.result`](https://underscorejs.org/#result) but can invoke result function if its not one of well known constructors.  
 > note:  
 third argument is NOT a default value. default value should be passed through options.
@@ -113,7 +119,6 @@ new View({ optionsValue: 'options-foo' })
 ````
 
 ## utils/camel-case
-## camelCase(text, affectFirstLetter) [utils/camel-case](https://github.com/taburetkin/bbmn-extend/tree/master/src/utils/came-case)
 converts `:` separated string to `camelCase`.
 ### returns: 
 string
@@ -131,7 +136,6 @@ result = camelCase('as:camel:case', true); // - "AsCamelCase"
 ````
 
 ## utils/compare-ab
-## compareAB(a,b,getter) [utils/compare-ab](https://github.com/taburetkin/bbmn-extend/tree/master/src/utils/compare-ab)
 compares a and b  
 was implemented for backbone.model or marionette.view comparison  
 used by [utils/comparator](https://github.com/taburetkin/bbmn-extend/tree/master/src/utils/comparator)
@@ -181,7 +185,6 @@ compareAB(viewA, viewB, [(model,view) => view.order, model => model.get('order')
 ````
 
 ## utils/get-by-path
-## getByPath(object, path) [utils/get-by-path](https://github.com/taburetkin/bbmn-extend/tree/master/src/utils/get-by-path)
 ### returns: 
 value from object by given path.
 
@@ -204,7 +207,6 @@ result = getByPath(myObject, 'foo.bar'); // - undefined
 ````
 
 ## utils/is-known-ctor
-## isKnownCtor(argument) [utils/is-known-ctor](https://github.com/taburetkin/bbmn-extend/tree/master/src/utils/is-known-ctor)
 returns true if passed argument is a well known constructor.  
 in general was implemented for [utils/better-result](https://github.com/taburetkin/bbmn-extend/tree/master/src/utils/better-result) and [mixins/common/get-option](https://github.com/taburetkin/bbmn-extend/tree/master/src/mixins/common/get-option) mixin.
 
@@ -246,7 +248,6 @@ let result = isKnownCtor(MyClass); // true
 
 
 ## utils/mix
-## mix(arg, [options]) [utils/mix](https://github.com/taburetkin/bbmn-extend/tree/master/src/utils/mix)
 helper for extending class or object with a given mixins.
 ### returns: 
 returns wrapper object: `{ with, options, class}`.
@@ -340,7 +341,6 @@ let result = new MixedView();
 ````
 
 ## utils/set-by-path
-## setByPath(object, path, value, [options]) [utils/set-by-path](https://github.com/taburetkin/bbmn-extend/tree/master/src/utils/set-by-path)
 sets object value by path
 ### returns: 
 returns given value.

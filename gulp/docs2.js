@@ -72,11 +72,11 @@ function hasDocs(path){
 function buildTable(folder, level = 0){
 	let result = '';
 	_(folder.children).each(child => {
-		console.log('child', child.path, hasDocs(child.path));
+		//console.log('child', child.path, hasDocs(child.path));
 		if(!hasDocs(child.path)) return;
 		let name = removeSrc(child.path);
 		let url = name.replace(/[^a-z0-9-\s]/gi,'').replace(/\s/gi,'-');
-		let nameUrl = `[${name}](${url})`;
+		let nameUrl = `[${name}](#${url})`;
 		result += (level ? '\t'.repeat(level) : '') + '* ' + nameUrl + '\r\n';
 		result += buildTable(child, level + 1);
 	});

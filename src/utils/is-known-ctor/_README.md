@@ -1,4 +1,3 @@
-## isKnownCtor(argument) [utils/is-known-ctor](https://github.com/taburetkin/bbmn-extend/tree/master/src/utils/is-known-ctor)
 returns true if passed argument is a well known constructor.  
 in general was implemented for [utils/better-result](https://github.com/taburetkin/bbmn-extend/tree/master/src/utils/better-result) and [mixins/common/get-option](https://github.com/taburetkin/bbmn-extend/tree/master/src/mixins/common/get-option) mixin.
 

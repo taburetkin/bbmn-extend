@@ -1,5 +1,3 @@
-> betterResult(context, key, options)
-
 Acts almost as underscore [`_.result`](https://underscorejs.org/#result) but can invoke result function if its not one of well known constructors.  
 > note:  
 third argument is NOT a default value. default value should be passed through options.

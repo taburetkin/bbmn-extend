@@ -1,4 +1,3 @@
-## mix(arg, [options]) [utils/mix](https://github.com/taburetkin/bbmn-extend/tree/master/src/utils/mix)
 helper for extending class or object with a given mixins.
 ### returns: 
 returns wrapper object: `{ with, options, class}`.
