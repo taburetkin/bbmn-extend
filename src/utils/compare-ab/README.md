@@ -1,3 +1,4 @@
+## utils/compare-ab
 ## compareAB(a,b,getter) [utils/compare-ab](https://github.com/taburetkin/bbmn-extend/tree/master/src/utils/compare-ab)
 compares a and b  
 was implemented for backbone.model or marionette.view comparison  

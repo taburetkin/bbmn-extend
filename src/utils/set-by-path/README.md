@@ -1,3 +1,4 @@
+## utils/set-by-path
 ## setByPath(object, path, value, [options]) [utils/set-by-path](https://github.com/taburetkin/bbmn-extend/tree/master/src/utils/set-by-path)
 sets object value by path
 ### returns: 
