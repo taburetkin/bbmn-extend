@@ -15,8 +15,9 @@ export default function normalizeNestedViewContextRegion(context) {
 
 		if(!region.name)
 			region.name = regionName;
-
-		context.region = _.partial(buildRegion, this, region, context);
+		let replaceElement = this.getOption('replaceNestedElement');
+		context.region = _.extend({ replaceElement }, region);
+		context.show = _.partial(buildRegion, this, context.region, context);
 	}
 	return context;
 }

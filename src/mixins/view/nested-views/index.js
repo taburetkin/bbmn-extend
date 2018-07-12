@@ -1,15 +1,21 @@
 import result from '../../../utils/better-result';
 import normalizeRegion from './normalize-region';
+import isViewClass from '../../../bb/is-view-class';
 export default Base => Base.extend({
 	constructor(){
 		this._nestedViews = {};
 		Base.apply(this, arguments);
 		this.initializeNestedViews();
 	},
+	template: false,
+
 	showAllNestedViewsOnRender: false,
 	showNestedViewOnAdd: false,
+	replaceNestedElement: true,
+
 	initializeNestedViews(){
 		if (this._nestedViewsInitialized) return;
+
 		if(this.getOption('showAllNestedViewsOnRender')) {
 			this.on('render', () => this.showAllNestedViews());
 		}
@@ -17,24 +23,31 @@ export default Base => Base.extend({
 		let nesteds = this.getOption('nestedViews', { args:[this.model, this]});
 		_(nesteds).each((context, index) => {
 
-			let name = _.isString(index) ? index : context.name;			
+			let name = _.isString(index) ? index : (context.name || _.uniqueId('nested'));
 			this.addNestedView(name, context);
 
 		});
 
-		this.once('destroy',() => delete this._nestedViews);
-
 		this._nestedViewsInitialized = true;
 	},
 	_normalizeNestedContext(name, context){
+
+		if (isViewClass(context)) {
+			let View = context;
+			context = {
+				name, View
+			};
+		}
+
 		//unwrap to plain object
 		if (_.isFunction(context)) {
 			context = context.call(this, this.model, this);
 		}
 
 		//fix name if its not provided
-		if (context.name == null)
+		if (context.name == null) {
 			context.name = name || _.uniqueId('nested');
+		}
 
 		//convert region to valid function
 		context = normalizeRegion.call(this, context);		
@@ -48,10 +61,11 @@ export default Base => Base.extend({
 	},
 
 	addNestedView(name, context){
-		if (_.isObject(name)) {
-			context = name;
-			name = undefined;
+
+		if (!_.isString(name) || name === '') {
+			throw new Error('addNestedView: first argument should be a string');
 		}
+
 		context = this._normalizeNestedContext(name, context);
 		this._createNestedContext(context);
 		if(this.getOption('showNestedViewOnAdd') && this.isRendered()){
@@ -61,12 +75,10 @@ export default Base => Base.extend({
 
 	showNestedView(name){
 		let region = this.getNestedViewRegion(name);
-		if (!region) return;
-
-		let view = this.buildNestedView(name);
-		if (!view) return;
-
-		return region.show(view);
+		let view = region && this.buildNestedView(name);
+		if (view) {
+			region.show(view);
+		}
 	},
 	showAllNestedViews(){
 		let contexts = this.getNestedViewContext();
@@ -101,7 +113,7 @@ export default Base => Base.extend({
 		let context = _.isObject(name) ? name
 			: _.isString(name) ? this.getNestedViewContext(name)
 				: null;
-		return context && _.result(context, 'region');
+		return context && _.result(context, 'show');
 	}
 	
 });
