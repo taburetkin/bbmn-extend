@@ -2,12 +2,15 @@ console.log('bbmn', bbmn);
 $(() => {
 
 	const Child = Mn.View.extend({
+		className(){ return this.cid },
 		template:_.template('child view: <%= cid %>'),
 		templateContext(){
 			return {cid: this.cid }
 		}
 	});
-
+	let Region = Mn.Region.extend({
+		replaceElement:true,
+	});
 	let Input = bbmn.mixins.controls.input(Mn.View)
 
 	const Test = bbmn.mixins.view.nestedViews(Mn.View).extend({
@@ -16,6 +19,7 @@ $(() => {
 		initialize(){
 			this.$el.appendTo($('body'));
 		},
+		regionClass: Region,
 		regions:{
 			'testC':{el:'.content-c .test-c'}
 		},
@@ -52,5 +56,5 @@ $(() => {
 	test.render();
 	console.log(test);
 	test.render();
-
+	console.log('*')
 });
