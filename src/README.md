@@ -1,12 +1,12 @@
 # contents: 
-* (utils)[utils]
-	* (utils/better-result)[utilsbetter-result]
-	* (utils/camel-case)[utilscamel-case]
-	* (utils/compare-ab)[utilscompare-ab]
-	* (utils/get-by-path)[utilsget-by-path]
-	* (utils/is-known-ctor)[utilsis-known-ctor]
-	* (utils/mix)[utilsmix]
-	* (utils/set-by-path)[utilsset-by-path]
+* [utils](utils)
+	* [utils/better-result](utilsbetter-result)
+	* [utils/camel-case](utilscamel-case)
+	* [utils/compare-ab](utilscompare-ab)
+	* [utils/get-by-path](utilsget-by-path)
+	* [utils/is-known-ctor](utilsis-known-ctor)
+	* [utils/mix](utilsmix)
+	* [utils/set-by-path](utilsset-by-path)
 # utils
 ## utils/better-result
 > betterResult(context, key, options)

@@ -76,7 +76,7 @@ function buildTable(folder, level = 0){
 		if(!hasDocs(child.path)) return;
 		let name = removeSrc(child.path);
 		let url = name.replace(/[^a-z0-9-\s]/gi,'').replace(/\s/gi,'-');
-		let nameUrl = `(${name})[${url}]`;
+		let nameUrl = `[${name}](${url})`;
 		result += (level ? '\t'.repeat(level) : '') + '* ' + nameUrl + '\r\n';
 		result += buildTable(child, level + 1);
 	});
