@@ -97,12 +97,12 @@ function buildFolderReadme(folder){
 
 			table = buildTable(folder);
 			if (table) {
-				table = '# contents: \r\n' + table;
+				table = '## contents: \r\n' + table + '\r\n-----\r\n\r\n';
 			}
 			gulp.src(readmes)
 			.on('error', reject)
 			.pipe(concat('README.md', { process: function(src, filePath){
-				src = src.replace(/# contents[^#]+##/gmi,'##');
+				src = src.replace(/## contents:((.|\n|\r))+(?=-----)-----/gmi,'');
 				return src;
 			}}))
 			.pipe(concat('README.md', { process: function(src, filePath){

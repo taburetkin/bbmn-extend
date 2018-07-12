@@ -1,5 +1,5 @@
 # utils
-# contents: 
+## contents: 
 * [utils/better-result](#utilsbetter-result)
 * [utils/camel-case](#utilscamel-case)
 * [utils/compare-ab](#utilscompare-ab)
@@ -7,6 +7,9 @@
 * [utils/is-known-ctor](#utilsis-known-ctor)
 * [utils/mix](#utilsmix)
 * [utils/set-by-path](#utilsset-by-path)
+
+-----
+
 ## utils/better-result
 Acts almost as underscore [`_.result`](https://underscorejs.org/#result) but can invoke result function if its not one of well known constructors.  
 > note:  
