@@ -38,7 +38,7 @@ $(() => {
 				}
 			},
 			viewB:{
-				View: Child,
+				template: () => 'just template',
 			},
 			viewC:{
 				View:Child,

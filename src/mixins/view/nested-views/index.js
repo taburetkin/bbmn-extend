@@ -101,10 +101,14 @@ export default Base => Base.extend({
 
 		if(!context) return;
 
-		let View = context.View;
-		let options = this.buildNestedViewOptions(result(context, 'options', { context: this, args: [this, this.model], default:{} }));
-		
-		return new View(options);
+		if(_.isFunction(context.template))
+			return context.template;
+		else {
+			let View = context.View;
+			let options = this.buildNestedViewOptions(result(context, 'options', { context: this, args: [this, this.model], default:{} }));
+			
+			return new View(options);
+		}
 	},
 	buildNestedViewOptions(opts){
 		return opts;
