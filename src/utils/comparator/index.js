@@ -3,7 +3,7 @@ export default function comparator(...args){
 	var result = 0;
 
 	//for simple case (arg1, arg2, compare)
-	if (args.length === 3 && !_.isArray(args[0])){
+	if (args.length <= 3 && !_.isArray(args[0])){
 
 		return compareAB.apply(null, args);
 

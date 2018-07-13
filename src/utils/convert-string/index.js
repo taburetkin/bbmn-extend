@@ -1,6 +1,8 @@
 import toNumber from './to-number';
 import toBoolean from './to-boolean';
 
+
+//this is under development yet and can be change in any time
 export default function convertString(text, type, opts) {
 
 	switch(type){

@@ -6,7 +6,7 @@
   "author": "dimtabu <dima.taburetkin@gmail.com>",
   "license": "MIT",
   "scripts": {
-	"test-one": "mocha"
+    "test-one": "mocha"
   },
   "peerDependencies": {
     "backbone": "^1.3.3",

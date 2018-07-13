@@ -3,7 +3,7 @@ was implemented for backbone.model or marionette.view comparison
 used by [utils/comparator](https://github.com/taburetkin/bbmn-extend/tree/master/src/utils/comparator)
 ### returns: 
 -1 | 0 | 1
-> -1 if a less then `b`,  
+> -1 if `a` less then `b`,  
 > 0 if `a` equals `b`  
 > and 1 if `a` greater than `b`
 ### arguments:
@@ -22,7 +22,7 @@ will be applied to each argument to extract compare value
 does multiple compare of `a` and `b` by given array of getters.  
 if getter returns '0' then next getter applied.
 
-### usage:
+### examples:
 ````javascript
 
 compareAB(1,2); 

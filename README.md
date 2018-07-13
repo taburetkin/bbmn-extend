@@ -33,11 +33,14 @@ let flatten = flat(myObject);
 * [utils](#utils)
 	* [utils/better-result](#utilsbetter-result)
 	* [utils/camel-case](#utilscamel-case)
+	* [utils/comparator](#utilscomparator)
 	* [utils/compare-ab](#utilscompare-ab)
+	* [utils/flat](#utilsflat)
 	* [utils/get-by-path](#utilsget-by-path)
 	* [utils/is-known-ctor](#utilsis-known-ctor)
 	* [utils/mix](#utilsmix)
 	* [utils/set-by-path](#utilsset-by-path)
+	* [utils/unflat](#utilsunflat)
 
 -----
 
@@ -163,13 +166,42 @@ result = camelCase('as:camel:case', true); // - "AsCamelCase"
 
 ````
 
+## utils/comparator
+compares A and B.  
+difference from `compare-ab` is that you can pass multiple sets of compare operators.
+
+### returns: 
+-1 | 0 | 1
+
+### arguments:
+accepts 3 arguments and acts like `compareAB`:
+> comparator(A, B, getter | [getter, ..])
+
+or array :
+> comparator(array)  
+[ [A, B, getter | [getter, ..]], ... ]
+
+### examples:
+````javascript
+
+compare(view1, view2, model => model.get('order'));
+//acts like compareAB
+
+compare([
+	[view2, view1, model => model.get('order')], // by order desc
+	[view1, view2, model => model.get('name')], // then by name asc
+]);
+
+
+````
+
 ## utils/compare-ab
 compares a and b  
 was implemented for backbone.model or marionette.view comparison  
 used by [utils/comparator](https://github.com/taburetkin/bbmn-extend/tree/master/src/utils/comparator)
 ### returns: 
 -1 | 0 | 1
-> -1 if a less then `b`,  
+> -1 if `a` less then `b`,  
 > 0 if `a` equals `b`  
 > and 1 if `a` greater than `b`
 ### arguments:
@@ -188,7 +220,7 @@ will be applied to each argument to extract compare value
 does multiple compare of `a` and `b` by given array of getters.  
 if getter returns '0' then next getter applied.
 
-### usage:
+### examples:
 ````javascript
 
 compareAB(1,2); 
@@ -209,6 +241,36 @@ viewB.order = 0;
 compareAB(viewA, viewB, [(model,view) => view.order, model => model.get('order')]); 
 // returns: -1
 
+
+````
+
+## utils/flat
+> flat(obj)
+
+Flattens given object
+### returns: 
+plain object
+### arguments:
+* **obj** : object, required
+
+### examples
+````javascript
+	let testArr = [1,2,3];
+	let test = {
+		foo: {
+			bar:{
+				baz:'hello'
+			},
+			qwe: testArr
+		}
+	}
+	let result = flat(test);
+
+	//result value will be
+	{
+		"foo.bar.baz":"hello",
+		"foo.qwe":[1,2,3]
+	}
 
 ````
 
@@ -432,5 +494,36 @@ model.set('nested', nested);
 setByPath(model, 'nested.baz', 123);
 // will set nested model baz attribute equal to 123 and
 // triggers change events on both models
+
+````
+
+## utils/unflat
+> unflat(obj)
+
+Unflattens given object
+### returns: 
+plain object
+### arguments:
+* **obj** : object, required
+
+### examples
+````javascript
+	let testArr = [1,2,3];
+	let test = {
+		"foo.bar.baz":"hello",
+		"foo.qwe":[1,2,3]
+	}
+	let result = unflat(test);
+
+	//result value will be
+	{
+		foo: {
+			bar:{
+				baz:'hello'
+			},
+			qwe: testArr
+		}
+	}	
+	
 
 ````
