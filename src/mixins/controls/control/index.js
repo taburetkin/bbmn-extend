@@ -38,16 +38,32 @@ export default Base => Base.extend({
 	triggerControlDone(){
 		this._triggerControlEvent('done', arguments);
 	},
+	_isValueAsPrevious(value, type){
+		let previousTriggerName = this.getPreviousTriggerValueKey(type);
+		if (previousTriggerName in this) {
+			return JSON.stringify(this[previousTriggerName]) === JSON.stringify(value);
+		}
+	},
+	isValueAsPrevious(value, type)
+	{
+		return this._isValueAsPrevious(value, type);
+	},
+	setPreviousTriggerValue(value, type){
+		let key = this.getPreviousTriggerValueKey(type);
+		this[key] = value;
+	},
+	getPreviousTriggerValueKey(type){
+		return camelCase('_previous:' + type);
+	},
 	_triggerControlEvent(eventName, args) {
 
 		let triggerValue = getTriggerValue(this, args);
-		let previousTriggerName = camelCase('_previous:' + eventName);
-		if (previousTriggerName in this && this[previousTriggerName] === triggerValue) {
+		if (this.isValueAsPrevious(triggerValue, eventName)) {
 			return;
 		}
 		let errors = this.tryValidateControl(triggerValue);
 		if (!errors) {
-			this[previousTriggerName] = triggerValue;
+			this.setPreviousTriggerValue(triggerValue, eventName);			
 			triggerControlEvent(this, eventName, triggerValue);
 		} else {
 			this.triggerControlInvalid(errors);
