@@ -1,3 +1,3 @@
 {	
-	"runCurrentTest.run": "mocha ${relativeTestPath} --grep \"${fullTestName}\" --compilers js:babel-core/register",
+	"runCurrentTest.run": "mocha ${relativeTestPath} --grep \"${fullTestName}\" --require babel-register",
 }

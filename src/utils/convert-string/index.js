@@ -1,5 +1,5 @@
 import toNumber from './to-number';
-import toBoolean from './to-boolean';
+import toBoolean from '../to-bool';
 
 
 //this is under development yet and can be change in any time

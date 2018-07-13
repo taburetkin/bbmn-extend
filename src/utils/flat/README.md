@@ -8,14 +8,13 @@ plain object
 * **obj** : object, required
 
 ### examples
-````javascript
-	let testArr = [1,2,3];
+````javascript	
 	let test = {
 		foo: {
 			bar:{
 				baz:'hello'
 			},
-			qwe: testArr
+			qwe: [1,2,3]
 		}
 	}
 	let result = flat(test);
