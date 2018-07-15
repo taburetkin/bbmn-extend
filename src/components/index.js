@@ -1,4 +1,4 @@
-import * as processEngine from './process-engine';
+import processEngine from './process-engine';
 export {
 	processEngine
 };

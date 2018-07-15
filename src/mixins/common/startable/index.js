@@ -1,4 +1,4 @@
-import initProcess from '../../../components/process-engine/init';
+import initProcess from '../../../components/process-engine';
 export default Base => Base.extend({
 	constructor(){
 		Base.apply(this, arguments);

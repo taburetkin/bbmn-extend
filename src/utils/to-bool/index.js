@@ -22,7 +22,7 @@ const valueOrAlternative = function(nullable, nullValue, value, ...alts){
 		return nullValue;
 	else
 		return value;
-}
+};
 
 const convertToBoolean = function (arg, opts = {})
 {
