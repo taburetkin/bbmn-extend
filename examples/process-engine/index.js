@@ -28,10 +28,20 @@ $(() => {
 	test.on('all', (...args) => console.log(...args));
 
 	bbmn.components.processEngine(test, 'start', {
-		concurrent: 'last' // false | 'last' | 'first' | undefined
+		concurrent: 'last', // false | 'last' | 'first' | undefined,
+		onBegin(){
+			return 'stop this';
+		},
+		onError(){
+			console.log('/*/*/*/');
+		},
+		onComplete(){
+			console.log('=====');
+		}
+
 	});
 
-	test.start();
+	test.start('foo','bar');
 	setTimeout(() => test.start(), 300);
 
 

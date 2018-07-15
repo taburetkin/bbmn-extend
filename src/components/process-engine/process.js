@@ -5,8 +5,25 @@ import { getCanNotRunPromise, getWaitPromise } from './run-promises';
 export default function process(processContext){
 	
 	let promise = new Promise((resolve, reject) => {
+		let shouldExit = false;
+		let rejectWithError = (error) => {			
+			triggerError(processContext, error);
+			reject(processContext);
+			shouldExit = true;
+		};
 
-		triggerBegin(processContext);
+		Promise.race([
+			processContext.cancelation.promise, 
+			Promise.resolve()
+		]).catch(rejectWithError);
+
+		if(shouldExit) return;
+
+		let beginError = triggerBegin(processContext);
+		if (beginError) {
+			rejectWithError(beginError);
+			return;
+		}
 
 		let canBeRuned = getCanNotRunPromise(processContext);
 		canBeRuned.then(
@@ -20,10 +37,7 @@ export default function process(processContext){
 					}
 				);
 			}
-		).catch((error) => {			
-			triggerError(processContext, error);
-			reject(processContext);
-		});
+		).catch(rejectWithError);
 
 	});
 	processContext.promise = promise;

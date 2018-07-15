@@ -4,7 +4,7 @@ export default function createProcessContext(context, name, args = [], opts = {}
 
 	let cancelation = {};
 	cancelation.promise = new Promise((resolve, reject) => {
-		cancelation.cancel = () => reject('cancel');
+		cancelation.cancel = () => reject('cancel'); 
 	});
 
 
@@ -15,8 +15,7 @@ export default function createProcessContext(context, name, args = [], opts = {}
 		args,
 		errors:[],
 		waitPromises:[],
-		cancelation,
-		isCanceled(){ return this.status == 'canceled'; }
+		cancelation,		
 	}, opts);
 
 	return result;
