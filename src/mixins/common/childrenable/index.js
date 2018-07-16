@@ -1,23 +1,29 @@
-import isKnownCtor from '../../../utils';
+import isKnownCtor from '../../../utils/is-known-ctor';
 
 export default Base => Base.extend({
 
-	constructor(){
+	constructor(opts){
 
 		Base.apply(this, arguments);
-		
-		//if(this.getOption('autoinitialization'))
-		this.initializeChildren();
+		this._initializeChildrenable(opts);
 
 	},
+	_initializeChildrenable(opts){
+		this.mergeOptions(opts, ['parent', 'root']);
+		if(this.parent == null && this.root == null)
+			this.root = this;
+	},
 
-	_initializeChildren(){
-		
-		this.triggerMethod('before:children:initialize');
+	//call this method manualy for initialize children
+	initializeChildren(){
+		if (this._childrenInitialized) return;
 
 		let children = this.getOption('children');
 		this._children = [];
 		_(children).each(child => this._initializeChild(child));
+
+		this._childrenInitialized = true;
+
 	},
 	_initializeChild(arg){
 		let Child;
@@ -43,6 +49,19 @@ export default Base => Base.extend({
 		let child = new Child(options);
 		this._children.push(child);
 
+	},
+
+	buildChildOptions(options){
+		return options;
+	},
+
+	getChildren(){
+		return this._children || [];
+	},
+	getParent(){
+		return this.parent;
 	}
+
+
 
 });

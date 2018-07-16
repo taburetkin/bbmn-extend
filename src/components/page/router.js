@@ -1,29 +1,37 @@
 import BaseRouter from '../router';
 
-const PageRouter = BaseRouter.extend({
+export default BaseRouter.extend({
 	
 	classicMode:false,
 	isRouterHoldsActions : false,
 	isRouteChaining: false,	
 	callbacksAsPromises: true,
-
-	processCallback(actionContext, routeType){
-
-		routeType || (routeType = 'route');
-		this.triggerRouteEvents(actionContext, routeType, actionContext.name, actionContext);
-		return actionContext.callback().then(
-			() => {},
-			(error) => this.processCallbackError(actionContext, error)
-		);
-		// return actionContext.page.start(actionContext).catch((error, ...args) => {
-
-		// 	this.processStartError(actionContext, error);
-
-		// });
+	registerPageRoutes(page){
+		let contexts = page.getRoutesContexts();
+		_(contexts).each(context => {
+			let callback = (...args) => {
+				return page.start(...args);
+			};
+			this.addRoute(context.route, context.name, callback);
+		});
 	},
-	processCallbackError(ac, error){
+	// processCallback(actionContext, routeType){
 
-	},
+	// 	routeType || (routeType = 'route');
+	// 	this.triggerRouteEvents(actionContext, routeType, actionContext.name, actionContext);
+	// 	return actionContext.callback().then(
+	// 		() => {},
+	// 		(error) => this.processCallbackError(actionContext, error)
+	// 	);
+	// 	// return actionContext.page.start(actionContext).catch((error, ...args) => {
+
+	// 	// 	this.processStartError(actionContext, error);
+
+	// 	// });
+	// },
+	// processCallbackError(ac, error){
+
+	// },
 
 	/*
 	processStartError(actionContext, error){
@@ -58,5 +66,3 @@ const PageRouter = BaseRouter.extend({
 	},
 	*/
 });
-
-export default PageRouter;

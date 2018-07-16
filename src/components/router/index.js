@@ -1,9 +1,9 @@
 import mix from '../../utils/mix';
 import GetOptionMixin from '../../mixins/common/get-option';
 import paramStringToObject from '../../utils/params-to-object';
+import BbRouter from '../../bb/router';
 
-//import result from '../../utils/better-result';
-const BaseRouter = mix(Router).with(GetOptionMixin);
+const BaseRouter = mix(BbRouter).with(GetOptionMixin);
 const Router = BaseRouter.extend({
 
 
@@ -163,7 +163,6 @@ const Router = BaseRouter.extend({
 	//refactored out from original route method
 	//just check passed arguments and mix them into an object
 	_normalizeRegisterRouteArguments(route, name, callback, opts = {}){
-
 		let context = {};
 
 		if(_.isObject(route)){
@@ -219,14 +218,14 @@ const Router = BaseRouter.extend({
 		if(!_.isFunction(context.callback) )
 			context.callback = () => {};
 
-		context.originalCallback = context.callback;
-		context.callback = _.bind(this._processCallback, this, context);
-
+		//context.originalCallback = context.callback;
+		//context.callback = _.bind(this._processCallback, this, context);
+		context.historyRouteCallback = _.bind(this._processCallback, this, context);
 	},
 
 	//finally, putting handler to the backbone.history.handlers
 	registerRouteContext(context){
-		Backbone.history.route(context.route, context.callback, context);
+		Backbone.history.route(context.route, context.historyRouteCallback, context);
 	},
 
 	//store registered context for further use
@@ -250,6 +249,7 @@ const Router = BaseRouter.extend({
 	//preparing actionContext and calls public processCallback
 	_processCallback (routeContext, fragment, options = {}) {
 		let actionContext = this._createExecuteActionContext(routeContext, fragment, options);
+
 		actionContext.options = options;
 		if (actionContext.routeType == null) {
 
@@ -259,7 +259,6 @@ const Router = BaseRouter.extend({
 		}
 		//actionContext.restart = () => actionContext.callback(fragment, options);
 		let result = this.processCallback(actionContext, actionContext.routeType);
-
 		//this.triggerHistory(history, actionContext.fragment, actionContext);
 		return result;
 	},
@@ -267,10 +266,11 @@ const Router = BaseRouter.extend({
 	//by default behave as original router
 	//override this method to process action by your own
 	processCallback(actionContext, routeType){
+
 		let resultContext = {};
 		let toPromise = this.getOption('callbacksAsPromises');
 		let callback = (...args) => { 
-			let result = actionContext.originalCallback(...args);
+			let result = actionContext.callback(...args);
 			if (toPromise) {
 				if (!(result instanceof Promise || (!!result && _.isFunction(result.then)))) {
 					result = Promise.resolve(result);
@@ -282,7 +282,7 @@ const Router = BaseRouter.extend({
 		let args = this.getOption('classicMode') 
 			? actionContext.rawArgs || [] 
 			: [actionContext];
-		
+
 		let event = this.execute(callback, args) !== false ? routeType : 'fail';
 		this.triggerRouteEvents(actionContext, event, actionContext.name, ...args);
 
