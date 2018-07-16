@@ -34,6 +34,21 @@ const Mixin = (Base) => Base.extend({
 
 		return getOption(this, key, options);
 	},
+
+	mergeOptions(values = {}, keys = [], opts = {}){
+		
+		if(_.isString(keys))
+			keys = keys.split(/\s*,\s*/);
+
+		_.each(keys, (key) => {
+			const option = result(values, key, opts);
+			if (option !== undefined) {
+				this[key] = option;
+			}
+		});
+
+	}
+
 }, {
 	GetOptionMixin:true
 });
