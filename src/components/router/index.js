@@ -227,42 +227,6 @@ const Router = BaseRouter.extend({
 
 		return processCallback(this, actionContext, routeType);
 
-		// let resultContext = {};
-
-		// let toPromise = this.getOption('callbacksAsPromises');
-
-		// let callback = (...args) => { 
-		// 	let result = actionContext.callback && actionContext.callback(...args);
-		// 	if (toPromise) {
-		// 		if (!(result instanceof Promise || (!!result && _.isFunction(result.then)))) {
-		// 			result = Promise.resolve(result);
-		// 		}
-		// 	}
-		// 	resultContext.result = result;			
-		// };
-
-		// let args = this.getOption('classicMode') 
-		// 	? actionContext.rawArgs || [] 
-		// 	: [actionContext];
-
-		// let event = this.execute(callback, args) !== false ? routeType : 'fail';
-		// this.triggerRouteEvents(actionContext, event, actionContext.name, ...args);
-
-		// let delegate = this.getOption('delegatePromiseErrorsTo');
-		// let catchErrors = this.getOption('catchPromiseErrors');
-		// resultContext.result.then(
-		// 	(arg) => arg,
-		// 	(error) => {
-		// 		if (delegate && _.isFunction(delegate.trigger)) {
-		// 			triggerMethodOn(delegate, 'route:error', actionContext, error);
-		// 		} else {
-		// 			if(!catchErrors)
-		// 				return Promise.reject(error);
-		// 		}
-		// 	}
-		// );
-
-		// return resultContext.result;
 	},
 
 
@@ -283,6 +247,24 @@ const Router = BaseRouter.extend({
 	//converts string to object
 	//default implementation, can be overriden by user
 	queryStringParser: paramStringToObject,	
+
+
+	_routeToRegExp(route) {
+
+		var optionalParam = /\((.*?)\)/g;
+		var namedParam    = /(\(\?)?:\w+/g;
+		var splatParam    = /\*\w+/g;
+		var escapeRegExp  = /[-{}[]+?.,\\\^$|#\s]/g;
+
+		route = route.replace(escapeRegExp, '\\$&')
+			.replace(optionalParam, '(?:$1)?')
+			.replace(namedParam, function(match, optional) {
+				return optional ? match : '([^/?]+)';
+			})
+			.replace(splatParam, '([^?]*?)');
+		let flags = this.getOption('routeCaseInsensitive') ? 'i' : '';
+		return new RegExp('^' + route + '(?:\\?([\\s\\S]*))?$', flags);
+	},
 
 
 	/*
