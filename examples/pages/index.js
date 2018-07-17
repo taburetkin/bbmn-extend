@@ -41,7 +41,7 @@ $(() => {
 			BasePage.extend({
 				routes:'asd/:id/:qwe',
 				canNotStart(){
-					return 'not:allowed';
+					//return 'not:allowed';
 				}
 			})
 		]

@@ -2,7 +2,11 @@ import mix from '../../utils/mix';
 import GetOptionMixin from '../../mixins/common/get-option';
 import paramStringToObject from '../../utils/params-to-object';
 import BbRouter from '../../bb/router';
-import triggerMethodOn from '../../mn/trigger-method-on';
+//import triggerMethodOn from '../../mn/trigger-method-on';
+import buildRouteContextFromArguments from './build-route-context';
+
+import  { createActionContext } from './action-context';
+import { processCallback } from './process-callback';
 
 const BaseRouter = mix(BbRouter).with(GetOptionMixin);
 const Router = BaseRouter.extend({
@@ -44,6 +48,7 @@ const Router = BaseRouter.extend({
 
 	//by default router expects that routes will result in { route, callback } hash
 	//we are extending this to provide more flexibility
+	// - overrided
 	_bindRoutes: function() {
 		
 		let routes = this.getInitRoutes();
@@ -51,56 +56,57 @@ const Router = BaseRouter.extend({
 		this.addRoutes(routes);
 
 	},
-
 	getInitRoutes(){
 		let routes;
-		if(!this.getOption('isMarionetteStyle'))
-			routes = this.getOption('routes');
-		else {
-			let cntrl = this.getOption('controller') || {};
+		if(this.getOption('isMarionetteStyle')) {
+			let controller = this.getOption('controller') || {};
 			let approutes = this.getOption('appRoutes') || {};
-			routes = _(approutes).map((name, route) => _.create({}, { route, name, callback:cntrl[name] }));
+			routes = _(approutes).map((name, route) => ({ 
+				route, name, 
+				callback: controller[name] 
+			}));
+		}
+		else {
+			routes = this.getOption('routes');
 		}
 		return routes;
 	},
 
 
 	/*
-	
-		register new route methods
-		"when a new route added"
-
+		manipulating routes
+		adding
 	*/
 
 	// refactored original route method
 	// chain:true by default is for supporting default behavior
 	// routerHoldsActions: true - backbone router tries to get callback from router itself if there is no callback provided. 
 	// this options allow to support this behavior, but its recomended not to hold action inside router instance
+	// - overrided
 	route(route, name, callback, opts = {}){
 		
 		//normalizing passed arguments and putting them into a context object
 		//refactored from original route
-		let context = this._normalizeRegisterRouteArguments(route, name, callback, opts);
+		// let context = this._normalizeRegisterRouteArguments(route, name, callback, opts);
 
-		//extends context with result of `mergeWithRegisterRouteContext`
-		this._normalizeRegisterRouteContext(context);
+		// //extends context with result of `mergeWithRegisterRouteContext`
+		// this._normalizeRegisterRouteContext(context);
 
-		//wrapping provided callback 
-		this._normalizeRegisterRouteCallback(context);
+		// //wrapping provided callback 
+		// this._normalizeRegisterRouteCallback(context);
 
-		
+		let context = this._buildRouteContext(route, name, callback, opts);
+
 		//refactored for providing possibility to override
 		//at this point context should be almost ready
 		this.registerRouteContext(context);
 
 		this._storeCreatedContext(context, opts);
 
+		return opts.isRouteChaining === true 
+			? this 
+			: context;
 
-
-		if(opts.isRouteChaining === true)
-			return this;
-		else
-			return context;
 	},
 
 	// provide more semantic alias for route
@@ -120,12 +126,19 @@ const Router = BaseRouter.extend({
 		if(opts.isRouteChaining == null)
 			opts.isRouteChaining = this.getOption('isRouteChaining');
 
-		let normalized = _(routes).map((value, key) => this._normalizeRoutes(value, key));
+		let normalized = _(routes)
+			.chain()
+			.map((value, key) => this._normalizeRoutes(value, key))
+			.filter(f => _.isObject(f))
+			.value();
 
 		if(opts.doNotReverse != true)
 			normalized.reverse();
 
-		let registered = _(normalized).map((route) => route && this.addRoute(route, _.extend({massAdd:true},opts))); 
+		let registered = _(normalized).map(
+			route => route && 
+			this.addRoute(route, _.extend({ massAdd:true }, opts))
+		); 
 		
 		if(opts.doNotReverse != true)
 			registered.reverse();
@@ -161,72 +174,25 @@ const Router = BaseRouter.extend({
 	},
 
 
-	//refactored out from original route method
-	//just check passed arguments and mix them into an object
-	_normalizeRegisterRouteArguments(route, name, callback, opts = {}){
-		let context = {};
-
-		if(_.isObject(route)){
-			context = route;
-			//_.extend(context, route);
-			//then second argument is probably options;
-			_.extend(opts, name);
-
-		} else if (_.isFunction(name)) {
-			_.extend(context, { route, callback: name, name: _.uniqueId('routerAction')});
-		}else {
-			_.extend(context, { route, name, callback });
-		}
 
 
-		!_(opts).has('isRouterHoldsActions') && (opts.isRouterHoldsActions = this.getOption('isRouterHoldsActions'));
-		!_(opts).has('isRouteChaining') && (opts.isRouteChaining = this.getOption('isRouteChaining'));
+	_buildRouteContext(route, name, callback, opts) {
 
+		let context = buildRouteContextFromArguments(this, route, name, callback, opts);
 
-		// last chance to get callback from router instance by name
-		// this behavior can be disabled through `isRouterHoldsActions` options
-		if(!_.isFunction(context.callback) && opts.isRouterHoldsActions)
-			context.callback = this[context.name];
-
-
-		//store original route
-		context.rawRoute = context.route;
-
-		!context.name && (context.name = _.uniqueId('routerAction'));
-
-		//converts route to RegExp pattern
-		if (!_.isRegExp(context.route)) context.route = this._routeToRegExp(context.route);
-
-		return context;
-	},
-
-	//internal method for merging context with user defined object
-	_normalizeRegisterRouteContext(context){
-		_.extend(context, this.routeContext(context));
+		return this.buildRouteContext(context);
 	},
 
 	//override this method if you need more information in route context
 	// should return object wich will be merged with default context
 	// be aware of providing reserved properties: route, name, callback
 	// this will override context defaults
-	routeContext: _.noop,
+	buildRouteContext: context => context,
 
-
-	//wraps provided callback with correct environment
-	//and some events triggers
-	_normalizeRegisterRouteCallback(context){
-
-		if(!_.isFunction(context.callback) )
-			context.callback = () => {};
-
-		//context.originalCallback = context.callback;
-		//context.callback = _.bind(this._processCallback, this, context);
-		context.historyRouteCallback = _.bind(this._processCallback, this, context);
-	},
 
 	//finally, putting handler to the backbone.history.handlers
 	registerRouteContext(context){
-		Backbone.history.route(context.route, context.historyRouteCallback, context);
+		Backbone.history.route(context.route, context.callbackWrapper, context);
 	},
 
 	//store registered context for further use
@@ -249,18 +215,9 @@ const Router = BaseRouter.extend({
 	//inner route handler
 	//preparing actionContext and calls public processCallback
 	_processCallback (routeContext, fragment, options = {}) {
-		let actionContext = this._createExecuteActionContext(routeContext, fragment, options);
 
-		actionContext.options = options;
-		if (actionContext.routeType == null) {
-
-			actionContext.routeType = 'route';
-			routeContext.lastAttempt = actionContext;
-			//this.lastActionContext = routeContext;
-		}
-		//actionContext.restart = () => actionContext.callback(fragment, options);
-		let result = this.processCallback(actionContext, actionContext.routeType);
-		//this.triggerHistory(history, actionContext.fragment, actionContext);
+		let actionContext = createActionContext(this, routeContext, fragment, options);
+		let result = this.processCallback(actionContext, actionContext.routeType, options);
 		return result;
 	},
 	
@@ -268,47 +225,44 @@ const Router = BaseRouter.extend({
 	//override this method to process action by your own
 	processCallback(actionContext, routeType){
 
-		let resultContext = {};
-		let toPromise = this.getOption('callbacksAsPromises');
-		let callback = (...args) => { 
-			let result = actionContext.callback(...args);
-			if (toPromise) {
-				if (!(result instanceof Promise || (!!result && _.isFunction(result.then)))) {
-					result = Promise.resolve(result);
-				}
-			}
-			resultContext.result = result;			
-		};
+		return processCallback(this, actionContext, routeType);
 
-		let args = this.getOption('classicMode') 
-			? actionContext.rawArgs || [] 
-			: [actionContext];
+		// let resultContext = {};
 
-		let event = this.execute(callback, args) !== false ? routeType : 'fail';
-		this.triggerRouteEvents(actionContext, event, actionContext.name, ...args);
+		// let toPromise = this.getOption('callbacksAsPromises');
 
-		let delegate = this.getOption('delegatePromiseErrorsTo');
-		let catchErrors = this.getOption('catchPromiseErrors');
-		resultContext.result.then(
-			(arg) => arg,
-			(error) => {
-				if (delegate && _.isFunction(delegate.trigger)) {
-					triggerMethodOn(delegate, 'route:error', actionContext, error);
-				} else {
-					if(!catchErrors)
-						return Promise.reject(error);
-				}
-			}
-		);
+		// let callback = (...args) => { 
+		// 	let result = actionContext.callback && actionContext.callback(...args);
+		// 	if (toPromise) {
+		// 		if (!(result instanceof Promise || (!!result && _.isFunction(result.then)))) {
+		// 			result = Promise.resolve(result);
+		// 		}
+		// 	}
+		// 	resultContext.result = result;			
+		// };
 
-		return resultContext.result;
-	},
+		// let args = this.getOption('classicMode') 
+		// 	? actionContext.rawArgs || [] 
+		// 	: [actionContext];
 
+		// let event = this.execute(callback, args) !== false ? routeType : 'fail';
+		// this.triggerRouteEvents(actionContext, event, actionContext.name, ...args);
 
-	_onReRouteLast(){
-		if(!this.lastAttempt) return;
-		let ac = this.lastAttempt.lastActionContext;
-		ac.callback(ac.fragment, ac.options);
+		// let delegate = this.getOption('delegatePromiseErrorsTo');
+		// let catchErrors = this.getOption('catchPromiseErrors');
+		// resultContext.result.then(
+		// 	(arg) => arg,
+		// 	(error) => {
+		// 		if (delegate && _.isFunction(delegate.trigger)) {
+		// 			triggerMethodOn(delegate, 'route:error', actionContext, error);
+		// 		} else {
+		// 			if(!catchErrors)
+		// 				return Promise.reject(error);
+		// 		}
+		// 	}
+		// );
+
+		// return resultContext.result;
 	},
 
 
@@ -322,58 +276,9 @@ const Router = BaseRouter.extend({
 		Backbone.history.trigger(event, this, name, ...args);
 	},
 
-	//triggers directional event on History.
-	// triggerHistory(history, fragment, actionContext){
-	// 	Backbone.history.trigger(history, fragment, actionContext);
-	// },
 
-	//converts actions arguments array to actionContext
-	// context : {
-	//   qs: {},
-	//   args:{},
-	// }
-	_createExecuteActionContext(context, fragment, options) {
 
-		let rawArgs = this._extractParameters(context.route, fragment);
-		let result = _.extend({}, context, { fragment, rawArgs }, options);
-		let args = rawArgs.slice(0);
-		_.extend(result, { qs: this._prepareActionQueryString(args) });
-		_.extend(result, { args: this._prepareActionArguments(fragment, context.rawRoute, args) });
-		result.reroute = () => {
-			let newcontext = _.extend({ routeType: 'reroute' }, result);
-			return newcontext.callback(fragment, options);
-		};
-		//actionContext.restart = () => actionContext.callback(fragment, options);
-		return result;
-	},
 
-	//extracts last backbone action argument and converts it to key value object
-	//using queryStringParser method.
-	_prepareActionQueryString(args){
-		if(!_.isArray(args) || args.length == 0 || (args.length == 1 && args[0] == null))
-			return {};
-		let rawQs = args.pop();
-		return this.queryStringParser(rawQs);
-	},
-
-	//converts action arguments array to named object {key:value}
-	_prepareActionArguments(fragment, rawRoute, args){
-		let params = rawRoute.match(/:([^/|)]+)/g) || [];
-		let res = {};
-		_(params).each((name, index) => {
-			name = name.substring(1);
-			
-			if(args == null) return;
-
-			if(name in res && _.isArray(res[name]))
-				res[name].push(args[index]);
-			else if(name in res && !_.isArray(res[name]))
-				res[name] = [res[name]].concat(args[index]);
-			else
-				res[name] = args[index];
-		});
-		return res;
-	},
 
 	//converts string to object
 	//default implementation, can be overriden by user
