@@ -2,6 +2,7 @@ import mix from '../../utils/mix';
 import GetOptionMixin from '../../mixins/common/get-option';
 import paramStringToObject from '../../utils/params-to-object';
 import BbRouter from '../../bb/router';
+import triggerMethodOn from '../../mn/trigger-method-on';
 
 const BaseRouter = mix(BbRouter).with(GetOptionMixin);
 const Router = BaseRouter.extend({
@@ -285,6 +286,20 @@ const Router = BaseRouter.extend({
 
 		let event = this.execute(callback, args) !== false ? routeType : 'fail';
 		this.triggerRouteEvents(actionContext, event, actionContext.name, ...args);
+
+		let delegate = this.getOption('delegatePromiseErrorsTo');
+		let catchErrors = this.getOption('catchPromiseErrors');
+		resultContext.result.then(
+			(arg) => arg,
+			(error) => {
+				if (delegate && _.isFunction(delegate.trigger)) {
+					triggerMethodOn(delegate, 'route:error', actionContext, error);
+				} else {
+					if(!catchErrors)
+						return Promise.reject(error);
+				}
+			}
+		);
 
 		return resultContext.result;
 	},

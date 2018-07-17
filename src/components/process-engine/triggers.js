@@ -20,7 +20,7 @@ export function triggerBefore(processContext) {
 }
 export function triggerComplete(processContext) { 
 
-	triggerOnContext(processContext, 'complete');
+	triggerOnContext(processContext);
 	if (_.isFunction(processContext.onComplete))
 		processContext.onComplete.call(processContext.context, ...processContext.args);
 	triggerOnContext(processContext, 'end');
