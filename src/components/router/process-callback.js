@@ -11,8 +11,8 @@ function toPromise(arg, resolve = true){
 function getCallbackFunction(callback, executeResult, asPromise)
 {
 	return (...args) => {
-		let result = callback && callback(...args);
-		executeResult.value = asPromise ? toPromise(result) : result;
+		executeResult.value = callback && callback(...args);
+		executeResult.promise = toPromise(executeResult.value);
 		return executeResult.value;
 	};
 }
@@ -20,45 +20,34 @@ function getCallbackFunction(callback, executeResult, asPromise)
 
 export function processCallback(router, actionContext, routeType){	
 	
-	let asPromise = router.getOption('callbackAsPromises');
-	let executeResult = {};
-	let callback = getCallbackFunction(actionContext.callback, executeResult, asPromise);
-
 	let args = router.getOption('classicMode') 
 		? actionContext.rawArgs || [] 
 		: [ actionContext ];
 
-	router.execute(callback, args);
+	let asPromise = router.getOption('callbackAsPromises');
+	let executeResult = {};
+	let callback = getCallbackFunction(actionContext.callback, executeResult, asPromise);
 
-	if (asPromise) {
-		let delegate = router.getOption('delegatePromiseErrorsTo');
-		let catchErrors = router.getOption('catchPromiseErrors');		
-		return executeResult.value.then(
-			(arg) => {
-				postProcessCallback({
-					failed: arg === false, 
-					routeType, args, router, actionContext					
-				});
-				return arg;
-			},
-			(error) => {
+	//console.log('routeType:',routeType);
 
-				if (delegate && _.isFunction(delegate.trigger)) {
-					triggerMethodOn(delegate, 'route:error', actionContext, error);
-				} else {
-					if(!catchErrors)
-						return Promise.reject(error);
-				}
-			}
-		);
-	} else {
-		postProcessCallback({
-			failed: executeResult.value === false, 
-			routeType, args, router, actionContext
-		});
-		return executeResult;
+	router.triggerEvent('before:' + routeType, actionContext);
+
+	let shouldTriggerEvent = router.execute(callback, args);
+	if (shouldTriggerEvent !== false) {
+		router.triggerEvent(routeType, actionContext);
 	}
 
+	executeResult.promise.then(
+		(arg) => {
+			router.triggerEvent('after:'+routeType, actionContext);
+			return arg;
+		},
+		() => {
+			router.triggerEvent('error:' + routeType, actionContext);
+		}
+	);
+
+	return executeResult.value;
 }
 
 

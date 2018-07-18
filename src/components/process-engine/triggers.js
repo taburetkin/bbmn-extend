@@ -26,17 +26,17 @@ export function triggerComplete(processContext) {
 	triggerOnContext(processContext, 'end');
 
 }
-export function triggerError(context, errors){ 
+export function triggerError(processContext, errors){ 
 
 	if(!_.isArray(errors))
 		errors = [errors];
 
-	context.errors.push(...errors);
+	processContext.errors.push(...errors);
 
-	triggerOnContext(context, 'error', ...context.errors);
-	if (_.isFunction(context.onError))
-		context.onError.call(context.context, ...context.errors);
+	triggerOnContext(processContext, 'error', ...processContext.errors);
+	if (_.isFunction(processContext.onError))
+		processContext.onError.call(processContext.context, ...processContext.errors);
 
-	triggerOnContext(context, 'end');
+	triggerOnContext(processContext, 'end');
 	
 }

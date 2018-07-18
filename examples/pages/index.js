@@ -20,13 +20,13 @@ $(() => {
 	const BasePage = bbmn.components.Page.extend({
 		relativeRoutes: true,
 		initialize(){
-			//this.on('all', (c, ...args) => console.log(c, this.cid, ...args));
+			this.on('all', (c, ...args) => console.log('page:', c));
 		},
 		onStart(){
-			console.log('started', this.cid);
+			console.log('page:started', this.cid, this.routes);
 		},
 		onStartError(){
-			console.log('errored', this.cid, arguments);
+			console.log('page:errored', this.cid, arguments);
 		}
 	});
 
@@ -39,10 +39,17 @@ $(() => {
 		},
 		children:[
 			BasePage.extend({
+				routes:'qqqq',				
+			}),
+			BasePage.extend({
 				routes:'asd/:id/:qwe',
 				canNotStart(){
-					//return 'not:allowed';
-				}
+					//throw new Error('bla bla bla');
+					return ['execute','asd/qwe'];
+				},
+				// onStart(){
+				// 	//a = new Mn.Asd()
+				// }
 			})
 		]
 	});
@@ -56,9 +63,40 @@ $(() => {
 	// });
 	// var router = new Router();
 
-	let root = new Root();
-	Backbone.history.start({ pushState: false });
+	// let originalCheckUrl = Backbone.history.checkUrl;
+	// Backbone.history.checkUrl = function(e) {
+	// 	console.log('* check-url *');
+	// 	originalCheckUrl.call(this, e);
+  	// }
 
-	console.log(root);
+	// let hoBack = history.back;
+	// history.back = function(){
+	// 	console.log('* back *');
+	// 	return hoBack.apply(this, arguments);
+	// }
+	// let hoForward = history.forward;
+	// history.forward = function(){
+	// 	console.log('* forward *');
+	// 	return hoForward.apply(this, arguments);
+	// }
+
+	// let hoGo = history.go;
+	// history.go = function(){
+	// 	console.log('* go *');
+	// 	return hoGo.apply(this, arguments);
+	// }
+
+	// window.addEventListener('popstate', function (e) {
+	// 	console.log('* popstate *', e);
+	// });	
+
+	let root = new Root();
+	root.router.on('all', (c,a) => console.log('router:', c, a));
+	Backbone.history.on('all', c => console.log('history:', c));
+	bbmn.components.historyWatcher.watch();
+	Backbone.history.start({ pushState: false });
+	window.router = root.router;
+	window.nav = bbmn.components.navigator;
+	//console.log(root);
 
 });

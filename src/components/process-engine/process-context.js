@@ -13,9 +13,9 @@ export default function createProcessContext(context, name, args = [], opts = {}
 		name,
 		context,
 		args,
-		errors:[],
-		waitPromises:[],
-		cancelation,		
+		errors:[],		
+		cancelation,
+		shouldCatch: false,		
 	}, opts);
 
 	return result;

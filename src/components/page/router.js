@@ -5,7 +5,7 @@ export default BaseRouter.extend({
 	classicMode:false,
 	isRouterHoldsActions : false,
 	isRouteChaining: false,	
-	callbacksAsPromises: true,
+	callbackAsPromises: true,
 	routeCaseInsensitive: true,
 	registerPageRoutes(page){
 		let contexts = page.getRoutesContexts();

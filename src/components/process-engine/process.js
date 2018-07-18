@@ -40,6 +40,23 @@ export default function process(processContext){
 		).catch(rejectWithError);
 
 	});
-	processContext.promise = promise;
+	processContext.promise = promise.catch((context) => {		
+		let error;
+		if(context instanceof Error) {
+			triggerError(processContext, context);
+			throw context;
+		}
+		if(context && context.errors && context.errors.length == 1 && context.errors[0] instanceof Error) {
+			error = context.errors[0];
+			return Promise.reject(error);
+		}
+
+
+		if(processContext.shouldCatch)
+			return context;
+		else
+			return Promise.reject(context);
+
+	});
 	return promise;
 }

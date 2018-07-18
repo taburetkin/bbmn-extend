@@ -8,6 +8,8 @@ import buildRouteContextFromArguments from './build-route-context';
 import  { createActionContext } from './action-context';
 import { processCallback } from './process-callback';
 
+import { historyNavigate } from '../../bb/history';
+
 const BaseRouter = mix(BbRouter).with(GetOptionMixin);
 const Router = BaseRouter.extend({
 
@@ -215,7 +217,6 @@ const Router = BaseRouter.extend({
 	//inner route handler
 	//preparing actionContext and calls public processCallback
 	_processCallback (routeContext, fragment, options = {}) {
-
 		let actionContext = createActionContext(this, routeContext, fragment, options);
 		let result = this.processCallback(actionContext, actionContext.routeType, options);
 		return result;
@@ -240,6 +241,10 @@ const Router = BaseRouter.extend({
 		Backbone.history.trigger(event, this, name, ...args);
 	},
 
+	triggerEvent(event, context){
+		this.trigger(event, context);
+		Backbone.history.trigger(event, context);
+	},
 
 
 
@@ -248,6 +253,10 @@ const Router = BaseRouter.extend({
 	//default implementation, can be overriden by user
 	queryStringParser: paramStringToObject,	
 
+	// navigate(...args){
+	// 	historyNavigate(...args);
+	// 	return this;
+	// },
 
 	_routeToRegExp(route) {
 
