@@ -57,6 +57,11 @@ export default Base => {
 			_.extend(opts, { display:true });
 			return this.get(key, opts);
 		},
+		propertyName(key) {
+			let prop = getPropertySchema(this, key);
+			let display = getDisplayConfig(key, this, prop);
+			return display.label || key;
+		}
 	});
 
 	return Mixed;
