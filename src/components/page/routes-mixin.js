@@ -75,8 +75,12 @@ export default {
 
 		return config;
 	},
-	getRoutesContexts(){
-		return this.routesContext || [];
+	getRoutesContexts(opts = {}){
+		let { clone, reverse } = opts;
+		let result = this.routesContext || [];
+		if (clone || reverse) result = [].slice.call(result);
+		if (reverse) result.reverse();
+		return result;
 	},
 
 	getMainRouteContext(){

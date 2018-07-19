@@ -8,7 +8,7 @@ export default BaseRouter.extend({
 	callbackAsPromises: true,
 	routeCaseInsensitive: true,
 	registerPageRoutes(page){
-		let contexts = page.getRoutesContexts();
+		let contexts = page.getRoutesContexts({ reverse: true });
 		_(contexts).each(context => {
 			let callback = (...args) => {
 				return page.start(...args);

@@ -25,7 +25,11 @@ export function historyLoadUrl(fragment, opts) {
 	// If the root doesn't match, no routes can match either.
 	if (!history.matchRoot()) return false;
 	fragment = history.fragment = history.getFragment(fragment);
-	return executeHandler(fragment, opts);
+	let executed = executeHandler(fragment, opts);
+	if (!executed) {
+		history.trigger('handler:not:found', fragment, opts);
+	}
+	return executed;
 }
 
 //TODO: think about constraints check
@@ -43,6 +47,14 @@ export function executeHandler(fragment, opts = {}, resultContext = {}) {
 	let handler = findHandler(fragment, opts.testHandler);
 	handler && (resultContext.value = handler.callback(fragment, opts));
 	return !!handler;
+}
+
+export function start(options){
+
+	if(history.loadUrl !== historyLoadUrl)
+		history.loadUrl = historyLoadUrl;
+
+	return history.start(options);
 }
 
 export { history };

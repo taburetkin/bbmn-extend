@@ -91,12 +91,20 @@ $(() => {
 	// });	
 
 	let root = new Root();
+
 	root.router.on('all', (c,a) => console.log('router:', c, a));
-	Backbone.history.on('all', c => console.log('history:', c));
-	bbmn.components.historyWatcher.watch();
-	Backbone.history.start({ pushState: false });
+	//Backbone.history.on('all', c => console.log('history:', c));
+
 	window.router = root.router;
 	window.nav = bbmn.components.navigator;
+	const navi = bbmn.components.navigator;
+	const watcher = bbmn.components.historyWatcher;
+	watcher.watch();
+	Backbone.history.start();
+	window.gogo = path => navi.navigate(path);
+	window.goback = () => watcher.goBack();
+
+
 	//console.log(root);
 
 });

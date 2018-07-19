@@ -1,8 +1,10 @@
-import triggerMethodOn from '../../mn/trigger-method-on';
+//import triggerMethodOn from '../../mn/trigger-method-on';
 
 function toPromise(arg, resolve = true){
 	if (arg instanceof Promise || (arg && _.isFunction(arg.then)))
 		return arg;
+	else if (arg instanceof Error)
+		return Promise.reject(arg);
 	else
 		return resolve 
 			? Promise.resolve(arg) 
@@ -11,7 +13,11 @@ function toPromise(arg, resolve = true){
 function getCallbackFunction(callback, executeResult, asPromise)
 {
 	return (...args) => {
-		executeResult.value = callback && callback(...args);
+		try {
+			executeResult.value = callback && callback(...args);
+		} catch(exception) {
+			executeResult.value = exception;
+		}
 		executeResult.promise = toPromise(executeResult.value);
 		return executeResult.value;
 	};
@@ -42,8 +48,12 @@ export function processCallback(router, actionContext, routeType){
 			router.triggerEvent('after:'+routeType, actionContext);
 			return arg;
 		},
-		() => {
+		(error) => {
 			router.triggerEvent('error:' + routeType, actionContext);
+			if(error instanceof Error)
+				throw error;
+			else
+				router.handleError(error, actionContext);
 		}
 	);
 

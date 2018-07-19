@@ -8,7 +8,7 @@ import buildRouteContextFromArguments from './build-route-context';
 import  { createActionContext } from './action-context';
 import { processCallback } from './process-callback';
 
-import { historyNavigate } from '../../bb/history';
+//import { historyNavigate } from '../../bb/history';
 
 const BaseRouter = mix(BbRouter).with(GetOptionMixin);
 const Router = BaseRouter.extend({
@@ -230,16 +230,19 @@ const Router = BaseRouter.extend({
 
 	},
 
+	handleError(error, action){
+		console.log(' handle route error: ', error, action);
+	},
 
 	//just triggers appropriate events
-	triggerRouteEvents(context, event, name, ...args) {
-		if (event == 'route') {
-			this.lastActionContext = context;
-		}
-		this.trigger(`${event}:${name}`, ...args);
-		this.trigger(event, name, ...args);
-		Backbone.history.trigger(event, this, name, ...args);
-	},
+	// triggerRouteEvents(context, event, name, ...args) {
+	// 	if (event == 'route') {
+	// 		this.lastActionContext = context;
+	// 	}
+	// 	this.trigger(`${event}:${name}`, ...args);
+	// 	this.trigger(event, name, ...args);
+	// 	Backbone.history.trigger(event, this, name, ...args);
+	// },
 
 	triggerEvent(event, context){
 		this.trigger(event, context);
