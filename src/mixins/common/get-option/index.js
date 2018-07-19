@@ -41,7 +41,7 @@ const Mixin = (Base) => Base.extend({
 			keys = keys.split(/\s*,\s*/);
 
 		_.each(keys, (key) => {
-			const option = result(values, key, opts);
+			const option = result(values, key, _.extend({ force: false }, opts));
 			if (option !== undefined) {
 				this[key] = option;
 			}
