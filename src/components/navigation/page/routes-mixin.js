@@ -1,5 +1,5 @@
 import BaseRouter from './router';
-import comparator from '../../utils/comparator';
+import comparator from '../../../utils/comparator';
 
 export default {
 	initializeRoutes(){

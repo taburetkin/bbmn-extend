@@ -1,7 +1,7 @@
 //import engine from './engine';
 import createProcessContext from './process-context';
 import concurrencyCheck from './concurrency-check';
-import process from './process';
+import beginProcess from './begin-process';
 
 export default function initializeProcess(context, name, opts){
 
@@ -13,7 +13,7 @@ export default function initializeProcess(context, name, opts){
 		if (concurrent) {
 			return concurrent;
 		} else {
-			return process(processContext);
+			return beginProcess(processContext);
 		}
 
 	};

@@ -1,5 +1,5 @@
-import { history, historyNavigate }  from '../../bb/history';
-import Events from '../../bb/events';
+import { history, historyNavigate }  from '../history';
+import Events from '../../../bb/events';
 
 
 export default _.extend({

@@ -1,8 +1,8 @@
-import MnObject from '../../mn/object';
-import mix from '../../utils/mix';
-import GetOptionMixin from '../../mixins/common/get-option';
-import StartableMixin from '../../mixins/common/startable';
-import ChildrenableMixin from '../../mixins/common/childrenable';
+import MnObject from '../../../mn/object';
+import mix from '../../../utils/mix';
+import GetOptionMixin from '../../../mixins/common/get-option';
+import StartableMixin from '../../../mixins/common/startable';
+import ChildrenableMixin from '../../../mixins/common/childrenable';
 import RoutesMixin from './routes-mixin';
 
 const BasePage = mix(MnObject).with(GetOptionMixin, ChildrenableMixin, StartableMixin, RoutesMixin);

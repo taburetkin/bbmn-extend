@@ -1,62 +1,60 @@
-import { triggerBegin, triggerBefore, triggerComplete, triggerError } from './triggers';
-import { getCanNotRunPromise, getWaitPromise } from './run-promises';
+import mix from '../../utils/mix';
+
+// const Process = function(name, context, opts){
+// 	this.cid = _.uniqueId('process');
+// 	this.name = name;
+// 	this.context = context;
+// 	this.errors = [];
+// 	this._initCancelation();
+// 	this._mergeOptions(opts);
+// };
+// _.extend(Process.prototype, {
+// 	_initCancelation(){
+// 		let cancelation = {};
+// 		cancelation.promise = new Promise((resolve, reject) => {
+// 			cancelation.cancel = () => reject('cancel'); 
+// 		});
+// 		this.cancelation = cancelation;
+// 	},
+// 	_mergeOptions(opts = {}){
+// 		let options = _.omit(opts, 'cid', 'name', 'context', 'cancelation', 'errors');
+// 		_(options).each((value, key) => this[key] = value);
+// 	}
+// });
 
 
-export default function process(processContext){
-	
-	let promise = new Promise((resolve, reject) => {
-		let shouldExit = false;
-		let rejectWithError = (error) => {			
-			triggerError(processContext, error);
-			reject(processContext);
-			shouldExit = true;
-		};
+const Process = mix({
+	constructor: function Process(name, context, opts){
+		this._initDefaults(name, context);
+		this._initCancelation();
+		this._mergeOptions(opts);
+	},
+	_initDefaults(name, context){
+		if(name == null || name === '')
+			throw new Error('Process requires two arguments: name [string], context [object]. name missing');
+		
+		if(!_.isObject(context))
+			throw new Error('Process requires two arguments: name [string], context [object]. context is not an object');
 
-		Promise.race([
-			processContext.cancelation.promise, 
-			Promise.resolve()
-		]).catch(rejectWithError);
+		this.cid = _.uniqueId('process');
+		this.name = name;
+		this.context = context;
+		this.errors = [];
+	},
+	_initCancelation(){
+		let cancelation = {};
+		cancelation.promise = new Promise((resolve, reject) => {
+			cancelation.cancel = () => reject('cancel'); 
+		});
+		this.cancelation = cancelation;
+	},
+	_mergeOptions(opts = {}){
+		let options = _.omit(opts, 'cid', 'name', 'context', 'cancelation', 'errors');
+		_(options).each((value, key) => this[key] = value);
+	}
+}).class;
 
-		if(shouldExit) return;
-
-		let beginError = triggerBegin(processContext);
-		if (beginError) {
-			rejectWithError(beginError);
-			return;
-		}
-
-		let canBeRuned = getCanNotRunPromise(processContext);
-		canBeRuned.then(
-			() => {
-				triggerBefore(processContext);
-				let waitFor = getWaitPromise(processContext);
-				return waitFor.then(
-					() => {
-						triggerComplete(processContext);
-						resolve();
-					}
-				);
-			}
-		).catch(rejectWithError);
-
-	});
-	processContext.promise = promise.catch((context) => {		
-		let error;
-		if(context instanceof Error) {
-			triggerError(processContext, context);
-			throw context;
-		}
-		if(context && context.errors && context.errors.length == 1 && context.errors[0] instanceof Error) {
-			error = context.errors[0];
-			return Promise.reject(error);
-		}
+console.log(Process);
 
 
-		if(processContext.shouldCatch)
-			return context;
-		else
-			return Promise.reject(context);
-
-	});
-	return promise;
-}
+export default Process;

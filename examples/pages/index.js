@@ -35,60 +35,32 @@ $(() => {
 		relativeRoutes: false,
 		shouldCreateRouter: true,
 		routerOptions:{
-			catchPromiseErrors: true
+			catchPromiseErrors: true,			
 		},
 		children:[
 			BasePage.extend({
-				routes:'qqqq',				
+				routes:'{notallowed}',
+				onStart() { console.warn('not allowed') },
 			}),
 			BasePage.extend({
-				routes:'asd/:id/:qwe',
+				routes:'{notfound}',
+				onStart() { console.warn('not found') },
+			}),			
+			BasePage.extend({
+				routes:'auth',
 				canNotStart(){
-					//throw new Error('bla bla bla');
-					return ['execute','asd/qwe'];
+					return ['execute','{notallowed}'];
 				},
-				// onStart(){
-				// 	//a = new Mn.Asd()
-				// }
-			})
+			}),
+			BasePage.extend({
+				routes:'fake-404',
+				canNotStart(){
+					return ['execute','{notfound}'];
+				},
+			}),
 		]
 	});
 
-	// var Router = bbmn.components.Router.extend({
-	// 	routes:{
-	// 		'asd/:id/:cid'(){
-	// 			console.log(arguments);
-	// 		}
-	// 	},
-	// });
-	// var router = new Router();
-
-	// let originalCheckUrl = Backbone.history.checkUrl;
-	// Backbone.history.checkUrl = function(e) {
-	// 	console.log('* check-url *');
-	// 	originalCheckUrl.call(this, e);
-  	// }
-
-	// let hoBack = history.back;
-	// history.back = function(){
-	// 	console.log('* back *');
-	// 	return hoBack.apply(this, arguments);
-	// }
-	// let hoForward = history.forward;
-	// history.forward = function(){
-	// 	console.log('* forward *');
-	// 	return hoForward.apply(this, arguments);
-	// }
-
-	// let hoGo = history.go;
-	// history.go = function(){
-	// 	console.log('* go *');
-	// 	return hoGo.apply(this, arguments);
-	// }
-
-	// window.addEventListener('popstate', function (e) {
-	// 	console.log('* popstate *', e);
-	// });	
 
 	let root = new Root();
 
@@ -99,8 +71,11 @@ $(() => {
 	window.nav = bbmn.components.navigator;
 	const navi = bbmn.components.navigator;
 	const watcher = bbmn.components.historyWatcher;
+	const errorHandler = bbmn.components.routeErrorHandler;
 	watcher.watch();
-	Backbone.history.start();
+	bbmn.components.history.start();
+
+	//Backbone.history.start();
 	window.gogo = path => navi.navigate(path);
 	window.goback = () => watcher.goBack();
 

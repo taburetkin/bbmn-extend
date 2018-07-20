@@ -1,13 +1,14 @@
 export default function createMixinFromObject(arg) {
-	let obj = _.clone(arg);
+	let mixedObj = _.clone(arg);
+	let mixedCtor = _.isFunction(mixedObj.constructor) && mixedObj.constructor;
 	return Base => { 
-		if (_.isFunction(obj.constructor)) {
-			let providedCtor = obj.constructor;
-			obj.constructor = function(){
+		if (_.isFunction(mixedCtor)) {
+			//let providedCtor = ((mixed) => mixed)(obj.constructor);
+			mixedObj.constructor = function mx(){
 				Base.apply(this, arguments);
-				providedCtor.apply(this, arguments);
+				mixedCtor.apply(this, arguments);
 			};
 		}
-		return Base.extend(obj);
+		return Base.extend(mixedObj);
 	};
 }

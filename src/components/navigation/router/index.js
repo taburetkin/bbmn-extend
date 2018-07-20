@@ -1,13 +1,13 @@
-import mix from '../../utils/mix';
-import GetOptionMixin from '../../mixins/common/get-option';
-import paramStringToObject from '../../utils/params-to-object';
-import BbRouter from '../../bb/router';
+import mix from '../../../utils/mix';
+import GetOptionMixin from '../../../mixins/common/get-option';
+import paramStringToObject from '../../../utils/params-to-object';
+import BbRouter from '../../../bb/router';
 //import triggerMethodOn from '../../mn/trigger-method-on';
 import buildRouteContextFromArguments from './build-route-context';
 
 import  { createActionContext } from './action-context';
 import { processCallback } from './process-callback';
-
+import errorHandler from '../route-error-handler';
 //import { historyNavigate } from '../../bb/history';
 
 const BaseRouter = mix(BbRouter).with(GetOptionMixin);
@@ -231,7 +231,8 @@ const Router = BaseRouter.extend({
 	},
 
 	handleError(error, action){
-		console.log(' handle route error: ', error, action);
+		console.log('in handle', error == action, error);
+		errorHandler.handle(error, this, [action]);
 	},
 
 	//just triggers appropriate events
