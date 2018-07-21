@@ -30,7 +30,8 @@ export default {
 
 	},
 	getHandler(key){
-		return _.isFunction(this.handlers[key]) && this.handlers[key];
+		if(_.isFunction(this.handlers[key]))
+			return this.handlers[key];
 	},
 	setHandler(key, handler){
 		if(!_.isString(key) || key === '')
@@ -63,16 +64,13 @@ export default {
 			args.unshift(error);
 			return { 'js:error': { context, args } };
 		}
-		else if(error instanceof XMLHttpRequest) {
-			args.unshift(error);
-			return { 'xhr': { context, args }};
+		else if(_.isString(error)) {
+			return { [error]: { context, args } };
 		}
 		else if(error instanceof $.Deferred().constructor){
 			args.unshift(error);
 			return { 'jq:xhr': { context, args }};
 		}
-		else if(_.isString(error))
-			return { [error]: { context, args } };
 
 	},
 
