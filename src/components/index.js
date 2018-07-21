@@ -1,4 +1,4 @@
-import processEngine from './process-engine';
+import Process from './process';
 import PageRouter from './navigation/page/router';
 import Page from './navigation/page';
 import Router from './navigation/router';
@@ -11,7 +11,7 @@ export {
 	navigator,
 	history,
 	routeErrorHandler,
-	processEngine,
+	Process,
 	Router,
 	Page,
 	PageRouter,	

@@ -1,8 +1,10 @@
-import initProcess from '../../../components/process-engine';
+import Process from '../../../components/process';
 export default Base => Base.extend({
 	constructor(){
 		Base.apply(this, arguments);
-		initProcess(this, 'start');
-		initProcess(this, 'stop');
+
+		Process.register(this, 'start');
+		Process.register(this, 'stop');
+
 	}
 });

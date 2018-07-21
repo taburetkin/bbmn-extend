@@ -10,16 +10,13 @@ export default function mix(_ctor, options) {
 	let opts = _.extend({}, defaultOptions, options);
 
 	let ctor;
-	let name = 'mixed';
 
 	if (_.isFunction(_ctor)) {
 		ctor = _ctor;
-		if(_ctor.name)
-			name += ':' + _ctor.name;
 	}
 	else if (_.isObject(_ctor)) {
-
-		ctor = _.isFunction(_ctor.constructor) ? _ctor.constructor : function mx() { };
+		let b = _.isFunction(_ctor.constructor) && _ctor.constructor;
+		ctor = function mx() { b.apply(this, arguments); };
 		_.extend(ctor.prototype, _.omit(_ctor,'constructor'));
 
 	} else {
@@ -30,7 +27,6 @@ export default function mix(_ctor, options) {
 		ctor.extend = extend;
 
 	return {
-		name,
 		options: opts,
 		with: withMethod,
 		class: ctor,
