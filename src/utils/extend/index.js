@@ -1,2 +1,2 @@
-//import Mn from 'backbone.marionette';
-export default Mn.extend;
+import Model from '../../bb/model';
+export default Model.extend;
