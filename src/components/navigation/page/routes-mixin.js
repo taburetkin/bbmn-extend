@@ -70,9 +70,9 @@ export default {
 		let config = _.extend({ 
 			relative: this.getOption('relativeRoutes', {args: [this]}),
 			parent: this.parent,
-			parentContext: this.parent && _.isFunction(this.parent.getMainRoute) && this.parent.getMainRouteContext()
+			parentContext: this.parent && _.isFunction(this.parent.getMainRouteContext) && this.parent.getMainRouteContext()
 		}, this.getOption('routesConfig', {args: [this]}));
-
+		console.log('-',this.cid, config);
 		return config;
 	},
 	getRoutesContexts(opts = {}){
@@ -84,13 +84,15 @@ export default {
 	},
 
 	getMainRouteContext(){
+		// let contexts = this.getRoutesContexts();
+		// console.log(contexts);
 		if(this.mainRouteContext) return this.mainRouteContext;
-
-		this.mainRouteContext = this.getRoutesContexts()
+		this.mainRouteContext = _(this.getRoutesContexts())
 			.chain()
 			.sortBy((a,b) => comparator([ [b,a, c => c.main], [a,b, c => c.order] ]))
 			.take(1)
 			.value()[0];
+
 		return this.mainRouteContext;
 	}
 };

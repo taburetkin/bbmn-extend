@@ -131,7 +131,7 @@ const Process = mix({
 
 	_getHookResultAsPromise(hookName){
 		let procMethod = camelCase('on:' + hookName);
-		let procHook = _.isFunction(this[procMethod]) && this[procMethod].call(this.context, ...this.args) || undefined;
+		let procHook = _.isFunction(this[procMethod]) && this[procMethod](this.context, ...this.args) || undefined;
 		let result = valueToPromise(procHook).then(() => {
 			let cntxHook = this.triggerOnContext(hookName);
 			return valueToPromise(cntxHook);
@@ -149,7 +149,7 @@ const Process = mix({
 		this.updateProcessInContext(null);
 
 		if (_.isFunction(this.onComplete))
-			this.onComplete.call(this.context, ...this.args);
+			this.onComplete(this.context, ...this.args);
 
 		this.triggerOnContext();
 
@@ -169,7 +169,7 @@ const Process = mix({
 
 		
 		if (_.isFunction(this.onError))
-			this.onError.call(this.context, ...this.errors);
+			this.onError(this.context, ...this.errors);
 		
 		this.triggerOnContext('error', ...this.errors);
 		

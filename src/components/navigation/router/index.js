@@ -37,7 +37,7 @@ const Router = BaseRouter.extend({
 
 		BaseRouter.apply(this, arguments);
 
-		this.on('re:route:last', this._onReRouteLast);
+		//this.on('re:route:last', this._onReRouteLast);
 	},
 
 
@@ -230,8 +230,7 @@ const Router = BaseRouter.extend({
 
 	},
 
-	handleError(error, action){
-		console.log('in handle', error == action, error);
+	handleError(error, action){		
 		errorHandler.handle(error, this, [action]);
 	},
 

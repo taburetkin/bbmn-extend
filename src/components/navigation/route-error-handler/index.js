@@ -1,19 +1,9 @@
+
 export default {
 	handlers: {
 		'js:error'(error){
-			console.warn(error);
+			throw error;
 		},
-		'not:found'(fragment){
-			console.warn('route:not:found', fragment);
-		},
-		/*
-		'not:allowed'(fragment){
-			console.warn('route:not:allowed', fragment);
-		},		
-		'jq:xhr'(xhr){
-			console.warn('jq:xhr:error', xhr);
-		},
-		*/
 	},
 	handle(error, context, args){
 
@@ -57,8 +47,10 @@ export default {
 			return _(error).reduce((memo, item) => _.extend(memo, this._getHandleContext(item, context, args)), {});
 		}
 
-		if(_.isFunction(this.getHandleContext))
-			return this.getHandleContext(error, context, args);
+		if(_.isFunction(this.getHandleContext)) {
+			let custom = this.getHandleContext(error, context, args);
+			if(custom != null) return custom;
+		}
 
 		if (error instanceof Error) {
 			args.unshift(error);
