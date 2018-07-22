@@ -25,6 +25,7 @@ export default Base => Base.extend({
 		this._childrenInitialized = true;
 
 	},
+
 	_initializeChild(arg){
 		let Child;
 		let options = {};
@@ -41,12 +42,12 @@ export default Base => Base.extend({
 			_.extend(options, _.omit(arg, 'Child'));
 		}
 
-		if (!isKnownCtor(arg)) return;
+		//if (!isKnownCtor(arg)) return;
 
 		_.extend(options, this.getOption('childOptions'), { parent: this });
 		options = this.buildChildOptions(options);
 		
-		let child = new Child(options);
+		let child = this.buildChild(Child, options);
 		this._children.push(child);
 
 	},
@@ -54,7 +55,10 @@ export default Base => Base.extend({
 	buildChildOptions(options){
 		return options;
 	},
-
+	buildChild(Child, options){
+		!Child && (Child = this.getOption('defaultChildClass') || this.prototype.constructor);
+		return new Child(options);
+	},
 	getChildren(){
 		return this._children || [];
 	},

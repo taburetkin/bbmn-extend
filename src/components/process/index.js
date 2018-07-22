@@ -141,7 +141,6 @@ const Process = mix({
 
 	},
 
-
 	// trigger methods
 
 	triggerComplete() { 
@@ -220,7 +219,7 @@ const Process = mix({
 		
 		let event = (eventName ? eventName + ':' : '') + this.name;
 		
-		return triggerMethodOn(context, event, this);
+		return triggerMethodOn(context, event, this, ...this.args);
 	
 	},
 

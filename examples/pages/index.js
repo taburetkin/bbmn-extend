@@ -1,18 +1,7 @@
 
 console.log('bbmn', bbmn);
 
-function prom (delay, error) {
-	let id = _.uniqueId('p');
-	return new Promise((resolve,reject) => {
-		setTimeout(() => {
-			console.log('	>', id);
-			if(error)
-				reject(error);
-			else
-				resolve();
-		}, delay);
-	});
-}
+
 
 
 $(() => {
@@ -22,6 +11,19 @@ $(() => {
 	const watcher = bbmn.components.historyWatcher;
 	const errorHandler = bbmn.components.routeErrorHandler;
 
+	function prom (delay, error) {
+		let id = _.uniqueId('p');
+		return new Promise((resolve,reject) => {
+			setTimeout(() => {
+				console.log('	>', id);
+				if(error)
+					reject(error);
+				else
+					resolve();
+			}, delay);
+		});
+	}
+
 	window.gogo = path => navi.navigate(path);
 	window.goback = () => watcher.goBack();
 
@@ -30,8 +32,10 @@ $(() => {
 	errorHandler.setHandlers({
 		'not:found':() => navi.execute('{notfound}'),
 		'not:allowed':() => navi.execute('{notallowed}'),
-		'execute':(fragment) => navi.execute(fragment)
+		'execute':(fragment, original) => navi.execute(fragment, { original })
 	});
+
+	let rights = new Backbone.Model();
 
 	let Layout = Mn.View.extend({
 		el:'body',
@@ -39,10 +43,35 @@ $(() => {
 		regions:{
 			'content':'section'
 		},
+		events:{
+			'click .toggle-rights'(){
+				this.model.set('rights', !this.model.get('rights'));
+			}
+		},
+		modelEvents:{
+			'change:rights'(){
+				let label = this.model.get('rights') ? 'clear rights' : 'get rights';
+				$('.toggle-rights').html(label);
+			}
+		},
+		showPage(page){
+			this.page = page;
+			view = new Mn.View({
+				template: () => $(`#${page.getOption('templateId')}`).html()
+			});
+			this.showChildView('content', view)
+		},
+		emptyPage(){
+			if(this.isRendered()){
+				this.getRegion('content').empty();
+			}
+		},
+		stopPage(){
+			this.emptyPage();
+			return this.page && this.page.stop() || Promise.resolve();			
+		}
 	});
-	let layout = new Layout();
-	layout.render();
-
+	let layout = new Layout({ model: rights });
 
 	let Preloader = Mn.View.extend({
 		className: 'page-preloader',
@@ -55,29 +84,14 @@ $(() => {
 
 	const BasePage = bbmn.components.Page.extend({
 		relativeRoutes: true,
-		initialize(){
-			this.on('all', (c, ...args) => console.log('page:', c));
-		},
 		onBeforeStart(){
 			return prom(500);
 		},
 		onStart(){
-			let view = new Mn.View({
-				template: `#${this.templateId}`
-			});
-			layout.showChildView('content',view);
+			layout.showPage(this);
 		},
-		onEndStart(){
-			this.hidePreloader();
-		},
-		onBeginStart(){
-			if(!layout.isRendered()) return;
-			let region = layout.getRegion('content');
-			region.empty();
-
-			this.showPreloader();
-			//layout.emptyChildView('content');
-		},
+		onEndStart(){ this.hidePreloader(); },
+		onBeginStart(){ this.showPreloader(); },
 		showPreloader(){
 			this.preloader = new Preloader();
 			this.preloader.render();
@@ -89,61 +103,74 @@ $(() => {
 		}
 	});
 
+
+	const AuthPage = BasePage.extend({
+		canNotStart(){
+			if(rights.get('rights') !== true)
+				return 'not:allowed';
+		}
+	})
+
 	const Root = BasePage.extend({
 		routes:'root',
 		relativeRoutes: false,
 		shouldCreateRouter: true,
 		templateId:'root',
+		defaultChildClass: BasePage,		
 		children:[
-			BasePage.extend({
+			{
 				relativeRoutes:false,
 				routes:'{notallowed}',
 				templateId:'notallowed',
-			}),
-			BasePage.extend({
+			},
+			{
 				relativeRoutes:false,
 				routes:'{notallowed2}',
 				templateId:'notallowed2',
-			}),			
-			BasePage.extend({
+			},			
+			{
 				relativeRoutes:false,
 				routes:'{notfound}',
 				templateId:'notfound',
-			}),
+			},
 			BasePage.extend({
 				relativeRoutes:false,
 				routes:'{notfound2}',
 				templateId:'notfound2',
 			}),					
-			BasePage.extend({
+			{
 				routes:'cats',
 				templateId:'cats',
-			}),			
-			BasePage.extend({
-				routes:'auth2',				
+			},			
+			{
+				routes:'auth2',
+				templateId:'auth2',
 				canNotStart(){
-					return ['execute','{notallowed2}'];
+					if(rights.get('rights') !== true)
+						return ['execute','{notallowed2}'];
 				},
-			}),
-			BasePage.extend({
-				routes:'auth',				
-				canNotStart(){
-					return 'not:allowed';
-				},
-			}),			
-			BasePage.extend({
+			},
+			{
+				Child: AuthPage,
+				routes:'auth',
+				templateId:'auth',
+			},			
+			{
 				routes:'fake-404',
 				templateId:'notfound',
-				canNotStart(){
+				canNotStart(){					
 					return ['execute','{notfound2}'];
 				},
-			}),
+			},
 		]
 	});
 
 
 	let root = new Root();
 	root.router.on('all', (c,a) => console.log('router:', c, a));
+
+	rights.on('change:rights',() => root.router.restartLastAttempt());
+
 	window.router = root.router;
 	
 	watcher.watch();

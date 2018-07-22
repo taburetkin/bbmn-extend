@@ -41,7 +41,7 @@ export default {
 		if(arguments.length < 2){
 			config = this.getRoutesConfig();
 		}
-		let context = {};
+		let context = { page: this };
 		if(arg == null)
 			return;
 		if (_.isString(arg)) {
@@ -72,7 +72,7 @@ export default {
 			parent: this.parent,
 			parentContext: this.parent && _.isFunction(this.parent.getMainRouteContext) && this.parent.getMainRouteContext()
 		}, this.getOption('routesConfig', {args: [this]}));
-		console.log('-',this.cid, config);
+		
 		return config;
 	},
 	getRoutesContexts(opts = {}){

@@ -218,6 +218,7 @@ const Router = BaseRouter.extend({
 	//preparing actionContext and calls public processCallback
 	_processCallback (routeContext, fragment, options = {}) {
 		let actionContext = createActionContext(this, routeContext, fragment, options);
+		actionContext.restart = () => actionContext.callbackWrapper(fragment, options);
 		let result = this.processCallback(actionContext, actionContext.routeType, options);
 		return result;
 	},

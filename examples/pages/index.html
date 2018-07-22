@@ -58,6 +58,29 @@
 				font-size:20;
 				font-weight: 500;
 			}
+			button {
+				
+				border:2px solid #525;
+				background-color:#636;
+				color:white;
+				font-weight:700;
+				padding:4.5px 15px;
+				border-radius:3px;
+				margin-top:15px;
+
+			}
+			button:hover {
+				cursor:pointer;
+				border-color: #414;
+				background-color:#525;
+			}
+			button:focus {
+				outline:none;
+			}
+			button:active {
+				box-shadow: inset 1px 1px 1px 1px rgba(0,0,0,0.2);
+    			border-color: #8585;
+			}
 		</style>
 		<nav>
 			<a href="#root">root page</a>
@@ -66,6 +89,7 @@
 			<a href="#root/fake-404">another 404 example</a>
 			<a href="#root/auth">not allowed example</a>
 			<a href="#root/auth2">not allowed example</a>
+			<button class='toggle-rights'>get rights</button>
 		</nav>
 		<section></section>
 		<script type="html/text" id="root">
@@ -93,7 +117,15 @@
 		<script type="html/text" id="notallowed2">
 			<h1>sorry, forbidden</h1>
 			<p>page you are looking for is ... bla bla bla</p>
-			<p>actualy its just shown to you through execute method
-		</script>		
+			<p>actualy its just shown to you through execute method</p>
+		</script>	
+		<script type="html/text" id="auth">
+			<h1>now when you have enough rights...</h1>
+			<p>it still just a page</p>			
+		</script>				
+		<script type="html/text" id="auth2">
+			<h1>and one more security page</h1>
+			<p>just for fun</p>
+		</script>				
 	</body>
 </html>

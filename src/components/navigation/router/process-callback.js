@@ -41,6 +41,8 @@ export function processCallback(router, actionContext, routeType){
 	let shouldTriggerEvent = router.execute(callback, args);
 	if (shouldTriggerEvent !== false) {
 		router.triggerEvent(routeType, actionContext);
+		if(routeType == 'route' || routeType == 'backroute')
+			router.lastAttempt = actionContext;
 	}
 
 	executeResult.promise.then(

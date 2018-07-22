@@ -31,10 +31,11 @@ const defaultStartableOptions  = {
 			this.context[keyValue.key] = keyValue.value;
 		});
 	},
-	onBegin(){
+	onBefore(...args){
 		this.storeState();
 		this.ensureState();
 		this.context['startable.status'] = this.processingName;
+		this.context['startable.start.lastArguments'] = args;
 	},
 	onComplete(){
 		this.context['startable.status'] = this.processedName;
@@ -90,7 +91,22 @@ export default Base => Base.extend({
 		Process.register(this, 'stop', stop);
 
 	},
-
+	isStarted(){
+		return this['startable.status'] === 'started';
+	},
+	isStopped(){
+		return this['startable.status'] === 'stopped' || this['startable.status'] === 'iddle';
+	},
+	isNotIddle(){
+		return this['startable.status'] === 'stopping' || this['startable.status'] === 'starting';
+	},
+	restart(){
+		if(this.isNotIddle())
+			throw new Error('Restart not allowed while startable instance is not iddle: ', this['startable.status']);
+		let stop = this.isStarted() ? this.stop() : Promise.resolve();
+		let args = this['startable.start.lastArguments'] || [];
+		return stop.then(() => this.start(...args));
+	}
 }, {
 	Startable: true
 });

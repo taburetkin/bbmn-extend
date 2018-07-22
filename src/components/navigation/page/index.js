@@ -10,14 +10,20 @@ const BasePage = mix(MnObject).with(GetOptionMixin, ChildrenableMixin, Startable
 export default BasePage.extend({
 	constructor(opts = {}){
 		BasePage.apply(this, arguments);
-		this.mergeOptions(opts, 'root, parent, router');
+
+		this.mergeOptions(opts, ['root','parent','router','canNotStart','onStart','onBeginStart', 'onBeforeStart', 'onEndStart', 'onStop', 'onBeginStop', 'onBeforeStop', 'onEndStop']);
 		
-		//routes-mixin
+		// resides in routes-mixin
 		this.initializeRoutes();
-		//ChildrenableMixin
+		// resides in ChildrenableMixin
 		this.initializeChildren();
 
 	},
+	// startOptions:{
+	// 	onBegin(){
+
+	// 	}
+	// },
 	buildChildOptions(options){
 		return _.extend({
 			root: this.root,

@@ -13,7 +13,8 @@ export default BaseRouter.extend({
 		let contexts = page.getRoutesContexts({ reverse: true });
 		_(contexts).each(context => {
 			let callback = (...args) => {
-				return page.start(...args);
+				return this.startPage(page, ...args);
+				//page.start(...args);
 			};
 			this.addRoute(context.route, context.name, callback);
 		});
@@ -33,5 +34,23 @@ export default BaseRouter.extend({
 		errorHandler.handle(error, this, args);
 
 		//BaseRouter.prototype.handleError(error, action);
-	},	
+	},
+	startPage(page, ...args){
+		return this.beforePageStart()
+			.then(() => page.start(...args))
+			.then(() => this.afterPageStart(page, ...args));
+	},
+	beforePageStart(){
+		if (this.previousPage && this.previousPage.isStarted())
+			return this.previousPage.stop();
+		else
+			return Promise.resolve();
+	},
+	afterPageStart(){
+		
+	},
+	restartLastAttempt(){
+		if(this.lastAttempt)
+			return this.lastAttempt.restart();
+	}
 });
