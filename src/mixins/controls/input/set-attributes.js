@@ -2,9 +2,10 @@ import getInputType from './get-input-type';
 
 import getOption from '../../../utils/get-option';
 
+
 export default function setInputAttributes(inputView, opts = {}) {
 
-	let attributes = getOption(inputView, 'attributes', { checkAlso: opts, args:[inputView] });
+	let attributes = getOption(inputView, opts, 'attributes');
 
 	let restrictionKeys = {
 		'maxLength':'maxlength', 
@@ -16,7 +17,7 @@ export default function setInputAttributes(inputView, opts = {}) {
 	};
 	let restrictions = {};
 	_(restrictionKeys).each((key2, key) => {
-		let value = getOption(inputView, key, { checkAlso: opts, args:[inputView] });
+		let value = getOption(inputView, opts, key);
 		if (value != null)
 			restrictions[key2] = value;
 	});
@@ -25,5 +26,7 @@ export default function setInputAttributes(inputView, opts = {}) {
 		value: inputView.value,
 		type: getInputType(inputView, opts),
 	}, restrictions, attributes);
-
+	
+	if(opts.attributes)
+		delete opts.attributes;
 }
