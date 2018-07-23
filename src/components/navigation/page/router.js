@@ -14,7 +14,6 @@ export default BaseRouter.extend({
 		_(contexts).each(context => {
 			let callback = (...args) => {
 				return this.startPage(page, ...args);
-				//page.start(...args);
 			};
 			this.addRoute(context.route, context.name, callback);
 		});
