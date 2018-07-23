@@ -61,7 +61,7 @@ export default {
 		if (!context.rawRoute)
 			context.rawRoute = context.route;
 				
-		if(config.relative && config.parentContext)
+		if(config.relative && config.parentContext && config.parentContext.route)
 			context.route = config.parentContext.route + '/' + context.route;
 
 		return context;
