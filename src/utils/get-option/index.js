@@ -1,22 +1,18 @@
 import result from '../better-result';
 
-export default function getOption(context, key, opts) {
-	// if (_.isFunction(context.getOption)) {
-	// 	return context.getOption(key, opts);
-	// } else {
-	// 	opts.context = context;
-	// 	let fallback = _.isFunction(context.getProperty)
-	// 		? context.getProperty
-	// 		: key => context[key];
-	// 	return getProperty(context.options, key, opts, fallback);
-	// }
+export default function getOption(context, key, opts, also) {
 
-	let options = _.extend({}, opts, {
-		context,
-	});
+	if(_.isObject(key) && _.isString(opts)){
+		let _opts = also;
+		also = key;
+		key = opts;
+		opts = _opts;
+	}
+
+	let options = _.extend({ args:[context], context }, opts);
 	let { deep } = options;
 
-	let value = result(context.options, key, options);
+	let value = result(context.options || also, key, options);
 	if (value == null && deep !== false) {
 		value = result(context, key, options);
 	}

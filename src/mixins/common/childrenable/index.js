@@ -59,8 +59,24 @@ export default Base => Base.extend({
 		!Child && (Child = this.getOption('defaultChildClass') || this.prototype.constructor);
 		return new Child(options);
 	},
-	getChildren(){
-		return this._children || [];
+	getChildren(opts = {}){
+		let children = this._children || [];
+		let { reverse, clone } = opts;		
+		if(!reverse && !clone)
+			return children;
+
+		let result = [].slice.call(children);
+		if(reverse)
+			result.reverse();
+
+		return result;
+	},
+	getAllChildren(opts){
+		let children = this.getChildren(opts);
+		return _(children).chain()
+			.map(child => [child.getAllChildren(opts), child])
+			.flatten()
+			.value();
 	},
 	getParent(){
 		return this.parent;

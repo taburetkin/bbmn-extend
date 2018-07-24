@@ -4,12 +4,15 @@ import comparator from '../../../utils/comparator';
 export default {
 	initializeRoutes(){
 		if (this.initializeRouter()) {
-			this._buildRoutes();
+			this._buildRoutesContexts();
+
 		}
 	},
 	initializeRouter(){		
-		if(this.getOption('shouldCreateRouter') && !this.router)
+		if(this.getOption('shouldCreateRouter') && !this.router) {
 			this.router = this._createRouter();
+			this._shouldRegisterAllRoutes = true;
+		}
 
 		return !!this.router;
 	},
@@ -18,9 +21,14 @@ export default {
 		let options = _.extend({}, this.getOption('routerOptions'));
 		return new Router(options);
 	},
-	_buildRoutes(){
-		this._buildRoutesContexts();
-		this.router.registerPageRoutes(this);
+	registerAllRoutes(){
+		if(!this._shouldRegisterAllRoutes) return;
+
+		let pages = this.getAllChildren({ reverse: true });
+		pages.push(this);
+		let router = this.router;
+		_(pages).each(page => router.registerPageRoutes(page));
+		
 	},
 	_buildRoutesContexts(){
 		let routes = this.getOption('routes', {args: [this]});
@@ -61,7 +69,7 @@ export default {
 		if (!context.rawRoute)
 			context.rawRoute = context.route;
 				
-		if(config.relative && config.parentContext)
+		if(config.relative && config.parentContext && config.parentContext.route)
 			context.route = config.parentContext.route + '/' + context.route;
 
 		return context;
@@ -84,8 +92,7 @@ export default {
 	},
 
 	getMainRouteContext(){
-		// let contexts = this.getRoutesContexts();
-		// console.log(contexts);
+
 		if(this.mainRouteContext) return this.mainRouteContext;
 		this.mainRouteContext = _(this.getRoutesContexts())
 			.chain()

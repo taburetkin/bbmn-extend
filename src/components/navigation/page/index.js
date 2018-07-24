@@ -15,9 +15,12 @@ export default BasePage.extend({
 		
 		// resides in routes-mixin
 		this.initializeRoutes();
+
 		// resides in ChildrenableMixin
 		this.initializeChildren();
-
+		
+		// resides in routes-mixin
+		this.registerAllRoutes();
 	},
 	// startOptions:{
 	// 	onBegin(){
