@@ -35,7 +35,7 @@ export default BaseRouter.extend({
 		//BaseRouter.prototype.handleError(error, action);
 	},
 	startPage(page, ...args){
-		return this.beforePageStart()
+		return this.beforePageStart(page)
 			.then(() => page.start(...args))
 			.then(() => this.afterPageStart(page, ...args));
 	},
@@ -45,8 +45,8 @@ export default BaseRouter.extend({
 		else
 			return Promise.resolve();
 	},
-	afterPageStart(){
-		
+	afterPageStart(page){
+		this.previousPage = page;
 	},
 	restartLastAttempt(){
 		if(this.lastAttempt)
