@@ -1,6 +1,7 @@
 import result from '../../../utils/better-result';
 import normalizeRegion from './normalize-region';
 import isViewClass from '../../../bb/is-view-class';
+import isView from '../../../bb/is-view';
 export default Base => Base.extend({
 	constructor(){
 		this._nestedViews = {};
@@ -100,9 +101,12 @@ export default Base => Base.extend({
 				: null;
 
 		if(!context) return;
-
+		let passedView = result(context, 'view', { context: this, args: [this, this.model] });
 		if(_.isFunction(context.template))
 			return context.template;
+		else if ( isView(passedView) ) {
+			return passedView;
+		}
 		else {
 			let View = context.View;
 			let options = this.buildNestedViewOptions(result(context, 'options', { context: this, args: [this, this.model], default:{} }));
