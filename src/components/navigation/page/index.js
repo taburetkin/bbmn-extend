@@ -42,11 +42,12 @@ export default BasePage.extend({
 
 	getSiblings(opts = {}){
 		let parent = this.getParent();
-		let pages = parent && parent.getChildren({ exclude: [this] }) || [];
-		if(_.isFunction(opts.map))
-			return _(pages).chain().map(opts.map).filter(f => !!f).value();
-		else
-			return pages;
+		let options = _.extend({ exclude: [this] }, opts);
+		return parent && parent.getChildren(options) || [];
+		// if(_.isFunction(opts.map))
+		// 	return _(pages).chain().map(opts.map).filter(f => !!f).value();
+		// else
+		// 	return pages;
 	},
 	getChildrenHashes(){
 		return this.getChildren({ map: i => i.getHash(), visible: true, });
@@ -98,7 +99,7 @@ export default BasePage.extend({
 
 		if(visible && (!item.visible || item.hidden))
 			return;
-			
+
 		return item;
 	},
 

@@ -9,14 +9,15 @@ export default function getOption(context, key, opts, also) {
 		opts = _opts;
 	}
 
-	let options = _.extend({ args:[context], context }, opts);
+	let options = _.extend({ args:[context], context }, opts, { default: null });
 	let { deep } = options;
+	let defaultValue = opts.default;
 
 	let value = result(context.options || also, key, options);
 	if (value == null && deep !== false) {
 		value = result(context, key, options);
 	}
-	return value;
-
+	
+	return value || defaultValue;
 
 }
