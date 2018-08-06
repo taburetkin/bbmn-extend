@@ -27,6 +27,10 @@ export default BasePage.extend({
 		let result = this.getOption('label', { args: [this, this.model]});
 		return result;
 	},
+	getMenuLabel(){
+		let result = this.getOption('menuLabel', { args: [this, this.model], default: this.getLabel()});
+		return result;
+	},
 
 	buildChildOptions(options){
 		return _.extend({
@@ -79,9 +83,23 @@ export default BasePage.extend({
 			cid: this.cid,
 			parentCid,
 			url: context.route,
-			label: this.getLabel(),
+			label: this.getMenuLabel(),
 			order: this.order,
 		};
-	}
+	},
+
+
+	_childFilter(item, index, opts = {}) {
+
+		if(!BasePage.prototype._childFilter(item, index, opts))
+			return;
+
+		let { visible } = opts;
+
+		if(visible && (!item.visible || item.hidden))
+			return;
+			
+	},
+
 });
 

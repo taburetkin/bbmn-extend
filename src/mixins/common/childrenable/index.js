@@ -63,24 +63,17 @@ export default Base => Base.extend({
 		let { exclude, filter, map } = opts;
 
 		if(exclude != null && !_.isArray(exclude))
-			exclude = [exclude];
+			opts.exclude = [exclude];
 
 		if(filter != null && !_.isFunction(filter))
-			filter = null;
-
-		if(!(exclude || filter || map))
-			return items;
-
+			delete opts.filter;
 
 		let result = [];
-		_(items).each(item => {
+		_(items).each((item, index) => {
 
-			if(exclude && exclude.indexOf(item) >= 0)
+			if(!this._childFilter(item, index, opts))
 				return;
-
-			if(filter && !filter(item))
-				return;
-
+				
 			if(_.isFunction(map))
 				item = map(item);
 
@@ -88,13 +81,27 @@ export default Base => Base.extend({
 		});
 		return result;
 	},
+	_childFilter(item, index, opts = {}){
+		let { exclude, filter } = opts;
+
+		if(_.isFunction(this.childFilter) && !this.childFilter(item, index, opts))
+			return;
+
+		if(_.isArray(exclude) && exclude.indexOf(item) >= 0)
+			return;
+
+		if(_.isFunction(filter) && !filter(item, index, opts))
+			return;
+
+		return item;
+	},
+	childFilter: false,
 	getChildren(opts = {}){
 
-		let children = this._children || [];
-		let { reverse, clone } = opts;
-		if(reverse || clone) {
-			children = [].slice.call(children);
-			if(reverse) children.reverse();
+		let children = [].slice.call(this._children || []);
+		let { reverse } = opts;
+		if (reverse) {
+			children.reverse();
 		}
 		return this._prepareChildren(children, opts);
 	},
