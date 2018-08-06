@@ -59,13 +59,13 @@ export default Base => Base.extend({
 		!Child && (Child = this.getOption('defaultChildClass') || this.prototype.constructor);
 		return new Child(options);
 	},
-	_prepareChildren(items, opts = {}){
+	_getChildren(items, opts = {}){
 		let { exclude, filter, map } = opts;
 
 		if(exclude != null && !_.isArray(exclude))
 			opts.exclude = [exclude];
 
-		if(filter != null && !_.isFunction(filter))
+		if(!_.isFunction(filter))
 			delete opts.filter;
 
 		let result = [];
@@ -73,7 +73,7 @@ export default Base => Base.extend({
 
 			if(!this._childFilter(item, index, opts))
 				return;
-				
+
 			if(_.isFunction(map))
 				item = map(item);
 
@@ -90,20 +90,16 @@ export default Base => Base.extend({
 		if(_.isArray(exclude) && exclude.indexOf(item) >= 0)
 			return;
 
-		if(_.isFunction(filter) && !filter(item, index, opts))
+		if(_.isFunction(filter) && !filter.call(this, item, index, opts))
 			return;
 
 		return item;
 	},
 	childFilter: false,
 	getChildren(opts = {}){
-
 		let children = [].slice.call(this._children || []);
-		let { reverse } = opts;
-		if (reverse) {
-			children.reverse();
-		}
-		return this._prepareChildren(children, opts);
+		opts.reverse && children.reverse();		
+		return this._getChildren(children, opts);
 	},
 	getAllChildren(opts = {}){
 
