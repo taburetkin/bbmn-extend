@@ -91,7 +91,7 @@ export default BasePage.extend({
 
 	_childFilter(item, index, opts = {}) {
 
-		if(!BasePage.prototype._childFilter(item, index, opts))
+		if(!BasePage.prototype._childFilter.apply(this, arguments))
 			return;
 
 		let { visible } = opts;
