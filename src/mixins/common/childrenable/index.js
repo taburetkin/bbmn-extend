@@ -98,7 +98,7 @@ export default Base => Base.extend({
 	childFilter: false,
 	getChildren(opts = {}){
 		let children = [].slice.call(this._children || []);
-		opts.reverse && children.reverse();		
+		opts.reverse && children.length > 1 && children.reverse();		
 		return this._getChildren(children, opts);
 	},
 	getAllChildren(opts = {}){

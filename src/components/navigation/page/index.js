@@ -98,7 +98,8 @@ export default BasePage.extend({
 
 		if(visible && (!item.visible || item.hidden))
 			return;
-
+			
+		return item;
 	},
 
 });
