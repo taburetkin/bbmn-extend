@@ -10,7 +10,7 @@ export default Base => Base.extend({
 	},
 	_initializeChildrenable(opts){
 		this.mergeOptions(opts, ['parent', 'root']);
-		if(this.parent == null && this.root == null)
+		if (this.parent == null && this.root == null) 
 			this.root = this;
 	},
 
@@ -59,25 +59,73 @@ export default Base => Base.extend({
 		!Child && (Child = this.getOption('defaultChildClass') || this.prototype.constructor);
 		return new Child(options);
 	},
-	getChildren(opts = {}){
-		let children = this._children || [];
-		let { reverse, clone } = opts;		
-		if(!reverse && !clone)
-			return children;
+	_prepareChildren(items, opts = {}){
+		let { exclude, filter, map } = opts;
 
-		let result = [].slice.call(children);
-		if(reverse)
-			result.reverse();
+		if(exclude != null && !_.isArray(exclude))
+			exclude = [exclude];
 
+		if(filter != null && !_.isFunction(filter))
+			filter = null;
+
+		if(!(exclude || filter || map))
+			return items;
+
+
+		let result = [];
+		_(items).each(item => {
+
+			if(exclude && exclude.indexOf(item) >= 0)
+				return;
+
+			if(filter && !filter(item))
+				return;
+
+			if(_.isFunction(map))
+				item = map(item);
+
+			item && result.push(item);
+		});
 		return result;
 	},
-	getAllChildren(opts){
-		let children = this.getChildren(opts);
-		return _(children).chain()
-			.map(child => [child.getAllChildren(opts), child])
+	getChildren(opts = {}){
+
+		let children = this._children || [];
+		let { reverse, clone } = opts;
+		if(reverse || clone) {
+			children = [].slice.call(children);
+			if(reverse) children.reverse();
+		}
+		return this._prepareChildren(children, opts);
+	},
+	getAllChildren(opts = {}){
+
+		let { includeSelf, map, reverse } = opts;
+		let options = _.omit(opts, 'includeSelf', 'map');
+
+
+		let children = this.getChildren(options);
+		let result = _(children).chain()
+			.map(child => {
+				let children = child.getAllChildren(options);
+				return reverse ? [children, child] : [child, children];
+			})
 			.flatten()
 			.value();
+
+		if (includeSelf) {
+			let method = reverse ? 'push' : 'unshift';
+			result[method](this);
+		}
+		
+		if (_.isFunction(map)) {
+			return _(result).chain().map(map).filter(f => !!f).value();
+		} else {			
+			return result;
+		}
+
 	},
+
 	getParent(){
 		return this.parent;
 	}

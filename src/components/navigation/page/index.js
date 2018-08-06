@@ -22,11 +22,12 @@ export default BasePage.extend({
 		// resides in routes-mixin
 		this.registerAllRoutes();
 	},
-	// startOptions:{
-	// 	onBegin(){
 
-	// 	}
-	// },
+	getLabel(){
+		let result = this.getOption('label', { args: [this, this.model]});
+		return result;
+	},
+
 	buildChildOptions(options){
 		return _.extend({
 			root: this.root,
@@ -34,5 +35,53 @@ export default BasePage.extend({
 			router: this.router,
 		}, options);
 	},
+
+	getSiblings(opts = {}){
+		let parent = this.getParent();
+		let pages = parent && parent.getChildren({ exclude: [this] }) || [];
+		if(_.isFunction(opts.map))
+			return _(pages).chain().map(opts.map).filter(f => !!f).value();
+		else
+			return pages;
+	},
+	getChildrenHashes(){
+		return this.getChildren({ map: i => i.getHash() });
+	},
+	getSiblingsHashes(){
+		return this.getSiblings({ map: i => i.getHash() });
+	},
+
+	getAllPages(opts = {}){
+		
+		let options = _.extend({}, opts, { includeSelf: true });
+		delete options.map;
+		let pages = this.root.getAllChildren(options);
+
+		if (_.isFunction(opts.map)) {
+			return _(pages).chain().map(opts.map).filter(f => !!f).value();
+		} else {
+			return pages;
+		}
+	},
+	getAllHashes(opts = {}){
+		let options = _.extend({ map: i => i.getHash() }, opts);
+		return this.getAllPages(options);
+	},
+	getHash(){
+		let context = this.getMainRouteContext();
+
+		if(!_.isObject(context))
+			return;
+
+		let parent = this.getParent();
+		let parentCid = parent && parent.cid || undefined;		
+		return {
+			cid: this.cid,
+			parentCid,
+			url: context.route,
+			label: this.getLabel(),
+			order: this.order,
+		};
+	}
 });
 
