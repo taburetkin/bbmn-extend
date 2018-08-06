@@ -97,7 +97,7 @@ export default BasePage.extend({
 
 		let { visible } = opts;
 
-		if(visible && (!item.visible || item.hidden))
+		if(visible && (item.visible === false || item.hidden === true))
 			return;
 
 		return item;
