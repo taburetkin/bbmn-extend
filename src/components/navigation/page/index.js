@@ -49,10 +49,10 @@ export default BasePage.extend({
 			return pages;
 	},
 	getChildrenHashes(){
-		return this.getChildren({ map: i => i.getHash() });
+		return this.getChildren({ map: i => i.getHash(), visible: true, });
 	},
 	getSiblingsHashes(){
-		return this.getSiblings({ map: i => i.getHash() });
+		return this.getSiblings({ map: i => i.getHash(), visible: true, });
 	},
 
 	getAllPages(opts = {}){
@@ -68,7 +68,7 @@ export default BasePage.extend({
 		}
 	},
 	getAllHashes(opts = {}){
-		let options = _.extend({ map: i => i.getHash() }, opts);
+		let options = _.extend({ map: i => i.getHash(), visible: true, }, opts);
 		return this.getAllPages(options);
 	},
 	getHash(){
@@ -98,7 +98,7 @@ export default BasePage.extend({
 
 		if(visible && (!item.visible || item.hidden))
 			return;
-			
+
 	},
 
 });
