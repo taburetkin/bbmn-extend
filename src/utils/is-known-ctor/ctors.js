@@ -3,10 +3,19 @@ import Collection from '../../bb/collection';
 import View from '../../bb/view';
 import Router from '../../bb/router';
 import MnObject from '../../mn/object';
-export default [
+
+import Mn from 'backbone.marionette';
+
+
+let ctors = [
 	Model,
 	Collection,
 	View,
 	Router,
-	MnObject
+	MnObject,
+	Mn.Application, 
+	Mn.Region
 ];
+
+
+export default ctors;

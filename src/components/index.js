@@ -6,6 +6,8 @@ import routeErrorHandler from './navigation/route-error-handler';
 import historyWatcher from './navigation/history-watcher';
 import * as navigator from './navigation/navigator';
 import * as history from './navigation/history';
+import BearerToken from './bearer-token';
+import store from './store';
 export {
 	historyWatcher,
 	navigator,
@@ -14,5 +16,7 @@ export {
 	Process,
 	Router,
 	Page,
-	PageRouter,	
+	PageRouter,
+	BearerToken,
+	store,
 };
