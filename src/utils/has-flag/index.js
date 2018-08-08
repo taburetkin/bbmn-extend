@@ -1,3 +1,15 @@
+import camelCase from '../camel-case';
+function transformStringArray(arr, opts = {}){
+	let { ignoreCase = true, toCamelCase = false } = opts;
+	return _(arr).map(value => {
+		if (ignoreCase) 
+			return value.toLowerCase();
+		else if (toCamelCase)
+			return camelCase(value);
+		else
+			return value;
+	});
+}
 export default function hasFlag(value, flag, opts = {}){
 	if (value == null || flag == null) return false;
 	if(typeof value != typeof flag)
@@ -11,8 +23,8 @@ export default function hasFlag(value, flag, opts = {}){
 
 	if(_.isString(value) && _.isString(flag)) {
 		if(value === '' || flag === '') return false;
-		let values = value.split(/\s*,\s*/);
-		let flags = flag.split(/\s*,\s*/);
+		let values = transformStringArray(value.split(/\s*,\s*/));
+		let flags = transformStringArray(flag.split(/\s*,\s*/));
 		let intersection = _.intersection(values, flags);
 		
 		if(intersection.length == 0) return false;
