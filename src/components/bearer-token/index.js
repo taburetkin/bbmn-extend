@@ -109,15 +109,21 @@ const Token = Model.extend({
 			(xhr) => {
 				
 				delete this._fetching;
-
+				
 				options.clearOnFail !== false 
 					&& this.update(null);
-				
-				return Promise.reject(xhr);
 
+				let error = this.handleError(xhr);
+				if(error){
+
+					return Promise.reject(error);
+				} else {
+					return Promise.reject(xhr);
+				}
 			});	
 		return this._fetching;
 	},
+	handleError(){},
 	update(hash, opts = {}){
 		let { silent } = opts;
 		if (hash == null) {
