@@ -24,7 +24,7 @@ const Token = Model.extend({
 	tokenAttribute: 'access_token',
 	refreshTokenAttribute: 'refresh_token',
 	endPoint: 'auth/token',
-	secondsOffset: 30,
+	secondsOffset: 0,
 
 	shouldRequestOnInitialize: true,
 
@@ -140,7 +140,7 @@ const Token = Model.extend({
 				}
 				return memo;
 			}, {});
-			this.set(setHash, { silent });
+			this.set(setHash, { silent, parse: true });
 			_(unset).each(key => this.unset(key, { silent }));
 		}
 
