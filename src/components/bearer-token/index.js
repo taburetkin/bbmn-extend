@@ -98,7 +98,7 @@ const Token = Model.extend({
 
 	fetch(options = {}){
 		if(this._fetching) return this._fetching;
-		this._fetching = new Promise((resolve) => {
+		this._fetching = new Promise((resolve, reject) => {
 			nativeAjax(options).then(
 				(json) => {
 
@@ -114,7 +114,7 @@ const Token = Model.extend({
 					options.clearOnFail !== false 
 						&& this.update(null);
 					
-					return resolve(xhr);
+					return reject(xhr);
 
 				});	
 		});
