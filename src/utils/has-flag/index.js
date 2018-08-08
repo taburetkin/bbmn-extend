@@ -23,8 +23,8 @@ export default function hasFlag(value, flag, opts = {}){
 
 	if(_.isString(value) && _.isString(flag)) {
 		if(value === '' || flag === '') return false;
-		let values = transformStringArray(value.split(/\s*,\s*/));
-		let flags = transformStringArray(flag.split(/\s*,\s*/));
+		let values = transformStringArray(value.split(/\s*,\s*/), opts);
+		let flags = transformStringArray(flag.split(/\s*,\s*/), opts);
 		let intersection = _.intersection(values, flags);
 		
 		if(intersection.length == 0) return false;
