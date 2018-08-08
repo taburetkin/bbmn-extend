@@ -97,27 +97,25 @@ const Token = Model.extend({
 	},
 
 	fetch(options = {}){
-		if(this._fetching) return this._fetching;
-		this._fetching = new Promise((resolve, reject) => {
-			nativeAjax(options).then(
-				(json) => {
+		if(this._fetching) return this._fetching;		
+		this._fetching = nativeAjax(options).then(
+			(json) => {
 
-					let parsed = this.parse(_.clone(json));
-					this.update(parsed);
-					delete this._fetching;
-					return resolve(json);
-				}, 
-				(xhr) => {
-					
-					delete this._fetching;
+				let parsed = this.parse(_.clone(json));
+				this.update(parsed);
+				delete this._fetching;
+				return Promise.resolve(json);
+			}, 
+			(xhr) => {
+				
+				delete this._fetching;
 
-					options.clearOnFail !== false 
-						&& this.update(null);
-					
-					return reject(xhr);
+				options.clearOnFail !== false 
+					&& this.update(null);
+				
+				return Promise.reject(xhr);
 
-				});	
-		});
+			});	
 		return this._fetching;
 	},
 	update(hash, opts = {}){
