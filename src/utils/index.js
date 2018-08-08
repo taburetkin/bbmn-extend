@@ -15,9 +15,12 @@ import paramsToObject from './params-to-object';
 import setByPath from './set-by-path';
 import unflat from './unflat';
 
+import hasFlag from './has-flag';
+
 export {
 	betterResult, camelCase,
 	comparator, compareAB, convertString, extend,
 	flat, getByPath, isKnownCtor, 
-	mix, paramsToObject, setByPath, unflat
+	mix, paramsToObject, setByPath, unflat,
+	hasFlag
 };
