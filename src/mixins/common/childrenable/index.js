@@ -82,6 +82,9 @@ export default Base => Base.extend({
 		return result;
 	},
 	_childFilter(item, index, opts = {}){
+		
+		if(opts.force) return item;
+
 		let { exclude, filter } = opts;
 
 		if(_.isFunction(this.childFilter) && !this.childFilter(item, index, opts))
