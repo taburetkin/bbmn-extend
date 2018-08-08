@@ -168,11 +168,14 @@ const Token = Model.extend({
 	//implement by your own
 	storeToken(){},
 
-	reflectTokenChanges(){
+	reflectTokenChanges(opts = {}){
+		let { silent, store = true } = opts;
 		this.updateAjaxHeaders();
 		this.replaceBackboneAjax();
-		this.storeToken();
-		this.trigger('changed');
+		if (store)
+			this.storeToken();
+		if (!silent)
+			this.trigger('changed');
 	},
 
 	ajax(...args){
