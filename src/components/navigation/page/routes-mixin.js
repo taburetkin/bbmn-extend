@@ -24,8 +24,8 @@ export default {
 	registerAllRoutes(){
 		if(!this._shouldRegisterAllRoutes) return;
 
-		let pages = this.getAllChildren({ reverse: true });
-		pages.push(this);
+		let pages = this.getAllChildren({ reverse: true, includeSelf: true });
+		
 		let router = this.router;
 		_(pages).each(page => router.registerPageRoutes(page));
 		

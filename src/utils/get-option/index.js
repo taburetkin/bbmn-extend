@@ -18,6 +18,6 @@ export default function getOption(context, key, opts, also) {
 		value = result(context, key, options);
 	}
 	
-	return value || defaultValue;
+	return value != null ? value : defaultValue;
 
 }
