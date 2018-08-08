@@ -140,7 +140,9 @@ const Token = Model.extend({
 				}
 				return memo;
 			}, {});
-			this.set(setHash, { silent, parse: true });
+
+			setHash = this.parse(setHash);
+			this.set(setHash, { silent });
 			_(unset).each(key => this.unset(key, { silent }));
 		}
 
