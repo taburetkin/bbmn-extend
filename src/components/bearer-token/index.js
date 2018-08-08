@@ -96,7 +96,7 @@ const Token = Model.extend({
 		return data;
 	},
 
-	fetch(options){
+	fetch(options = {}){
 		if(this._fetching) return this._fetching;
 		this._fetching = new Promise((resolve) => {
 			nativeAjax(options).then(
@@ -108,9 +108,12 @@ const Token = Model.extend({
 					return resolve(json);
 				}, 
 				(xhr) => {
-
+					
 					delete this._fetching;
-					this.update(null);
+
+					options.clearOnFail !== false 
+						&& this.update(null);
+					
 					return resolve(xhr);
 
 				});	
@@ -237,6 +240,7 @@ const Token = Model.extend({
 
 		let options = this.getFlow('password');
 		options.data = { grant_type:'password', username, password };
+		options.clearOnFail = false;
 		return this.fetch(options);
 
 	},
