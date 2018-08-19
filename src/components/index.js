@@ -8,6 +8,7 @@ import * as navigator from './navigation/navigator';
 import * as history from './navigation/history';
 import BearerToken from './bearer-token';
 import store from './store';
+import ViewManager from './view-manager';
 export {
 	historyWatcher,
 	navigator,
@@ -18,5 +19,6 @@ export {
 	Page,
 	PageRouter,
 	BearerToken,
+	ViewManager,
 	store,
 };
