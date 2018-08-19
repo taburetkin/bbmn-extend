@@ -1,4 +1,4 @@
-import { isInPage } from './utils';
+//import { isInPage } from './utils';
 
 export default {
 
@@ -55,7 +55,7 @@ export default {
 
 	},
 	_setCollectionListeners(){
-
+		if(!this.collection) return;
 		this.listenTo(this.collection, 'update', this._onCollectionUpdate);
 		this.listenTo(this.collection, 'reset', this._onCollectionReset);
 		this.listenTo(this.collection, 'sort', this._onCollectionSort);
@@ -64,7 +64,7 @@ export default {
 	//first run, initialized all collection models
 	initModels(){
 
-		if(this._modelsInitialized) return;
+		if(!this.enableCollection || this._modelsInitialized) return;
 
 		this._rebuildModels();
 

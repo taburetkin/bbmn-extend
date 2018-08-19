@@ -53,7 +53,7 @@ export default {
 			return this._store.items;
 	},
 
-	_filterItems(items, { filter, paginator, force, initializeViews = true } = {}){
+	_filterItems(items, { filter, paginator, force } = {}){
 
 		let iterator = -1;
 		let detach = [];

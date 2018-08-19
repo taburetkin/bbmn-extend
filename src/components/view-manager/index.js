@@ -36,7 +36,8 @@ const ViewManager = function(options = {}){
 	};
 	
 	//in collection mixin
-	this.setCollection(this.collection || options.collection);
+	if(this.enableCollection)
+		this.setCollection(this.collection || options.collection);
 };
 
 ViewManager.extend = extend;

@@ -113,6 +113,11 @@ $(() => {
 	});
 
 
+	const WithCustoms = Experimental.extend({
+		enableCustomViews: true,
+	});
+
+
 	let testTemplate = `
 	<button a="1">toggle comparator</button>
 	<button a="2">toggle filter</button>
@@ -131,11 +136,13 @@ $(() => {
 			'experimental':'section'
 		},
 		ncvs:{
-			//'original':Original,
-			'experimental':Experimental
+			//'original': WithCustoms,
+			'experimental': Experimental
 		},
 		onRender(){
 			//this.showNcv('original');
+			let view = this.customsOne = new WithCustoms();
+			this.showChildView('original', view);
 			this.showNcv('experimental');
 		},
 		showNcv(name){
@@ -208,6 +215,7 @@ $(() => {
 			'click [a=6]'(){
 				this.original && this.original.render();
 				this.experimental && this.experimental.render();
+				this.customsOne && this.customsOne.render();
 			},
 		},
 	});
