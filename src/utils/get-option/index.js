@@ -11,7 +11,7 @@ export default function getOption(context, key, opts, also) {
 
 	let options = _.extend({ args:[context], context }, opts, { default: null });
 	let { deep } = options;
-	let defaultValue = opts.default;
+	let defaultValue = opts && opts.default;
 
 	let value = result(context.options || also, key, options);
 	if (value == null && deep !== false) {
