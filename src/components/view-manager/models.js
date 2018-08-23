@@ -7,7 +7,7 @@ export default {
 	process({ destroy = [], silent, forceSort, forceFilter } = {}){
 
 		
-		let items = this._getItems();
+		let items = this._getItems({ forceFilter });
 		let resultDetach = [];
 
 		if (!this._store.isFiltered || forceFilter) {
@@ -45,9 +45,9 @@ export default {
 	},
 
 
-	_getItems(){
+	_getItems({ forceFilter } = {}){
 
-		if (this._store.isFiltered)
+		if (this._store.isFiltered && !forceFilter)
 			return this._store.filtered;
 		else
 			return this._store.items;
