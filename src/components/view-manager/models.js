@@ -4,19 +4,19 @@ import { isInPage } from './utils';
 export default {
 
 
-	process({ destroy = [], silent } = {}){
+	process({ destroy = [], silent, forceSort, forceFilter } = {}){
 
 		
 		let items = this._getItems();
 		let resultDetach = [];
 
-		if (!this._store.isFiltered) {
+		if (!this._store.isFiltered || forceFilter) {
 			let { attach, detach } = this._filterItems(items, { filter: this.getFilter() });
 			this._setItems(attach, { isFiltered: true });
 			items = attach;
 			resultDetach = detach;
 		}
-		this._sortItems(items, { comparator: this.getComparator() },'process');
+		this._sortItems(items, { comparator: this.getComparator(), force: forceSort },'process');
 		this._store.isSorted = true;
 
 
