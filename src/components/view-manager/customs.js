@@ -25,6 +25,7 @@ export default {
 	_injectCustoms(items){
 
 		if (!items.length) {
+			items = [];
 			this._injectEmptyView(items);
 		}
 
