@@ -7,9 +7,6 @@ export default {
 			this.$container = this.view.$el;
 		}
 
-		if(!this.$container.length)
-			throw new Error('children container is not in the DOM');
-
 	},
 	getPaginator(){
 		let skip = this.skip || 0;

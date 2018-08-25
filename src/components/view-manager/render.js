@@ -5,6 +5,14 @@ export default {
 	triggerViewMethod(){
 		this.view.triggerMethod.apply(this.view, arguments);
 	},
+	getChildrenContainer(){
+		if(_.isString(this.$container))
+			return this.view.$(this.$container);
+		else if(_.isFunction(this.$container))
+			return this.$container();
+		else
+			return this.$container;
+	},
 	processAndRender(opts){
 		let data = this.process(opts);
 		this.render(data);
@@ -49,11 +57,11 @@ export default {
 	},
 	_destroyChildViews(views = []){
 		if(!views.length) return;
-
+		let $container = this.getChildrenContainer();
 		this.triggerViewMethod('before:destroy:children', this);
 
 		if (this.view.monitorViewEvents === false) {
-			this.view.Dom.detachContents(this.$container);
+			this.view.Dom.detachContents($container);
 		}
 	
 		const shouldDisableEvents = this.view.monitorViewEvents === false;
@@ -111,7 +119,7 @@ export default {
 		const shouldTriggerAttach = this.view._isAttached && this.view.monitorViewEvents !== false;
 
 		const elBuffer = this.view.Dom.createBuffer();
-
+		let $container = this.getChildrenContainer();
 		_.each(contexts, context => {
 			let view = this._ensureContextHasView(context);
 
@@ -125,7 +133,7 @@ export default {
 			}
 		});
 
-		this.view.Dom.appendContents(this.$container[0], elBuffer, {_$el: this.$container});
+		this.view.Dom.appendContents($container[0], elBuffer, {_$el: $container});
 
 		if(shouldTriggerAttach){
 			_.each(contexts, context => {

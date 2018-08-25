@@ -91,6 +91,8 @@ export default BaseView => BaseView.extend({
 
 
 	getChildrenContainer(){
+		return this.getOption('childrenContainer', { force: false });
+		/*
 		if(this._childrenContainer && this._childrenContainer.jquery)
 			return this._childrenContainer;
 
@@ -106,6 +108,7 @@ export default BaseView => BaseView.extend({
 			this._childrenContainer = this.$el;
 			return this._childrenContainer;
 		}
+		*/
 
 	},
 
