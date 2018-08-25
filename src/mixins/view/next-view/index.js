@@ -29,12 +29,14 @@ export default BaseView => BaseView.extend({
 			enableCollection: models,
 			collection: models && this.managedCollection || this.collection || null,
 			view: this,
+			$container: this.getChildrenContainer(),
 			modelView: this.modelView,
 			modelViewOptions: this.modelViewOptions,
 			dataFilter: this.getFilter(),
 			dataComparator: this.getComparator(),
 			emptyView: this.emptyView,
 			emptyViewOptions: this.emptyViewOptions,
+
 		});
 
 		if (this._customViewsQueue) {
@@ -87,6 +89,25 @@ export default BaseView => BaseView.extend({
 		return this;
 	},
 
+
+	getChildrenContainer(){
+		if(this._childrenContainer && this._childrenContainer.jquery)
+			return this._childrenContainer;
+
+		let value = this.getOption('childrenContainer');
+		if (value && value.jquery){
+			this._childrenContainer = value;
+		} else if(_.isString(value)) {
+			this._childrenContainer = this.$(value);
+			return this._childrenContainer;
+		}
+
+		if (!value) {
+			this._childrenContainer = this.$el;
+			return this._childrenContainer;
+		}
+
+	},
 
 	/*
 		managing sort and filter
