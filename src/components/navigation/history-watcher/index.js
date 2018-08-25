@@ -1,5 +1,5 @@
 import { history, historyNavigate }  from '../history';
-import Events from '../../../bb/events';
+import { Events } from '../../../vendors/backbone';
 
 
 export default _.extend({

@@ -1,2 +1,2 @@
-import { Model } from 'backbone';
+import { Model } from '../vendors/backbone';
 export default Model;

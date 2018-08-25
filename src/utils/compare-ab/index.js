@@ -17,8 +17,10 @@ export default function compareAB(a, b, func){
 			a = func.call(a, getModel(a), getView(a)) ;
 			b = func.call(b, getModel(b), getView(b));
 		}
-		return a < b ? -1
-			: a > b ? 1
-				: 0;
+
+		if (a < b) return -1;
+		if (a > b) return 1;
+		return 0;
+
 	}
 }

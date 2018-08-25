@@ -1,4 +1,4 @@
-import history from '../../../bb/history';
+import { history } from '../../../vendors/backbone';
 import errorHandler from '../route-error-handler';
 
 // supports passing options to the callback

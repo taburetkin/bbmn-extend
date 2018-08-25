@@ -1,4 +1,4 @@
-import isView from '../../bb/is-view';
+import { isView }  from '../../vendors/helpers';
 export default function getModel(arg){
 	return isView(arg) && arg;
 }

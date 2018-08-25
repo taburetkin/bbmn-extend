@@ -1,3 +1,6 @@
+import { isView, isViewClass } from '../../vendors/helpers';
+
+
 export default {
 
 	getCustoms(){
@@ -11,15 +14,22 @@ export default {
 
 
 	_extractCustomView(arg, custom = {}){
-		if(arg instanceof Backbone.View && !arg._isDestroyed) {
+		if(isView(arg) && !arg._isDestroyed) {
 			return arg;
 		} else if(_.isFunction(custom.build)) {
 			custom.view = custom.build();
 			return custom.view;
 		}
 	},
+
 	_injectCustoms(items){
+
+		if (!items.length) {
+			this._injectEmptyView(items);
+		}
+
 		let customs = this.getCustoms() || [];
+
 		if(!customs.length)
 			return items;
 
@@ -34,15 +44,16 @@ export default {
 			}
 		});
 		return newitems;
-	},	
+	},
+
 	_normalizeAddCustomContext(arg, index){
-		if(arg instanceof Backbone.View){
+		if(isView(arg)){
 			return {
 				view: arg,
 				rebuild: false,
 				index
 			};
-		} else if (_.isFunction(arg) && (arg == Backbone.View || arg.prototype instanceof Backbone.View)){
+		} else if (_.isFunction(arg) && isViewClass(arg)){
 			return {
 				build: () => new arg(),
 				index,

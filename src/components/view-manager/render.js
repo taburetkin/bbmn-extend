@@ -1,5 +1,5 @@
 import { destroyView, renderView } from './utils';
-//import { monitorViewEvents } from 'backbone.marionette';
+
 export default {
 
 	triggerViewMethod(){
@@ -47,7 +47,6 @@ export default {
 				this._detachChildView(custom.view);
 		});
 	},
-
 	_destroyChildViews(views = []){
 		if(!views.length) return;
 
@@ -170,4 +169,8 @@ export default {
 		}
 		return _.extend({}, options, { model });
 	},
+
+
+
+
 };

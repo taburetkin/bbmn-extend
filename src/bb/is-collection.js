@@ -1,4 +1,2 @@
-import Collection from './collection';
-export default function isModel(arg){
-	return arg instanceof Collection;
-}
+import { isCollection } from '../vendors/helpers';
+export default isCollection;

@@ -1,7 +1,7 @@
 import getProperty from '../get-by-path/get-property';
 import setProperty from './set-property';
 import ensureArguments from './ensure-arguments';
-import isModel from '../../bb/is-model';
+import { isModel } from '../../vendors/helpers';
 export default function setByPathArr(context, propertyName, pathArray, value, options) {
 
 	let argumentsErrors = ensureArguments(context, propertyName);

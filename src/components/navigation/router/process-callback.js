@@ -1,4 +1,3 @@
-//import triggerMethodOn from '../../mn/trigger-method-on';
 
 function toPromise(arg, resolve = true){
 	if (arg instanceof Promise || (arg && _.isFunction(arg.then)))

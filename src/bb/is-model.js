@@ -1,4 +1,2 @@
-import Model from './model';
-export default function isModel(arg){
-	return arg instanceof Model;
-}
+import { isModel } from '../vendors/helpers';
+export default isModel;

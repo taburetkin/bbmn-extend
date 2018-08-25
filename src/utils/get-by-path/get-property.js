@@ -1,4 +1,4 @@
-import isModel from '../../bb/is-model';
+import { isModel } from '../../vendors/helpers';
 function getProperty(context, name)
 {
 	if(context == null || !_.isObject(context) || name == null || name == '') return;

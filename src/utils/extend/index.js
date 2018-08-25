@@ -1,2 +1,2 @@
-import Model from '../../bb/model';
-export default Model.extend;
+import { extend } from '../../vendors/helpers';
+export default extend;

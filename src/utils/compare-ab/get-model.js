@@ -1,7 +1,8 @@
-import isModel from '../../bb/is-model';
-import isView from '../../bb/is-view';
+import { isModel, isView } from '../../vendors/helpers';
 export default function getModel(arg){
-	return isModel(arg) ? arg
-		: isView(arg) ? arg.model
-			: undefined;
+
+	if (isModel(arg)) { return arg; }
+	
+	if (isView(arg)) { return arg.model; }
+
 }

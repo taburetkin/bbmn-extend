@@ -1,4 +1,4 @@
-import Model from '../../../bb/model';
+import { Model } from '../../../vendors/backbone';
 import getNestedResult from './get-nested-result';
 import getPropertySchema from './get-property-schema';
 import getDisplayConfig from './get-display-config';

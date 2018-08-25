@@ -59,6 +59,9 @@ export default {
 		this.listenTo(this.collection, 'update', this._onCollectionUpdate);
 		this.listenTo(this.collection, 'reset', this._onCollectionReset);
 		this.listenTo(this.collection, 'sort', this._onCollectionSort);
+		if (this.collection.length === 0) {
+			this.listenToOnce(this.collection, 'sync', this._onCollectionFirstFetch);
+		}
 	},
 
 	//first run, initialized all collection models
@@ -147,6 +150,11 @@ export default {
 		this._store.isFiltered = true;
 
 	},	
+
+	_onCollectionFirstFetch(){
+		if(this.collection.length) return;
+		this.processAndRender();
+	},
 
 	_onCollectionSort(col, { add, merge, remove } = {}){
 

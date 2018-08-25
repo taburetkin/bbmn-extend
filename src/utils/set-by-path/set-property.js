@@ -1,5 +1,5 @@
 import getProperty from '../get-by-path/get-property';
-import isModel from '../../bb/is-model';
+import { isModel } from '../../vendors/helpers';
 function setProperty(context, name, value) {
 	if (isModel(context)) {
 		context.set(name, value, { silent: true });

@@ -1,11 +1,6 @@
-import Model from '../../bb/model';
-import Collection from '../../bb/collection';
-import View from '../../bb/view';
-import Router from '../../bb/router';
-import MnObject from '../../mn/object';
-
+import { Model, Collection, View, Router } from '../../vendors/backbone';
+import { MnObject } from '../../vendors/marionette';
 import Mn from 'backbone.marionette';
-
 
 let ctors = [
 	Model,
@@ -13,9 +8,13 @@ let ctors = [
 	View,
 	Router,
 	MnObject,
-	Mn.Application, 
-	Mn.Region
 ];
+
+let tryGetFromMn = ['Region', 'Application', 'AppRouter'];
+
+_.each(tryGetFromMn, ClassName => {
+	_.isFunction(Mn[ClassName]) && ctors.push(Mn[ClassName]);
+});
 
 
 export default ctors;

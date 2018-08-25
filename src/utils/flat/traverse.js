@@ -1,4 +1,4 @@
-import isModel from '../../bb/is-model';
+import { isModel } from '../../vendors/helpers';
 export default function traverse(fields, root)
 {
 	root = root || '';

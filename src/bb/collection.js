@@ -1,2 +1,2 @@
-import { Collection } from 'backbone';
+import { Collection } from '../vendors/backbone';
 export default Collection;

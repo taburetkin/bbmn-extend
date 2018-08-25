@@ -6,7 +6,8 @@ export default {
 
 	process({ destroy = [], silent, forceSort, forceFilter } = {}){
 
-		
+		this._removeEmptyViewInstance({ destroy });
+
 		let items = this._getItems({ forceFilter });
 		let resultDetach = [];
 

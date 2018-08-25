@@ -1,4 +1,4 @@
-import MnObject from '../../../mn/object';
+import { MnObject } from '../../../vendors/marionette';
 import mix from '../../../utils/mix';
 import GetOptionMixin from '../../../mixins/common/get-option';
 import StartableMixin from '../../../mixins/common/startable';

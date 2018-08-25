@@ -1,4 +1,4 @@
-import MnObject from '../../mn/object';
+import { MnObject } from '../../vendors/marionette';
 const base = MnObject.prototype;
 export default {
 	getOption: base.getOption,

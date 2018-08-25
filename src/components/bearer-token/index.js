@@ -1,7 +1,9 @@
-import Model from '../../bb/model';
+import { Model, ajax as _nativeAjax } from '../../vendors/backbone';
 import Backbone from 'backbone';
 
-let nativeAjax = Backbone.ajax;
+// import Model from '../../b b/model';
+
+let nativeAjax = _nativeAjax;
 
 const tokenizedAjax = function(...args){
 	let options;

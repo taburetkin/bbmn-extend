@@ -5,10 +5,23 @@ import common from './common';
 import customs from './customs';
 import models from './models';
 import render from './render';
+import emptyView from './empty-view';
 
-import Events from '../../bb/events';
+import { Events } from '../../vendors/backbone';
 
-const MergeOptions = ['createView', 'dataFilter', 'dataComparator', 'enableCollection', '$container', 'view', 'modelView', 'modelViewOptions'];
+const MergeOptions = [
+	'createView',
+	'dataFilter',
+	'dataComparator',
+	'enableCollection',
+	'$container',
+	'view',
+	'modelView',
+	'modelViewOptions',
+	'emptyView',
+	'emptyViewOptions'
+];
+
 const ViewManager = function(options = {}){
 	this.options = _.omit(options, 'collection');
 	this.mergeOptions(options, MergeOptions);
@@ -42,6 +55,6 @@ const ViewManager = function(options = {}){
 
 ViewManager.extend = extend;
 
-_.extend(ViewManager.prototype, Events, borrow, collection, common, customs, models, render);
+_.extend(ViewManager.prototype, Events, borrow, collection, common, customs, models, render, emptyView);
 
 export default ViewManager;

@@ -1,2 +1,2 @@
-import { Events } from 'backbone';
+import { Events } from '../vendors/backbone';
 export default Events;

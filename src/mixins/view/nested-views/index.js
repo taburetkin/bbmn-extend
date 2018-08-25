@@ -1,7 +1,6 @@
 import result from '../../../utils/better-result';
 import normalizeRegion from './normalize-region';
-import isViewClass from '../../../bb/is-view-class';
-import isView from '../../../bb/is-view';
+import { isView, isViewClass } from '../../../vendors/helpers';
 export default Base => Base.extend({
 	constructor(){
 		this._nestedViews = {};

@@ -1,2 +1,2 @@
-import { View } from 'backbone';
+import { View } from '../vendors/backbone';
 export default View;
