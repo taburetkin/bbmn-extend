@@ -37,6 +37,12 @@ export default BaseView => BaseView.extend({
 			emptyViewOptions: this.emptyViewOptions,
 		});
 
+		if (this._customViewsQueue) {
+			_.each(this._customViewsQueue, args => this._viewManager.addCustomView.apply(this._viewManager, args));
+			this._customViewsQueue.length = 0;
+			delete this._customViewsQueue;
+		}
+
 	},
 
 	_fallbackOptions(){
@@ -113,8 +119,13 @@ export default BaseView => BaseView.extend({
 		this._viewManager && this._viewManager.processAndRender({ forceFilter: true });
 	},	
 
-	addChildView(){
-		this._viewManager && this._viewManager.addCustomView.apply(this._viewManager, arguments);
+	addChildView(...args){
+		if (this._viewManager) {
+			this._viewManager.addCustomView.apply(this._viewManager, arguments);
+		} else {
+			this._customViewsQueue || (this._customViewsQueue = []);
+			this._customViewsQueue.push(args);
+		}
 	},
 
 });
