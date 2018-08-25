@@ -1,21 +1,22 @@
 import ViewManager from '../../../components/view-manager';
 
 export default BaseView => BaseView.extend({
-	template:_.noop,
-	//if true - initializes ViewManager without collection support
-	enableCustomViews: false,
-	//if true - initializes ViewManager with collection and customviews support
-	enableCollectionViews: false,
-
+	
 	constructor(options){
 		this.options = options;
 		this.mergeOptions(options,['managedCollection','collection','viewFilter','viewComparator', 'modelView', 'modelViewOptions', 'emptyView', 'emptyViewOptions']);
 		
-		Mn.View.apply(this, arguments);
+		BaseView.apply(this, arguments);
 		
 		//tries to initialize viewManager
 		this._initializeViewManager();
 	},
+
+	template: _.noop,
+	//if true - initializes ViewManager without collection support
+	enableCustomViews: false,
+	//if true - initializes ViewManager with collection and customviews support
+	enableCollectionViews: false,
 
 	_initializeViewManager(){
 		let customs = this.getOption('enableCustomViews');
