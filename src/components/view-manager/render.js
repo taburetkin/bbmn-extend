@@ -97,11 +97,11 @@ export default {
 		}
 				
 		this.view.Dom.detachEl(view.el, view.$el);
-
 		if (shouldTriggerDetach) {
 			view._isAttached = false;
 			view.triggerMethod('detach', view);
 		}	
+		this.stopListening(view);
 	},
 
 	_attachChildViews(contexts = []){
@@ -115,7 +115,9 @@ export default {
 			let view = this._ensureContextHasView(context);
 
 			if(!view) return;
-
+			if (!view._isAttached) {
+				this._proxyChildViewEvents(view);
+			}
 			renderView(view);
 			this.view.Dom.appendContents(elBuffer, view.el, {_$contents: view.$el});
 
