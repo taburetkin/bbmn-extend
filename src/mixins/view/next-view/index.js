@@ -92,24 +92,6 @@ export default BaseView => BaseView.extend({
 
 	getChildrenContainer(){
 		return this.getOption('childrenContainer', { force: false });
-		/*
-		if(this._childrenContainer && this._childrenContainer.jquery)
-			return this._childrenContainer;
-
-		let value = this.getOption('childrenContainer');
-		if (value && value.jquery){
-			this._childrenContainer = value;
-		} else if(_.isString(value)) {
-			this._childrenContainer = this.$(value);
-			return this._childrenContainer;
-		}
-
-		if (!value) {
-			this._childrenContainer = this.$el;
-			return this._childrenContainer;
-		}
-		*/
-
 	},
 
 	/*
@@ -144,6 +126,7 @@ export default BaseView => BaseView.extend({
 	},	
 
 	addChildView(...args){
+		if (!args || args.length == 0) return;
 		if (this._viewManager) {
 			this._viewManager.addCustomView.apply(this._viewManager, arguments);
 		} else {
