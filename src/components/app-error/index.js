@@ -12,15 +12,16 @@ const AppError = extend.call(Error, {
 	name: 'app:error',
 	constructor(options){
 		if (!(this instanceof AppError)) {
-			return new AppError(_.extend({},options,{ newKeyword: 'there was no `new` keyword on throwing this error' }));
+			return new AppError(_.extend({},options,{ newKeywordOmited: true }));
 		}
 		options = normalizeAppErrorOptions(options);
 		const error = Error.call(this, options.message);
 		const important = {
 			name: options.name || this.name,
-			message: options.message,
-			url: options.url,
+			message: options.message || this.message,
+			url: options.url || this.url,
 		};
+		options.name = important.name;
 		_.extend(this, important, _.pick(error, errorProps), options);
 	
 		if (Error.captureStackTrace) {
