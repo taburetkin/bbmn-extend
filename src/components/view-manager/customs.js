@@ -34,10 +34,10 @@ export default {
 		} else if (_.isFunction(custom.build)) {
 			if(isView(custom.view) && !custom.view._isDestroyed){
 				this._destroyChildView(custom.view);
-				// custom.view.destroy();
-				// this.stopListening(custom.view);
 			}
-			custom.view = custom.build();
+			
+			this._buildContextView(custom);
+
 			return custom.view;
 		}
 	},

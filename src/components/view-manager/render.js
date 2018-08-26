@@ -142,12 +142,15 @@ export default {
 			context.view = this._createModelChildView(context.model);
 			return context.view;
 		} else if(context.rebuild && _.isFunction(context.build)) {
-			context.view = context.build();
-			if (_.isFunction(context.onBuild)) {
-				context.onBuild.call(this.view, context.view);
-			}
+			this._buildContextView(context);
 			return context.view;
 		} 
+	},
+	_buildContextView(context){
+		context.view = context.build();
+		if (_.isFunction(context.onBuild)) {
+			context.onBuild.call(this.view, context.view);
+		}
 	},
 	_createModelChildView(model){
 		let View = this._getChildViewClass(model);
