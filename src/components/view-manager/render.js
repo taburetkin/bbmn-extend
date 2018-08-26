@@ -45,16 +45,7 @@ export default {
 		}
 	},
 
-	removeCustomViews(){
-		let customs = this.getCustoms() || [];
-		_.each(customs, custom => {
-			if(!custom.view) return;
-			if(custom.rebuild)
-				this._destroyChildView(custom.view);
-			else
-				this._detachChildView(custom.view);
-		});
-	},
+
 	_destroyChildViews(views = []){
 		if(!views.length) return;
 		let $container = this.getChildrenContainer();

@@ -1,5 +1,5 @@
 import { isView, isViewClass } from '../../vendors/helpers';
-
+import result from '../../utils/better-result';
 
 export default {
 
@@ -11,12 +11,32 @@ export default {
 		if (!customContext) { return; }
 		this._store.customs.push(customContext);
 	},
-
+	removeCustomViews(){
+		let customs = this.getCustoms() || [];
+		_.each(customs, custom => {
+			if(!custom.view) return;
+			if(custom.rebuild)
+				this._destroyChildView(custom.view);
+			else
+				this._detachChildView(custom.view);
+		});
+	},
 
 	_extractCustomView(arg, custom = {}){
-		if(isView(arg) && !arg._isDestroyed) {
+		if (
+			custom.condition === false
+			||
+			(_.isFunction(custom.condition) && custom.condition.call(this.view, this.view, arg) === false)
+		) return;
+		
+		if (isView(arg) && !arg._isDestroyed) {
 			return arg;
-		} else if(_.isFunction(custom.build)) {
+		} else if (_.isFunction(custom.build)) {
+			if(isView(custom.view) && !custom.view._isDestroyed){
+				this._destroyChildView(custom.view);
+				// custom.view.destroy();
+				// this.stopListening(custom.view);
+			}
 			custom.view = custom.build();
 			return custom.view;
 		}
@@ -48,7 +68,7 @@ export default {
 	},
 
 	_normalizeAddCustomContext(arg, index){
-		if(isView(arg)){
+		if (isView(arg) && !arg._isDestroyed) {
 			return {
 				view: arg,
 				rebuild: false,
@@ -66,10 +86,25 @@ export default {
 				index,
 				rebuild: true,
 			};
-		} else if (_.isObject(arg)) {
-			if(index != null)
+		} else if (_.isObject(arg) && !isView(arg)) {
+			if (arg.build == null && arg.view == null) { return; }
+			if (index != null)
 				arg.index = index;
-			arg.rebuild = !(arg.view instanceof Backbone.View);
+
+			if (_.isFunction(arg.view)) {
+				let viewFn = arg.view;
+				delete arg.view;
+				let options = arg.options;
+				if(isViewClass(viewFn)){
+					arg.build = () => new viewFn(result({ options }, 'options', { context: this.view }));
+				} else {
+					arg.build = () => viewFn.call(this.view, result({ options }, 'options', { context: this.view }));
+				}
+			}
+
+			if (arg.rebuild == null) {
+				arg.rebuild = !isView(arg.view);
+			}
 			return arg;
 		}
 	}	
