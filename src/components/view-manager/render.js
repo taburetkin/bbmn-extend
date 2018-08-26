@@ -143,6 +143,9 @@ export default {
 			return context.view;
 		} else if(context.rebuild && _.isFunction(context.build)) {
 			context.view = context.build();
+			if (_.isFunction(context.onBuild)) {
+				context.onBuild.call(this.view, context.view);
+			}
 			return context.view;
 		} 
 	},
