@@ -4,10 +4,7 @@ function normalizeAppErrorOptions(data = {}){
 	if(_.isString(data)){
 		data = { message: data };
 	}
-	return _.extend({
-		name: data.name,
-		message: data.message
-	}, data);
+	return data;
 }
 const AppError = extend.call(Error, {
 	urlRoot: '',
