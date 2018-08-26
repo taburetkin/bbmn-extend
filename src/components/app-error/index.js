@@ -14,9 +14,9 @@ const AppError = extend.call(Error, {
 	url: '',
 	name: 'app:error',
 	constructor(options){
-		// if (this == null) {
-		// 	return new arguments.callee(options);
-		// }
+		if (!(this instanceof AppError)) {
+			return new AppError(_.extend({},options,{ newKeyword: 'there was no `new` keyword on throwing this error' }));
+		}
 		options = normalizeAppErrorOptions(options);
 		const error = Error.call(this, options.message);
 		const important = {
@@ -31,7 +31,7 @@ const AppError = extend.call(Error, {
 		}
 		if (options.url) 
 			this.url = this.urlRoot + this.url;
-	},
+	},	
 	captureStackTrace(){
 		Error.captureStackTrace(this, this.constructor);
 	},
@@ -44,5 +44,6 @@ const AppError = extend.call(Error, {
 // 	this.prototype.urlRoot = url;
 // };
 AppError.extend = extend;
+
 
 export default AppError;
