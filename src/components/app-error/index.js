@@ -4,9 +4,6 @@ function normalizeAppErrorOptions(data = {}){
 	if(_.isString(data)){
 		data = { message: data };
 	}
-	if (!data.name) {
-		data.name = 'application:error';
-	}
 	return _.extend({
 		name: data.name,
 		message: data.message
@@ -14,15 +11,16 @@ function normalizeAppErrorOptions(data = {}){
 }
 const AppError = extend.call(Error, {
 	urlRoot: '',
-	url: '',	
+	url: '',
+	name: 'app:error',
 	constructor(options){
 		if (this == null) {
-			return new AppError(options);
+			return new arguments.callee(options);
 		}
 		options = normalizeAppErrorOptions(options);
 		const error = Error.call(this, options.message);
 		const important = {
-			name: options.name,
+			name: options.name || this.name,
 			message: options.message,
 			url: options.url,
 		};
@@ -42,8 +40,9 @@ const AppError = extend.call(Error, {
 		return `${ this.name }: ${ this.message }${url}`;
 	}
 });
-AppError.setUrlRoot = function(url){
-	this.prototype.urlRoot = url;
-};
+// AppError.setUrlRoot = function(url){
+// 	this.prototype.urlRoot = url;
+// };
+AppError.extend = extend;
 
 export default AppError;
