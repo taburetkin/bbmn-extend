@@ -101,7 +101,7 @@ export default {
 			view._isAttached = false;
 			view.triggerMethod('detach', view);
 		}	
-		this.stopListening(view);
+		this.view.stopListening(view);
 	},
 
 	_attachChildViews(contexts = []){
@@ -116,7 +116,7 @@ export default {
 
 			if(!view) return;
 			if (!view._isAttached) {
-				this._proxyChildViewEvents(view);
+				this.view._proxyChildViewEvents(view);
 			}
 			renderView(view);
 			this.view.Dom.appendContents(elBuffer, view.el, {_$contents: view.$el});
