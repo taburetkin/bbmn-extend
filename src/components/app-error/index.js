@@ -15,12 +15,17 @@ const AppError = extend.call(Error, {
 			return new AppError(_.extend({},options,{ newKeywordOmited: true }));
 		}
 		options = normalizeAppErrorOptions(options);
+		let url = options.url;
+		delete options.url;
+
 		const error = Error.call(this, options.message);
 		const important = {
 			name: options.name || this.name,
 			message: options.message || this.message,
-			url: options.url || this.url,
 		};
+		if(url || this.url){
+			important.url = (this.urlRoot || '') + (url || this.url || '');
+		}
 		options.name = important.name;
 		_.extend(this, important, _.pick(error, errorProps), options);
 	
