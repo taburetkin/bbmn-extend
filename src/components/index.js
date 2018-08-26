@@ -7,8 +7,9 @@ import historyWatcher from './navigation/history-watcher';
 import * as navigator from './navigation/navigator';
 import * as history from './navigation/history';
 import BearerToken from './bearer-token';
-import store from './store';
 import ViewManager from './view-manager';
+import store from './store';
+import AppError from './app-error';
 export {
 	historyWatcher,
 	navigator,
@@ -21,4 +22,5 @@ export {
 	BearerToken,
 	ViewManager,
 	store,
+	AppError
 };
