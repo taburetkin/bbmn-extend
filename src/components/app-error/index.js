@@ -14,9 +14,9 @@ const AppError = extend.call(Error, {
 	url: '',
 	name: 'app:error',
 	constructor(options){
-		if (this == null) {
-			return new arguments.callee(options);
-		}
+		// if (this == null) {
+		// 	return new arguments.callee(options);
+		// }
 		options = normalizeAppErrorOptions(options);
 		const error = Error.call(this, options.message);
 		const important = {
