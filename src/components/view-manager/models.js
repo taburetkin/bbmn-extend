@@ -9,25 +9,38 @@ export default {
 		this._removeEmptyViewInstance({ destroy });
 
 		let items = this._getItems({ forceFilter });
-		let resultDetach = [];
+
+
+
+		let totalDetach = [];
 
 		if (!this._store.isFiltered || forceFilter) {
 			let { attach, detach } = this._filterItems(items, { filter: this.getFilter() });
 			this._setItems(attach, { isFiltered: true });
 			items = attach;
-			resultDetach = detach;
+			if(detach.length) {
+				//resultData.detach = resultData.detach.concat(detach);
+				totalDetach = totalDetach.concat(detach);
+			}
+			//resultDetach = detach;
 		}
 		this._sortItems(items, { comparator: this.getComparator(), force: forceSort },'process');
 		this._store.isSorted = true;
 
 
+
 		let data = this._filterItems(items, { paginator: this.getPaginator() });
-		resultDetach = resultDetach.concat(data.detach);
-		let attach = this._injectCustoms(data.attach);
+		if(data.detach.length) {
+			//resultData.detach = resultData.detach.concat(data.detach);
+			totalDetach = totalDetach.concat(data.detach);
+		}
+
+
+		let attach = this._injectCustoms(data.attach, totalDetach, destroy);
 
 		let result = {
 			attach,
-			detach: resultDetach,
+			detach: totalDetach,
 			destroy,
 			total: data.total,
 			skiped: data.skiped,
@@ -60,13 +73,15 @@ export default {
 		let detach = [];
 		let attach = [];
 
+
 		if (!filter && !paginator && !force) {
+			
 			return { attach: items, detach:[] };
 		
 		}
 		
 		
-		let shouldUpdateIndex = items == this.collection.models;
+		let shouldUpdateIndex = this.collection && items == this.collection.models;
 		
 		
 		for(let index = 0, length = items.length; index < length; index++){
@@ -108,6 +123,10 @@ export default {
 			res.skiped = paginator.from;
 			res.taked = iterator - paginator.from - 1;
 		}
+
+		// resultData.attach = attach;
+		// resultData.detach = detach;
+
 		return res;
 	},
 

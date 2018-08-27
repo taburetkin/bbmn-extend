@@ -2,6 +2,9 @@ export function isInPage(paginator, index){
 	return !paginator || (index >= paginator.from && index < paginator.to);
 }
 
+export function viewIsGood(view){
+	return view && !view._isDestroyed;
+}
 
 export function renderView(view) {
 	if (view._isRendered) {

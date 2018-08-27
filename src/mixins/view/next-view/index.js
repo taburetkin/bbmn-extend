@@ -23,6 +23,11 @@ export default BaseView => BaseView.extend({
 		let models = this.getOption('enableCollectionViews');
 		if(!(customs || models)) return;
 		
+		let enableFilterForCustomViews;
+		if (!models && customs && this.getFilter()) {
+			enableFilterForCustomViews = true;
+		}
+
 		this._fallbackOptions();
 
 		this._viewManager = new ViewManager({
@@ -36,7 +41,7 @@ export default BaseView => BaseView.extend({
 			dataComparator: this.getComparator(),
 			emptyView: this.emptyView,
 			emptyViewOptions: this.emptyViewOptions,
-
+			enableFilterForCustomViews
 		});
 
 		if (this._customViewsQueue) {

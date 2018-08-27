@@ -19,7 +19,8 @@ const MergeOptions = [
 	'modelView',
 	'modelViewOptions',
 	'emptyView',
-	'emptyViewOptions'
+	'emptyViewOptions',
+	'enableFilterForCustomViews'
 ];
 
 const ViewManager = function(options = {}){

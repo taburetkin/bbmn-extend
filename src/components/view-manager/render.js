@@ -1,4 +1,7 @@
-import { destroyView, renderView } from './utils';
+import { destroyView, renderView, viewIsGood } from './utils';
+
+
+
 
 export default {
 
@@ -33,8 +36,8 @@ export default {
 
 			this.triggerViewMethod('before:render:children', data);
 
-			if(this.view._isRendered)
-				this.removeCustomViews();
+			// if(this.view._isRendered)
+			// 	this.removeCustomViews();
 
 			this._destroyChildViews(data.destroy);
 			this._detachChildViews(data.detach);
@@ -101,7 +104,7 @@ export default {
 			view._isAttached = false;
 			view.triggerMethod('detach', view);
 		}	
-		this.view.stopListening(view);
+		//this.view.stopListening(view);
 	},
 
 	_attachChildViews(contexts = []){
@@ -114,11 +117,9 @@ export default {
 		_.each(contexts, context => {
 			let view = this._ensureContextHasView(context);
 
-			if(!view) return;
-			if (!view._isAttached) {
-				this.view._proxyChildViewEvents(view);
-			}
-			renderView(view);
+			if (!view) return;
+
+			!view._isRendered && renderView(view);
 			this.view.Dom.appendContents(elBuffer, view.el, {_$contents: view.$el});
 
 			if (shouldTriggerAttach && !view._isAttached) {				
@@ -137,28 +138,47 @@ export default {
 			});			
 		}
 	},
+
+
 	_ensureContextHasView(context){
-		if (context.view && !context.view._isDestroyed)
+		if (viewIsGood(context.view))
 			return context.view;
 		else if (context.isCollection) {
 			context.view = this._createModelChildView(context.model);
 			return context.view;
 		} else if(context.rebuild && _.isFunction(context.build)) {
-			this._buildContextView(context);
+			context.view = this._createCustomChildView(context);
 			return context.view;
 		} 
 	},
-	_buildContextView(context){
-		context.view = context.build();
-		if (_.isFunction(context.onBuild)) {
-			context.onBuild.call(this.view, context.view);
+	_createChildView(context){
+		let created;
+		if (context.isCollection) {
+			context.view = this._createModelChildView(context.model);
+			created = !!context.view;
+		} else if (_.isFunction(context.build) && (!viewIsGood(context.view) || context.rebuild)) {
+			context.view = this._createCustomChildView(context);
+			created = !!context.view;
 		}
+		if (!created) return;
+
+		this._setupJustCreatedView(context.view, context);
+	},
+	_createCustomChildView(context){
+		return context.build();
 	},
 	_createModelChildView(model){
 		let View = this._getChildViewClass(model);
 		if(!View) return;
 		let options = this._getChildViewOptions(model, View);
-		return new View(options);
+		let view = new View(options);
+		return view;
+	},
+	_setupJustCreatedView(view, context){
+		if (_.isFunction(context.onBuild)) {
+			context.onBuild.call(this.view, view);
+		}
+		this.view._proxyChildViewEvents(view);		
 	},
 	_getChildViewClass(model){
 		if(this.modelView === Backbone.View || this.modelView.prototype instanceof Backbone.View)

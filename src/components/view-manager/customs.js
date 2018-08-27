@@ -10,41 +10,43 @@ export default {
 		let customContext = this._normalizeAddCustomContext(arg, index);
 		if (!customContext) { return; }
 		this._store.customs.push(customContext);
+		if(isView(customContext.view) && !customContext.view._isDestroyed) {
+			this._setupJustCreatedView(customContext.view, customContext);
+		}
 	},
 	removeCustomViews(){
 		let customs = this.getCustoms() || [];
 		_.each(customs, custom => {
 			if(!custom.view) return;
-			if(custom.rebuild)
+			
+			if(this._checkCustomCondition(custom.view, custom)) { return; }
+
+			if (custom.rebuild)
 				this._destroyChildView(custom.view);
 			else
 				this._detachChildView(custom.view);
 		});
 	},
 
-	_extractCustomView(arg, custom = {}){
-		if (
-			custom.condition === false
-			||
-			(_.isFunction(custom.condition) && custom.condition.call(this.view, this.view, arg) === false)
-		) return;
+	_checkCustomCondition(customView, custom){
 		
-		if (isView(arg) && !arg._isDestroyed) {
-			return arg;
-		} else if (_.isFunction(custom.build)) {
-			if(isView(custom.view) && !custom.view._isDestroyed){
-				this._destroyChildView(custom.view);
-			}
-			
-			this._buildContextView(custom);
-
-			return custom.view;
+		if (this.enableFilterForCustomViews) {
+			let filter = this.getFilter();
+			return !filter || filter(customView);
 		}
+
+		if (_.isFunction(custom.condition)) {
+			return custom.condition.call(this.view, customView, this.view);
+		} else if(custom.condition != null){
+			return custom.condition;
+		} else {
+			return true;
+		}
+
 	},
+	_injectCustoms(items, detached, destroyed){
 
-	_injectCustoms(items){
-
-		if (!items.length) {
+		if (this.collection && !items.length) {
 			items = [];
 			this._injectEmptyView(items);
 		}
@@ -56,8 +58,19 @@ export default {
 
 		let newitems = items.slice(0);
 		_.each(customs, custom => {
-			let view = this._extractCustomView(custom.view, custom);
+
+			let view = this._ensureContextHasView(custom);
 			if(!view) return;
+
+			if(!this._checkCustomCondition(view, custom)){
+				// if (custom.rebuild) {
+				// 	destroyed.push(view);
+				// } else {
+				// }
+				detached.push(custom);
+				return;
+			}
+
 			if(custom.index == null){
 				newitems.push(custom);
 			} else {
