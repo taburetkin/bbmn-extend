@@ -10,11 +10,8 @@ export default CollectionView => CollectionView.extend({
 		if (!this.collection || this.collection.length) { return; }
 
 		this.listenToOnce(this.collection, 'sync', 
-			() => !this.collection.length && this.showEmptyView()
+			() => !this.collection.length && this._renderChildren()
 		);
 
 	},
-	showEmptyView(){
-		return this._showEmptyView();
-	}
 });
