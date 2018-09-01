@@ -65,7 +65,7 @@ export default CollectionView => CollectionView.extend({
 
 		this._destroyEmptyView();
 	
-		if(this.isEmpty()) { return; }
+		if(!this.isEmpty()) { return; }
 
 		const EmptyView = this._getEmptyView();	
 		if (!EmptyView) {
