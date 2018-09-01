@@ -75,7 +75,7 @@ export default CollectionView => CollectionView.extend({
 		const options = this._getEmptyViewOptions();
 		this._emptyViewInstance = new EmptyView(options);
 	
-		this.addChildView(this._emptyViewInstance, { preventRender: true });
+		this.addChildView(this._emptyViewInstance, { preventRender: true, index: 0, });
 	
 	},
 	_destroyEmptyView(){
