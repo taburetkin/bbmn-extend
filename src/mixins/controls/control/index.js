@@ -7,8 +7,19 @@ import { compareObjects, mergeObjects, getOption, camelCase, setByPath } from '.
 
 export default Base => Base.extend({	
 
+	initializeValues(){
+		let value = this.getOption('value', {deep: false, force: false});
+		this.setInitialValue(value);
+		this.setControlValue(value, { trigger: false });
+	},
 	getControlValue(){
 		return this.value;
+	},
+	getInitialValue(){
+		return this.initialValue;
+	},
+	setInitialValue(value){
+		this.initialValue = value;
 	},
 	prepareValueBeforeSet(value){ return value; },
 	setControlValue(value, { key, trigger = true } = {}){
@@ -41,6 +52,13 @@ export default Base => Base.extend({
 		}
 		this.triggerControlDone();
 	},
+	cancel(){
+		this.done(this.getInitialValue());
+	},
+	reset(){
+		this.done(undefined);
+	},
+
 
 	_validateControl(value){
 		let validate = getOption(this, 'validateControl', { force: false });
