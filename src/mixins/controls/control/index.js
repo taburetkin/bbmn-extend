@@ -107,7 +107,7 @@ export default Base => Base.extend({
 		let parent = this.getParentControl();
 		if (!parent) return;
 
-		this.handleChildControlEvent.apply(parent, args);
+		this.handleChildControlEvent.call(parent, eventName, ...args);
 
 	},
 
