@@ -22,7 +22,7 @@ export default Base => {
 			this.buildRestrictions();
 			let value = this.getOption('value') || '';			
 			this.el.value = value;
-			this.setControlValue(value);
+			this.setControlValue(value, { trigger: false });
 		},
 		tagName:'input',
 		template: false,
@@ -47,13 +47,6 @@ export default Base => {
 				pick && (restrictions[key] = value);
 			});
 			this.restrictions = restrictions;		
-		},
-		setControlValue(value, opts = {})
-		{
-			this.value = this.prepareValueBeforeSet(value);
-			if(!opts.silent)
-				this.triggerControlChange();
-			return this.value;
 		},
 		prepareValueBeforeSet(value){
 			if (value == null || value === '') return value;

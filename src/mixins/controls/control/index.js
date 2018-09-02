@@ -10,9 +10,10 @@ export default Base => Base.extend({
 	getControlValue(){
 		return this.value;
 	},
-
+	prepareValueBeforeSet(value){ return value; },
 	setControlValue(value, { key, trigger = true } = {}){
 		let newvalue = _.clone(this.value);
+		value = this.transformValueBeforeSet(value);
 		if (key == null) {
 			newvalue = value;
 		} else {
@@ -31,6 +32,8 @@ export default Base => Base.extend({
 		this.value = newvalue;
 
 		trigger && this.triggerControlChange();
+
+		return this.value;
 	},
 
 	_validateControl(value){
