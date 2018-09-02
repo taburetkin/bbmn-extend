@@ -35,6 +35,12 @@ export default Base => Base.extend({
 
 		return this.value;
 	},
+	done(value){
+		if (arguments.length) {
+			this.setControlValue(value, { trigger: false });
+		}
+		this.triggerControlDone();
+	},
 
 	_validateControl(value){
 		let validate = getOption(this, 'validateControl', { force: false });
