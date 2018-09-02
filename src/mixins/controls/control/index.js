@@ -13,7 +13,7 @@ export default Base => Base.extend({
 	prepareValueBeforeSet(value){ return value; },
 	setControlValue(value, { key, trigger = true } = {}){
 		let newvalue = _.clone(this.value);
-		value = this.transformValueBeforeSet(value);
+		value = this.prepareValueBeforeSet(value);
 		if (key == null) {
 			newvalue = value;
 		} else {
