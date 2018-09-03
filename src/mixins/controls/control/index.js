@@ -35,7 +35,6 @@ export default Base => Base.extend({
 
 		let errors = this._validateControl(newvalue);
 		if (errors) {
-			this.triggerControlInvalid(errors);
 			return;
 		}
 
@@ -46,24 +45,24 @@ export default Base => Base.extend({
 
 		return this.value;
 	},
-	done(value){
-		if (arguments.length) {
-			this.setControlValue(value, { trigger: false });
-		}
-		this.triggerControlDone();
-	},
-	cancel(){
-		this.done(this.getInitialValue());
-	},
-	reset(){
-		this.done(undefined);
-	},
 
-
+	isValid(){
+		return this._isInvalid === false;
+	},
+	
 	_validateControl(value){
 		let validate = getOption(this, 'validateControl', { force: false });
-		if(_.isFunction(validate))
-			return validate.call(this, value, this);
+		let errors;
+		if (_.isFunction(validate)) {
+			errors = validate.call(this, value, this);
+		}
+		if (errors) {
+			this._isInvalid = true;
+			this.triggerControlInvalid(errors);
+		} else {
+			this._isInvalid = false;
+		}
+		return errors;
 	},
 
 
@@ -82,13 +81,20 @@ export default Base => Base.extend({
 		}
 	},
 
-
+	_triggerControlEvent(eventName, args) {
+		let triggerValue = getTriggerValue(this, args);
+		triggerControlEvent(this, eventName, triggerValue);
+	},
 	triggerControlChange(){
 		this._triggerControlEvent('change', arguments);
 	},
 	triggerControlDone(){
 		this._triggerControlEvent('done', arguments);
 	},
+	triggerControlInvalid(errors){
+		triggerControlEvent(this, 'invalid', errors);
+	},
+
 	/*
 	_isValueAsPrevious(value, type){
 		let previousTriggerName = this.getPreviousTriggerValueKey(type);
@@ -108,25 +114,7 @@ export default Base => Base.extend({
 		return camelCase('_previous:' + type);
 	},
 	*/
-	_triggerControlEvent(eventName, args) {
-		let triggerValue = getTriggerValue(this, args);
-		triggerControlEvent(this, eventName, triggerValue);
 
-		/*let triggerValue = getTriggerValue(this, args);
-		if (this.isValueAsPrevious(triggerValue, eventName)) {
-			return;
-		}
-		let errors = this.tryValidateControl(triggerValue);
-		if (!errors) {
-			this.setPreviousTriggerValue(triggerValue, eventName);			
-			triggerControlEvent(this, eventName, triggerValue);
-		} else {
-			this.triggerControlInvalid(errors);
-		}*/
-	},
-	triggerControlInvalid(errors){
-		triggerControlEvent(this, 'invalid', errors);
-	},
 	proxyControlEventToParent(eventName, ...args){
 		let parent = this.getParentControl();
 		if (!parent) return;
