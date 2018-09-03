@@ -35,6 +35,7 @@ export default Base => Base.extend({
 
 		let errors = this._validateControl(newvalue);
 		if (errors) {
+			this._previousValue = newvalue;
 			return;
 		}
 
@@ -49,7 +50,7 @@ export default Base => Base.extend({
 	isValid(){
 		return this._isInvalid === false;
 	},
-	
+
 	_validateControl(value){
 		let validate = getOption(this, 'validateControl', { force: false });
 		let errors;
