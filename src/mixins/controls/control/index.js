@@ -34,15 +34,15 @@ export default Base => Base.extend({
 		if (same) { return; }
 
 		let errors = this._validateControl(newvalue);
-		if (errors) {
-			this._previousValue = newvalue;
-			return;
-		}
+		// if (errors) {
+		// 	this._previousValue = newvalue;
+		// 	return;
+		// }
 
 		this._previousValue = this.value;
 		this.value = newvalue;
 
-		trigger && this.triggerControlChange();
+		!errors && trigger && this.triggerControlChange();
 
 		return this.value;
 	},
