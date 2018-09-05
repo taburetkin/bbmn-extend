@@ -33,18 +33,15 @@ export default Base => Base.extend({
 		let same = compareObjects(this.value, newvalue);
 		if (same) { return; }
 
-		let errors = this._validateControl(newvalue);
-		// if (errors) {
-		// 	this._previousValue = newvalue;
-		// 	return;
-		// }
 
-		this._previousValue = this.value;
-		this.value = newvalue;
-
-		!errors && trigger && this.triggerControlChange();
-
-		return this.value;
+		return this._validateControl(newvalue).then(
+			() => {
+				this._previousValue = this.value;
+				this.value = newvalue;
+				trigger && this.triggerControlChange();
+				return Promise.resolve(this.value);
+			}
+		);
 	},
 
 	isValid(){
@@ -52,18 +49,34 @@ export default Base => Base.extend({
 	},
 
 	_validateControl(value){
+
 		let validate = getOption(this, 'validateControl', { force: false });
-		let errors;
+		let validateResult;
+		let fullValue = this.getFullValue();
 		if (_.isFunction(validate)) {
-			errors = validate.call(this, value, this);
+			validateResult = validate.call(this, value, fullValue, this);
 		}
-		if (errors) {
-			this._isInvalid = true;
-			this.triggerControlInvalid(errors);
-		} else {
+		if (validateResult == null) {
 			this._isInvalid = false;
+			return Promise.resolve();
+		} else {
+			if (_.isFunction(validateResult.then)) {
+				return validateResult.then(
+					() => {
+						this._isInvalid = false;
+					},
+					errors => {
+						this._isInvalid = true;
+						this.triggerControlInvalid(errors);
+						return errors;
+					}
+				);
+			} else {
+				this._isInvalid = true;
+				this.triggerControlInvalid(validateResult);
+				return Promise.reject(validateResult);
+			}
 		}
-		return errors;
 	},
 
 
@@ -74,7 +87,10 @@ export default Base => Base.extend({
 	getParentControl(){
 		return getOption(this, 'proxyTo', { args:[this]});
 	},
-
+	getFullValue(){
+		let parent = this.getParentControl();
+		return parent && parent.getControlValue && parent.getControlValue() || undefined;
+	},
 	handleChildControlEvent(eventName, ...args){
 		let events = getOption(this, 'childControlEvents', { args:[this]}) || {};
 		if (_.isFunction(events[eventName])) {
