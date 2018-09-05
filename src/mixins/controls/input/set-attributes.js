@@ -7,8 +7,11 @@ export default function setInputAttributes(inputView, opts = {}) {
 
 	let attributes = getOption(inputView, opts, 'attributes');
 
+	let check = _.extend({}, inputView, opts, inputView.valueOptions, opts.valueOptions);
+
 	let restrictionKeys = {
 		'maxLength':'maxlength', 
+		'minLength':'minlength',
 		'minValue':'min', 
 		'maxValue':'max', 
 		'valuePattern':'pattern',
@@ -17,7 +20,8 @@ export default function setInputAttributes(inputView, opts = {}) {
 	};
 	let restrictions = {};
 	_(restrictionKeys).each((key2, key) => {
-		let value = getOption(inputView, opts, key);
+		let value = check[key];
+		//getOption(inputView, opts, key);
 		if (value != null)
 			restrictions[key2] = value;
 	});

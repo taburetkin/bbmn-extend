@@ -28,7 +28,7 @@ export default Base => {
 		template: false,
 		buildRestrictions(){
 			let attrs = _.result(this, 'attributes');
-			let pickNumbers = ['maxlength', 'min', 'max'];
+			let pickNumbers = ['maxlength', 'minlength', 'min', 'max'];
 			let pickStrings = ['pattern'];
 			let pickBools = ['required'];
 			let restrictions = {};
