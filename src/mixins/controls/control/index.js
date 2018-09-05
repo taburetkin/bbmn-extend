@@ -41,7 +41,9 @@ export default Base => Base.extend({
 				trigger && this.triggerControlChange();
 				return Promise.resolve(this.value);
 			},
-			() => {}
+			error => {
+				Console.log('-->', error);
+			}
 		);
 	},
 
