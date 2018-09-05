@@ -50,6 +50,7 @@ export default Base => Base.extend({
 	},
 
 	_validateControl(value){
+		
 		if (arguments.length === 0) {
 			value = this.getControlValue();
 		}
@@ -71,7 +72,7 @@ export default Base => Base.extend({
 					errors => {
 						this._isInvalid = true;
 						this.triggerControlInvalid(errors);
-						return errors;
+						return Promise.reject(errors);
 					}
 				);
 			} else {
