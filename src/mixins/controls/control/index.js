@@ -40,7 +40,8 @@ export default Base => Base.extend({
 				this.value = newvalue;
 				trigger && this.triggerControlChange();
 				return Promise.resolve(this.value);
-			}
+			},
+			() => {}
 		);
 	},
 
