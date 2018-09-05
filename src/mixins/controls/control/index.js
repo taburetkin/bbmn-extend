@@ -50,7 +50,9 @@ export default Base => Base.extend({
 	},
 
 	_validateControl(value){
-
+		if (arguments.length === 0) {
+			value = this.getControlValue();
+		}
 		let validate = getOption(this, 'validateControl', { force: false });
 		let validateResult;
 		let fullValue = this.getFullValue();
