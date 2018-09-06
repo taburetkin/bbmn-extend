@@ -12,7 +12,10 @@ export default Base => Base.extend({
 		this.setInitialValue(value);
 		this.setControlValue(value, { trigger: false });
 	},
-	getControlValue(){
+	getControlValue({ invalid } = {}){
+		if (invalid && ('_invalidValue' in this)) {
+			return this._invalidValue;
+		}
 		return this.value;
 	},
 	getInitialValue(){
@@ -22,7 +25,7 @@ export default Base => Base.extend({
 		this.initialValue = value;
 	},
 	prepareValueBeforeSet(value){ return value; },
-	setControlValue(value, { key, trigger = true } = {}){
+	setControlValue(value, { key, trigger = true, invalid } = {}){
 		let newvalue = _.clone(this.value);
 		value = this.prepareValueBeforeSet(value);
 		if (key == null) {
@@ -33,15 +36,24 @@ export default Base => Base.extend({
 		let same = compareObjects(this.value, newvalue);
 		if (same) { return; }
 
+		let alwaysUpdateValue = this.getOption('alwaysUpdateValue');
 
 		return this._validateControl(newvalue).then(
 			() => {
 				this._previousValue = this.value;
-				this.value = newvalue;
-				trigger && this.triggerControlChange();
+				if (!invalid) {
+					this.value = newvalue;
+					delete this._invalidValue;
+					trigger && this.triggerControlChange();
+				} else {
+					this._invalidValue = newvalue;
+				}
 				return Promise.resolve(this.value);
 			},
-			error => {}
+			error => {
+				alwaysUpdateValue && (this.value = newvalue);
+				this._invalidValue = newvalue;
+			}
 		);
 	},
 
