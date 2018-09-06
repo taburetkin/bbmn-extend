@@ -3,7 +3,7 @@ import getTriggerValue from './get-trigger-value';
 //import getOption from '../../../utils/get-option';
 //import camelCase from '../../../utils/camel-case';
 
-import { compareObjects, mergeObjects, getOption, camelCase, setByPath } from '../../../utils/index.js';
+import { compareObjects, mergeObjects, getOption, camelCase, setByPath, flat, unflat } from '../../../utils/index.js';
 
 export default Base => Base.extend({	
 
@@ -26,7 +26,11 @@ export default Base => Base.extend({
 	},
 	prepareValueBeforeSet(value){ return value; },
 	setControlValue(value, { key, trigger = true, invalid } = {}){
-		let newvalue = _.clone(this.value);
+		let newvalue = this.getControlValue({ invalid });
+		if(_.isObject(newvalue)){
+			newvalue = unflat(flat(newvalue));
+		}
+		//let newvalue = _.clone(this.value);
 		value = this.prepareValueBeforeSet(value);
 		if (key == null) {
 			newvalue = value;
