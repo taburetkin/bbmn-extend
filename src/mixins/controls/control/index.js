@@ -68,7 +68,7 @@ export default Base => Base.extend({
 	_validateControl(value){
 		
 		if (arguments.length === 0) {
-			value = this.getControlValue();
+			value = this.getControlValue({ invalid: true });
 		}
 		let validate = getOption(this, 'validateControl', { force: false });
 		let validateResult;
@@ -87,13 +87,13 @@ export default Base => Base.extend({
 					},
 					errors => {
 						this._isInvalid = true;
-						this.triggerControlInvalid(errors);
+						this.triggerControlInvalid(errors, value, fullValue);
 						return Promise.reject(errors);
 					}
 				);
 			} else {
 				this._isInvalid = true;
-				this.triggerControlInvalid(validateResult);
+				this.triggerControlInvalid(validateResult, value, fullValue);
 				return Promise.reject(validateResult);
 			}
 		}
@@ -109,7 +109,7 @@ export default Base => Base.extend({
 	},
 	getFullValue(){
 		let parent = this.getParentControl();
-		return parent && parent.getControlValue && parent.getControlValue() || undefined;
+		return parent && parent.getControlValue && parent.getControlValue({ invalid: true }) || undefined;
 	},
 	handleChildControlEvent(eventName, ...args){
 		let events = getOption(this, 'childControlEvents', { args:[this]}) || {};
