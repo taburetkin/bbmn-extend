@@ -87,7 +87,7 @@ export default Base => Base.extend({
 		}
 
 		return promise.then(() => {
-			this._validateSuccess(value, options);
+			return this._validateSuccess(value, options);
 		}, error => {
 			return this._validateError(error, value, options);
 		});
@@ -95,6 +95,7 @@ export default Base => Base.extend({
 	_validateSuccess(value, { proxyEvent } = {}){
 		this._isInvalid = false;
 		triggerControlEvent(this, 'valid', { proxyEvent, args: [value] });
+		return Promise.resolve(value);
 	},
 	_validateError(error, value, options = {}){
 		this._isInvalid = true;
