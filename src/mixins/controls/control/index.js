@@ -128,8 +128,8 @@ export default Base => Base.extend({
 	triggerControlDone(){
 		this._triggerControlEvent('done', arguments);
 	},
-	triggerControlInvalid(errors){
-		triggerControlEvent(this, 'invalid', errors);
+	triggerControlInvalid(errors, value, fullValue){
+		triggerControlEvent(this, 'invalid', errors, value, fullValue);
 	},
 
 	/*
