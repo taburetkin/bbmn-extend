@@ -3,7 +3,7 @@ import getTriggerValue from './get-trigger-value';
 //import getOption from '../../../utils/get-option';
 //import camelCase from '../../../utils/camel-case';
 
-import { compareObjects, mergeObjects, getOption, camelCase, setByPath, flat, unflat } from '../../../utils/index.js';
+import { compareObjects, getOption, setByPath, flat, unflat } from '../../../utils/index.js';
 
 export default Base => Base.extend({	
 
@@ -12,9 +12,9 @@ export default Base => Base.extend({
 		this.setInitialValue(value);
 		this.setControlValue(value, { trigger: false });
 	},
-	getControlValue({ invalid } = {}){
-		if (invalid) {
-			return this._invalidValue || this.value;
+	getControlValue({ notValidated } = {}){
+		if (notValidated) {
+			return this._notValidatedValue || this.value;
 		}
 		return this.value;
 	},
@@ -25,12 +25,11 @@ export default Base => Base.extend({
 		this.initialValue = value;
 	},
 	prepareValueBeforeSet(value){ return value; },
-	setControlValue(value, { key, trigger = true, invalid } = {}){
-		let newvalue = this.getControlValue({ invalid });
+	setControlValue(value, { key, trigger = true, notValidated, fullValue } = {}){
+		let newvalue = this.getControlValue({ notValidated });
 		if(_.isObject(newvalue)){
 			newvalue = unflat(flat(newvalue));
 		}
-		//let newvalue = _.clone(this.value);
 		value = this.prepareValueBeforeSet(value);
 		if (key == null) {
 			newvalue = value;
@@ -41,18 +40,20 @@ export default Base => Base.extend({
 		if (same) { return; }
 
 		let alwaysUpdateValue = this.getOption('alwaysUpdateValue');
-		this._invalidValue = newvalue;
-		return this._validateControl(newvalue).then(
+		this._notValidatedValue = newvalue;
+
+		if (notValidated) {
+			return Promise.resolve(this._notValidatedValue);
+		}
+
+		return this.validate(newvalue, fullValue).then(
 			() => {
 				this._previousValue = this.value;
-				if (!invalid) {
-					this.value = newvalue;
-					trigger && this.triggerControlChange();
-				}
-				
+				this.value = newvalue;
+				trigger && this.triggerControlChange();
 				return Promise.resolve(this.value);
 			},
-			error => {
+			() => {
 				alwaysUpdateValue && (this.value = newvalue);
 			}
 		);
@@ -62,14 +63,15 @@ export default Base => Base.extend({
 		return this._isInvalid === false;
 	},
 
-	_validateControl(value){
+	validate(value, fullValue){
 		
 		if (arguments.length === 0) {
 			value = this.getControlValue({ invalid: true });
+			fullValue = this.getFullValue({ notValidated: true });
 		}
 		let validate = getOption(this, 'validateControl', { force: false });
 		let validateResult;
-		let fullValue = this.getFullValue();
+		
 		if (_.isFunction(validate)) {
 			validateResult = validate.call(this, value, fullValue, this);
 		}
@@ -104,9 +106,12 @@ export default Base => Base.extend({
 	getParentControl(){
 		return getOption(this, 'proxyTo', { args:[this]});
 	},
-	getFullValue(){
+	getFullValue({ notValidated } = {}){
 		let parent = this.getParentControl();
-		return parent && parent.getControlValue && parent.getControlValue({ invalid: true }) || undefined;
+		if (!parent || !parent.getControlValue) {
+			return;
+		}
+		return parent.getControlValue({ notValidated });
 	},
 	handleChildControlEvent(eventName, ...args){
 		let events = getOption(this, 'childControlEvents', { args:[this]}) || {};
