@@ -46,7 +46,7 @@ export default Base => Base.extend({
 			return Promise.resolve(this._notValidatedValue);
 		}
 
-		return this.validate(newvalue, fullValue).then(
+		return this.validate({ value: newvalue, fullValue}).then(
 			() => {
 				this._previousValue = this.value;
 				this.value = newvalue;
