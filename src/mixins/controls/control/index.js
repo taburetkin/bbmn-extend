@@ -41,7 +41,7 @@ export default Base => Base.extend({
 		if (same) { return; }
 
 		let alwaysUpdateValue = this.getOption('alwaysUpdateValue');
-
+		this._invalidValue = newvalue;
 		return this._validateControl(newvalue).then(
 			() => {
 				this._previousValue = this.value;
@@ -49,12 +49,11 @@ export default Base => Base.extend({
 					this.value = newvalue;
 					trigger && this.triggerControlChange();
 				}
-				this._invalidValue = newvalue;
+				
 				return Promise.resolve(this.value);
 			},
 			error => {
 				alwaysUpdateValue && (this.value = newvalue);
-				this._invalidValue = newvalue;
 			}
 		);
 	},
