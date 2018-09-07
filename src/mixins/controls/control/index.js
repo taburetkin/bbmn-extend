@@ -6,7 +6,12 @@ import getTriggerValue from './get-trigger-value';
 import { compareObjects, getOption, setByPath, flat, unflat } from '../../../utils/index.js';
 
 export default Base => Base.extend({	
-
+	constructor(options){
+		if (options.controlName != null) {
+			this.controlName = options.controlName;
+		}
+		Base.apply(this, arguments);
+	},
 	initializeValues(){
 		let value = this.getOption('value', {deep: false, force: false});
 		this.setInitialValue(value);
