@@ -1,6 +1,8 @@
-export default function triggerControlEvent(control, event, ...args){
+export default function triggerControlEvent(control, event, options = {}){
 
 	//let control = _control.getParentControl() || _control;
+
+	let { proxyEvent, args = [] } = options;
 
 	let name = control.getControlName();
 	let eventName = 'control:' + event;
@@ -16,6 +18,6 @@ export default function triggerControlEvent(control, event, ...args){
 	}
 
 
-	control.proxyControlEventToParent(namedEventName, ...args);
+	!proxyEvent && control.proxyControlEventToParent(namedEventName, ...args);
 
 }

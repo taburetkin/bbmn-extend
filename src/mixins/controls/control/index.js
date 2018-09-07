@@ -63,7 +63,7 @@ export default Base => Base.extend({
 		return this._isInvalid === false;
 	},
 
-	validate(value, fullValue){
+	validate({ value, fullValue, proxyEvent } = {}){
 		
 		if (arguments.length === 0) {
 			value = this.getControlValue({ notValidated: true });
@@ -83,11 +83,11 @@ export default Base => Base.extend({
 
 		let valid = (value) => {
 			this._isInvalid = false;
-			triggerControlEvent(this, 'valid', value);
+			triggerControlEvent(this, 'valid', { proxyEvent, args: [value] });
 		};
 		let invalid = (error, value, fullValue) => {
 			this._isInvalid = true;
-			this.triggerControlInvalid(error, value, fullValue);			
+			this.triggerControlInvalid(error, value, { fullValue, proxyEvent });			
 		};
 
 		return promise.then(() => {
@@ -123,7 +123,10 @@ export default Base => Base.extend({
 
 	_triggerControlEvent(eventName, args) {
 		let triggerValue = getTriggerValue(this, args);
-		triggerControlEvent(this, eventName, triggerValue);
+		let opts = {
+			args:[triggerValue]
+		};
+		triggerControlEvent(this, eventName, opts);
 	},
 	triggerControlChange(){
 		this._triggerControlEvent('change', arguments);
@@ -131,8 +134,13 @@ export default Base => Base.extend({
 	triggerControlDone(){
 		this._triggerControlEvent('done', arguments);
 	},
-	triggerControlInvalid(errors, value, fullValue){
-		triggerControlEvent(this, 'invalid', errors, value, fullValue);
+	triggerControlInvalid(errors, value, opts = {}){
+		let args = [errors, value];
+		if ('fullValue' in opts) {
+			args.push(opts.fullValue);
+		}
+		let options = _.extend({}, opts, { args });
+		triggerControlEvent(this, 'invalid', options);
 	},
 
 	/*
