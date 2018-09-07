@@ -13,8 +13,8 @@ export default Base => Base.extend({
 		this.setControlValue(value, { trigger: false });
 	},
 	getControlValue({ invalid } = {}){
-		if (invalid && ('_invalidValue' in this)) {
-			return this._invalidValue;
+		if (invalid) {
+			return this._invalidValue || this.value;
 		}
 		return this.value;
 	},
@@ -47,11 +47,9 @@ export default Base => Base.extend({
 				this._previousValue = this.value;
 				if (!invalid) {
 					this.value = newvalue;
-					delete this._invalidValue;
 					trigger && this.triggerControlChange();
-				} else {
-					this._invalidValue = newvalue;
 				}
+				this._invalidValue = newvalue;
 				return Promise.resolve(this.value);
 			},
 			error => {
