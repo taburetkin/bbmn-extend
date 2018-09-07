@@ -25,7 +25,7 @@ export default Base => Base.extend({
 		this.initialValue = value;
 	},
 	prepareValueBeforeSet(value){ return value; },
-	setControlValue(value, { key, trigger = true, notValidated, fullValue } = {}){
+	setControlValue(value, { key, trigger = true, notValidated, proxyEvent } = {}){
 		let newvalue = this.getControlValue({ notValidated });
 		if(_.isObject(newvalue)){
 			newvalue = unflat(flat(newvalue));
@@ -38,18 +38,18 @@ export default Base => Base.extend({
 		}
 		let same = compareObjects(this.value, newvalue);
 		if (same) { return; }
-
-		let alwaysUpdateValue = this.getOption('alwaysUpdateValue');
+		
 		this._notValidatedValue = newvalue;
+		let alwaysUpdateValue = this.getOption('alwaysUpdateValue');
 
 		if (notValidated) {
 			return Promise.resolve(this._notValidatedValue);
 		}
 
-		return this.validate({ value: newvalue, fullValue}).then(
-			() => {
+		return this.validate({ proxyEvent }).then(
+			(value) => {
 				this._previousValue = this.value;
-				this.value = newvalue;
+				this.value = value;
 				trigger && this.triggerControlChange();
 				return Promise.resolve(this.value);
 			},
@@ -66,37 +66,13 @@ export default Base => Base.extend({
 	validate(options = {}){
 		
 		let value, fullValue;
-		if('value' in options){
-			value = options.value;
-		} else {
-			value = this.getControlValue({ notValidated: true });
-		}
-		if('fullValue' in options){
-			fullValue = options.fullValue;
-		} else {
-			fullValue = this.getFullValue({ notValidated: true });
-		}
+		value = this._notValidatedValue;
+		fullValue = this.getFullValue({ notValidated: true });
 
-		
 		let validate = getOption(this, 'validateControl', { force: false });
 		let validateResult = _.isFunction(validate) && validate.call(this, value, fullValue, this) || undefined;
 
 		return this._validatePromise(validateResult, value, options);
-
-		// let promise;
-		// if (!validateResult) {
-		// 	promise = Promise.resolve(value);
-		// } else if (_.isFunction(validateResult.then)) {
-		// 	promise = validateResult;
-		// } else {
-		// 	promise = Promise.reject(validateResult);
-		// }
-
-		// return promise.then(() => {
-		// 	this._validateSuccess(value, options);
-		// }, error => {
-		// 	return this._validateError(error, value, options);
-		// });
 
 	},
 	_validatePromise(promise, value, options){
