@@ -46,7 +46,7 @@ export default Base => Base.extend({
 			return Promise.resolve(this._notValidatedValue);
 		}
 
-		return this.validate({ proxyEvent }).then(
+		return this.validate({ proxyEvent, key }).then(
 			(value) => {
 				this._previousValue = this.value;
 				this.value = value;
