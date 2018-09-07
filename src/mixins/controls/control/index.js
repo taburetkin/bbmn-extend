@@ -63,12 +63,21 @@ export default Base => Base.extend({
 		return this._isInvalid === false;
 	},
 
-	validate({ value, fullValue, proxyEvent } = {}){
+	validate(options = {}){
 		
-		if (arguments.length === 0) {
+		let value, fullValue;
+		if('value' in options){
+			value = options.value;
+		} else {
 			value = this.getControlValue({ notValidated: true });
+		}
+		if('fullValue' in options){
+			fullValue = options.fullValue;
+		} else {
 			fullValue = this.getFullValue({ notValidated: true });
 		}
+
+		
 		let validate = getOption(this, 'validateControl', { force: false });
 		let validateResult = _.isFunction(validate) && validate.call(this, value, fullValue, this) || undefined;
 
@@ -81,24 +90,22 @@ export default Base => Base.extend({
 			promise = Promise.reject(validateResult);
 		}
 
-		let valid = (value) => {
-			this._isInvalid = false;
-			triggerControlEvent(this, 'valid', { proxyEvent, args: [value] });
-		};
-		let invalid = (error, value, fullValue) => {
-			this._isInvalid = true;
-			this.triggerControlInvalid(error, value, { fullValue, proxyEvent });			
-		};
-
 		return promise.then(() => {
-			valid(value);
+			this._validateSuccess(value, options);
 		}, error => {
-			invalid(error, value, fullValue);
-			return Promise.reject(error);
+			return this._validateError(error, value, options);
 		});
 
 	},
-
+	_validateSuccess(value, { proxyEvent } = {}){
+		this._isInvalid = false;
+		triggerControlEvent(this, 'valid', { proxyEvent, args: [value] });
+	},
+	_validateError(error, value, options = {}){
+		this._isInvalid = true;
+		this.triggerControlInvalid(error, value, options);
+		return Promise.reject(error);
+	},
 
 	getControlName(){
 		return getOption(this, 'controlName', { args:[this]}) || 'control';
