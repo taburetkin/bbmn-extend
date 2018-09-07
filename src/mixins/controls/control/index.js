@@ -81,13 +81,33 @@ export default Base => Base.extend({
 		let validate = getOption(this, 'validateControl', { force: false });
 		let validateResult = _.isFunction(validate) && validate.call(this, value, fullValue, this) || undefined;
 
-		let promise;
-		if (!validateResult) {
+		return this._validatePromise(validateResult, value, options);
+
+		// let promise;
+		// if (!validateResult) {
+		// 	promise = Promise.resolve(value);
+		// } else if (_.isFunction(validateResult.then)) {
+		// 	promise = validateResult;
+		// } else {
+		// 	promise = Promise.reject(validateResult);
+		// }
+
+		// return promise.then(() => {
+		// 	this._validateSuccess(value, options);
+		// }, error => {
+		// 	return this._validateError(error, value, options);
+		// });
+
+	},
+	_validatePromise(promise, value, options){
+		if (!promise) {
 			promise = Promise.resolve(value);
-		} else if (_.isFunction(validateResult.then)) {
-			promise = validateResult;
-		} else {
-			promise = Promise.reject(validateResult);
+		} else if (promise && !_.isFunction(promise.then)) {
+			promise = Promise.reject(promise);
+		}
+
+		if(!_.isFunction(promise.then)) {
+			throw new Error('_validatePromise resolved not in promise');
 		}
 
 		return promise.then(() => {
@@ -95,7 +115,6 @@ export default Base => Base.extend({
 		}, error => {
 			return this._validateError(error, value, options);
 		});
-
 	},
 	_validateSuccess(value, { proxyEvent } = {}){
 		this._isInvalid = false;
