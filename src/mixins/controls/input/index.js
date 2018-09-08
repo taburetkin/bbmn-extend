@@ -11,6 +11,8 @@ export default Base => {
 	return Mixin.extend({
 		constructor(opts){
 			
+			this._initControl(opts);
+
 			setInputAttributes(this, opts);
 			setInputEvents(this, opts);
 			Mixin.apply(this, arguments);
@@ -22,10 +24,12 @@ export default Base => {
 			this.buildRestrictions();
 			let value = this.getOption('value') || '';			
 			this.el.value = value;
-			this.setControlValue(value, { trigger: false });
+			this.setControlValue(value, { trigger: false, silent: true });
 		},
 		tagName:'input',
 		template: false,
+		doneOnEnter: true,
+		doneOnBlur: true,
 		buildRestrictions(){
 			let attrs = _.result(this, 'attributes');
 			let pickNumbers = ['maxlength', 'minlength', 'min', 'max'];
@@ -100,10 +104,13 @@ export default Base => {
 				return true;
 			}
 		},
-		validateControlValue(value){
+		controlValidate(value){
 			if (value == null || value === '') {
 				if(this.restrictions.required)
 					return 'required';
+				else if (this.restrictions.minLength > 0) {
+					return 'length:small';
+				}
 				else
 					return;
 			}
