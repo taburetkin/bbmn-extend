@@ -136,7 +136,7 @@ export default Base => Base.extend({
 		}
 		return this._validate(value, options)
 			.then(
-				value => this._onSetControlValueValidateSuccess(value, options), 
+				() => this._onSetControlValueValidateSuccess(value, options), 
 				error => this._onSetControlValueValidateFail(error, value, options)
 			);
 	},
@@ -164,7 +164,7 @@ export default Base => Base.extend({
 		let validator = this.getControlValidator(options);
 		let validate = validator(value, options);
 		return validate.then(
-			value => this._onControlValidateSuccess(value, options),
+			() => this._onControlValidateSuccess(value, options),
 			error => this._onControlValidateFail(error, value, options)
 		);
 	},
