@@ -218,11 +218,16 @@ export default Base => Base.extend({
 		return this._cntrl.parent;
 	},
 	getParentControlValue(options) {
+
 		let parent = this.getParentControl();
 		if (!parent || !_.isFunction(parent.getControlValue)) {
 			return;
 		}
-		return parent.getControlValue(options);
+		if (parent.isControlWrapper()) {
+			return parent.getParentControlValue();
+		} else {
+			return parent.getControlValue(options);
+		}
 	},
 	getChildrenControls(){
 		if(!this._cntrl.children) {
@@ -306,5 +311,8 @@ export default Base => Base.extend({
 	makeControlReady(){
 		let trigger = getTriggerMethod(this);
 		trigger.call(this, 'control:ready');
+	},
+	isControlWrapper(){
+		return this.getOption('isControlWrapper') === true;
 	}
 });
