@@ -1,4 +1,4 @@
-import { flat, unflat, setByPath, compareObjects } from '../../../utils/index.js';
+import { flat, unflat, setByPath, compareObjects, betterResult } from '../../../utils/index.js';
 
 function takeValue(key, first = {}, second = {}){
 	if(!_.isObject(first) || !_.isString(key)) return;
@@ -223,7 +223,7 @@ export default Base => Base.extend({
 		if (!parent || !_.isFunction(parent.getControlValue)) {
 			return;
 		}
-		if (parent.isControlWrapper && parent.isControlWrapper()) {
+		if (betterResult(parent, 'isControlWrapper', { args:[this]})) {
 			return parent.getParentControlValue(options);
 		} else {
 			return parent.getControlValue(options);
