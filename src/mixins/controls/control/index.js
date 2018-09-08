@@ -247,12 +247,18 @@ export default Base => Base.extend({
 	},
 	defaultChildControlEvents:{
 		'change'(controlName, value){
+			let isControlWraper = this.getOption('isControlWrapper');
+			isControlWraper && (controlName = undefined);
 			this.setControlValue(value, { key: controlName, skipChildValidate: controlName });
 		},
 		'done'(controlName, value){
+			let isControlWraper = this.getOption('isControlWrapper');
+			isControlWraper && (controlName = undefined);
 			this.setControlValue(value, { key: controlName, skipChildValidate: controlName });
 		},
 		'invalid'(controlName, value, error){
+			let isControlWraper = this.getOption('isControlWrapper');
+			isControlWraper && (controlName = undefined);
 			this.setControlValue(value, { key: controlName, silent: true });
 			this.makeInvalid(error);
 		},
