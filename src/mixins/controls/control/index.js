@@ -29,7 +29,7 @@ export default Base => Base.extend({
 	isControl: true,
 	constructor(options){		
 		this._initControl(options);
-		Base.apply(this, options);
+		Base.apply(this, arguments);
 		if (this.getOption('validateOnReady')) {
 			this.once('control:ready', () => {
 				this.validate().catch(() => {});
