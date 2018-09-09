@@ -1,6 +1,6 @@
 import result from '../better-result';
 
-export default function getOption(context, key, opts, also) {
+export default function getOption(context = {}, key, opts, also) {
 
 	if(_.isObject(key) && _.isString(opts)){
 		let _opts = also;
