@@ -7,6 +7,9 @@ const defaultCssConfig = {
 
 export default (Base) => Base.extend({
 	constructor(){
+		if(!this.cssClassModifiers) {
+			this.cssClassModifiers = [];
+		}
 		Base.apply(this, arguments);
 		this._setupCssClassModifiers();		
 	},
