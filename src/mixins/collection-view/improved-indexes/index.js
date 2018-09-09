@@ -13,12 +13,24 @@ function rebuildIndexes() {
 export default CollectionView => CollectionView.extend({
 	shouldRebuildIndexes: true,
 
-	constructor() {
-		this.on('before:sort', rebuildIndexes.bind(this));
+	constructor() {		
+		
 		CollectionView.apply(this, arguments);
+		this.on('before:sort', rebuildIndexes.bind(this));
+		// if (this.collection) {
+		// 	rebuildIndexes.call(this);
+		// 	this.listenTo({
+		// 		'update': rebuildIndexes.bind(this),
+		// 		'sort': rebuildIndexes.bind(this),
+		// 		'reset': rebuildIndexes.bind(this),
+		// 	});
+		// }
 	},
-	_addChild(view){
+	_addChild(view, index){
 		view._isModelView = arguments.length === 1;
+		if (index != null) {
+			view._index = index;
+		}
 		return CollectionView.prototype._addChild.apply(this, arguments);
 	},
 	_viewComparator(v1,v2){
