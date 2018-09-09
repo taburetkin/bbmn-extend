@@ -42,4 +42,37 @@ $(() => {
 	//test.on('all', (...c) => console.log('> ',...c));
 	test.render();
 
+
+	// let promises = [];
+	// for(let x = 0;x < 10;x++)
+	// 	promises.push(promise(x));
+
+	// Promise.all(promises).catch(() => {});
+
+	// setTimeout(() => _.each(promises, promise => getPromiseState(promise)), 1500);
+	
+
 });
+
+
+function stateRacePromise(promise) {
+	const pending = {};
+	return Promise.race([promise, pending]).then(
+		value => (value === pending) ? 'pending' : 'fulfilled', 
+		() => 'rejected'
+	);
+}
+
+async function getPromiseState(promise){
+	let state = await stateRacePromise(promise);
+	console.log('>>', state, promise);
+	return state;
+}
+
+function promise(arg){
+	return new Promise((resolve, reject) => {
+		let finalize = Math.random() * 2 >> 0 ? resolve : reject;
+		let delay = Math.random() * 3000 >> 0;
+		setTimeout(() => finalize(arg), delay);
+	});	
+}

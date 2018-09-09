@@ -155,46 +155,101 @@ export default Base => Base.extend({
 	isValid(){
 		return this._cntrl.isValid !== false;
 	},
-	validate(options){
+	validate(options = {}){
+
 		let notValidated = !this.isValid();
 		let value = this.getControlValue({ notValidated });
-		return this._validate(value, options);
+		let promise = this._validate(value, options);
+		let _catch = options.catch;
+
+		if (_catch === false) {
+			return promise;
+		} else if(_.isFunction(_catch)) {
+			return promise.catch(_catch);
+		} else {
+			return promise.catch(ensureError);
+		}
 	},
 	_validate(value, options){
-		let validator = this.getControlValidator(options);
-		let validate = validator(value, options);
+
+		let validate = this._validateControlPromise(value, options);
 		return validate.then(
 			() => this._onControlValidateSuccess(value, options),
 			error => this._onControlValidateFail(error, value, options)
 		);
 	},
-	_defaultControlValidator(value, options, validate, promises = []){
-		let values = this.getParentControlValue({ notValidated: true });
-		let validateResult = _.isFunction(validate) && validate.call(this, value, values, options) || undefined;
-		let promise = Promise.resolve(value);
-		if (validateResult && validateResult.then) {
+	_validateChildrenControlsPromise({ isControlWrapper, skipChildValidate} = {}, errors = {}){
 
-			promise = validateResult;
-
-		} else if(validateResult) {
-
-			promise = Promise.reject(validateResult);
-
-		}
-
-		return Promise.all(promises).then(() => promise);
-	},
-	getControlValidator({ skipChildValidate } = {}){
-		let validate = this.getOption('controlValidate', { force: false });
 		let children = this.getChildrenControls();
-		let promises = _.map(children, child => {
-			if (!child.validate || (skipChildValidate && child.getControlName() == skipChildValidate)) {
-				return;
-			}
-			return child.validate({ stopPropagation: true });
-		});
-		return _.bind(_.partial(this._defaultControlValidator, _, _, validate, promises), this);
+		let childrenPromise = Promise.resolve();
+		if (!children.length) return childrenPromise;
+
+		return _.reduce(children, (finaly, child) => {
+			let control = child.getControlName();
+
+			finaly = finaly.then(() => {
+
+				if (!child.validate || (skipChildValidate && control == skipChildValidate)) {
+					return Promise.resolve();
+				}
+				let validateResult = child.validate({ stopPropagation: true, catch: false });
+
+				return validateResult;
+			}).catch(error => {
+
+				if(isControlWrapper){
+					errors.wrapped = error;
+				} else {
+					errors.children[control] = error;
+				}
+				return Promise.resolve();
+			});
+			return finaly;
+		}, childrenPromise);		
+
 	},
+	_validateControlPromise(value, options){
+		
+		const { skipChildValidate } = options;
+		const isControlWrapper = betterResult(this, 'isControlWrapper', { args:[this]});
+
+		
+		return new Promise((resolve, reject) => {
+			let childrenErrors = {
+				children: {}
+			};
+			let childrenPromise = this._validateChildrenControlsPromise({ skipChildValidate, isControlWrapper }, childrenErrors);
+
+			childrenPromise.then(() => {
+
+				if (_.size(childrenErrors.children)) {
+					reject(childrenErrors.children);
+					return;
+				} else if (childrenErrors.wrapped) {
+					reject(childrenErrors.wrapped);
+					return;
+				}
+			
+				let validate = this.getOption('controlValidate', { force: false });
+				let values = this.getParentControlValue({ notValidated: true });
+				let validateResult = _.isFunction(validate) && validate.call(this, value, values, options) || undefined;
+				let promise = Promise.resolve(value);
+				if (validateResult && validateResult.then) {
+					promise = validateResult;
+				} else if(validateResult) {
+					promise = Promise.reject(validateResult);
+				}
+
+				promise.then(
+					() => resolve(value),
+					error => reject(error)
+				);
+
+			});
+		});		
+	},
+
+
 
 	_onControlValidateSuccess(value, options){
 		this.makeValid(value, options);
@@ -312,7 +367,5 @@ export default Base => Base.extend({
 		let trigger = getTriggerMethod(this);
 		trigger.call(this, 'control:ready');
 	},
-	isControlWrapper(){
-		return this.getOption('isControlWrapper') === true;
-	}
+
 });
