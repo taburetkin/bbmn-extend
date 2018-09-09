@@ -23,7 +23,9 @@ export default function getInputType(inputView, opts = {}){
 	}
 
 	let type = _getOption(inputView, 'inputType', opts);
-
+	if(type == null){
+		type = _getOption(inputView.valueOptions, 'inputType', opts.valueOptions);
+	}
 	if (!type) {
 		if (inputView._valueIsNumber) {
 			type = _getOption(inputView, 'inputNumberType', opts) || 'number';
