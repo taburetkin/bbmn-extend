@@ -22,7 +22,10 @@ import compareObjects from './compare-objects';
 import mergeObjects from './merge-objects';
 
 
-import { isModel, isModelClass, isCollection, isCollectionClass, isView, isViewClass } from '../vendors/helpers';
+import { 
+	isModel, isModelClass, isCollection, isCollectionClass, isView, isViewClass,
+	triggerMethod, triggerMethodOn
+} from '../vendors/helpers';
 
 export {
 	betterResult, camelCase,
@@ -30,5 +33,6 @@ export {
 	flat, getByPath, getOption, hasFlag, isKnownCtor, 
 	mix, paramsToObject, setByPath, toBool, unflat,
 	isModel, isModelClass, isCollection, isCollectionClass, isView, isViewClass,
+	triggerMethod, triggerMethodOn,
 	compareObjects, mergeObjects
 };

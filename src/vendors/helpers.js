@@ -42,3 +42,7 @@ export function triggerMethodOn(context, ...args) {
 }
 
 export const extend = Model.extend;
+
+export {
+	triggerMethod
+};

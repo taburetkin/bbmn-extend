@@ -10,6 +10,7 @@ import BearerToken from './bearer-token';
 import ViewManager from './view-manager';
 import store from './store';
 import AppError from './app-error';
+import ViewStack from './view-stack';
 export {
 	historyWatcher,
 	navigator,
@@ -22,5 +23,6 @@ export {
 	BearerToken,
 	ViewManager,
 	store,
-	AppError
+	AppError,
+	ViewStack
 };
