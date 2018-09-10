@@ -20,7 +20,7 @@ function normalizeElement(selector) {
 	let body = document.getElementsByTagName('body')[0];
 	let el;
 	if (selector == null) {
-		selector = body;
+		el = body;
 	} else if(selector && selector.jquery){
 		el = selector.get(0);
 	} else if (_.isString(selector)) {
