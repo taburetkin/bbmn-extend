@@ -17,7 +17,7 @@ const BaseNodeRegion = Region.extend({
 config.Region = BaseNodeRegion;
 
 function normalizeElement(selector) {
-	let body = document.getElementsByTagName('body')[0];
+	let body = document.querySelector('body');
 	let el;
 	if (selector == null) {
 		el = body;
@@ -36,7 +36,7 @@ function normalizeElement(selector) {
 export default function showInNode(view, { el, replaceElement = false, destroySelfOnEmpty = config.destroySelfOnEmpty, destroyOnEmpty = config.destroyOnEmpty  } = {}) {
 	const NodeRegion = config.Region;
 	el = normalizeElement(el);
-	const body = document.getElementsByTagName('body');
+	const body = document.querySelector('body');
 	if (el === body) {
 		el = document.createElement('div');
 		body.appendChild(el);
