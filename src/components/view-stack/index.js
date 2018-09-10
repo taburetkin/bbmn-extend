@@ -199,7 +199,7 @@ _.extend(ViewStack.prototype, Events, {
 		return this.$doc || $(document);
 	},
 	triggerMethod(){
-		return triggerMethod(this, arguments);
+		return triggerMethod(this, ...arguments);
 	},
 	isDestroyed(){
 		return this._isDestroyed || this._isDestroying;
