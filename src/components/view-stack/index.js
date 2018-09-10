@@ -198,7 +198,9 @@ _.extend(ViewStack.prototype, Events, {
 	getDocument(){
 		return this.$doc || $(document);
 	},
-	triggerMethod,
+	triggerMethod(){
+		return triggerMethod.apply(this, arguments);
+	},
 	isDestroyed(){
 		return this._isDestroyed || this._isDestroying;
 	},
