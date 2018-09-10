@@ -1,6 +1,7 @@
 import '../../setup/node';
 import setByPath from '../../../src/utils/set-by-path';
-import Model from '../../../src/bb/model';
+import { Model } from '../../../src/vendors/backbone.js';
+
 describe('utils • set-by-path',function(){
 	
 	it('should return given value in any case',() => {

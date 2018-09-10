@@ -14,7 +14,7 @@ export default function compareAB(a, b, func){
 		return result;
 	} else {
 		if (_.isFunction(func)) {
-			a = func.call(a, getModel(a), getView(a)) ;
+			a = func.call(a, getModel(a), getView(a));
 			b = func.call(b, getModel(b), getView(b));
 		}
 

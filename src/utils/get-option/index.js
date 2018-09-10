@@ -21,3 +21,7 @@ export default function getOption(context = {}, key, opts, also) {
 	return value != null ? value : defaultValue;
 
 }
+
+export function instanceGetOption(...args){
+	return getOption(this, ...args);
+}

@@ -1,6 +1,7 @@
 import { Events } from '../../vendors/backbone.js';
-import { getOption, triggerMethod } from '../../utils/index.js';
-//import { triggerMethod } from '../../vendors/helpers';
+import { triggerMethod } from '../../utils/index.js';
+import { instanceGetOption as getOption} from '../../utils/get-option/index.js';
+
 const ViewStack = function(options = {}){
 	this.cid = _.uniqueId('stack');
 	this.unremovableKey = `_${this.cid}_preventRemove`;
@@ -192,14 +193,11 @@ _.extend(ViewStack.prototype, Events, {
 	/*
 		helper methods
 	*/
-	getOption(...args){
-		return getOption(this, ...args);
-	},
+	getOption,
+	triggerMethod,
+
 	getDocument(){
 		return this.$doc || $(document);
-	},
-	triggerMethod(){
-		return triggerMethod(this, ...arguments);
 	},
 	isDestroyed(){
 		return this._isDestroyed || this._isDestroying;

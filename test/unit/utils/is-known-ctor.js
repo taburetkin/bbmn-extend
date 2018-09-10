@@ -1,7 +1,7 @@
 import '../../setup/node';
 import isKnownCtor from '../../../src/utils/is-known-ctor';
 import ctors from '../../../src/utils/is-known-ctor/ctors';
-import Model from '../../../src/bb/model';
+import { Model } from '../../../src/vendors/backbone.js';
 
 describe('utils • is-known-ctor',function(){
 	it('should return false if an argument is not one of known constructors',() => 

@@ -1,7 +1,7 @@
 import '../../setup/node';
-import compare from '../../../src/utils/comparator';
-import Model from '../../../src/bb/model';
-import { View } from 'backbone.marionette';
+import { comparator } from '../../../src/utils/index.js';
+import { Model } from '../../../src/vendors/backbone.js';
+
 
 
 describe('utils • comparator',function(){
@@ -12,18 +12,18 @@ describe('utils • comparator',function(){
 	];
 
 	it('should return 0 if no argument passed',() => {
-		expect(compare()).to.equal(0);
+		expect(comparator()).to.equal(0);
 	});
 
 	it('should act like compareAB if there is a three arguments',() => {
-		expect(compare(1,2)).to.equal(-1);
-		expect(compare('abc','abc')).to.equal(0);
-		expect(compare(-2, 2, function(){ return this * -1; })).to.equal(1);
+		expect(comparator(1,2)).to.equal(-1);
+		expect(comparator('abc','abc')).to.equal(0);
+		expect(comparator(-2, 2, function(){ return this * -1; })).to.equal(1);
 	});
 
 	it('should apply multiple comparators',() => {
 
-		let compareBy = (a,b) => compare([
+		let compareBy = (a,b) => comparator([
 			[a,b, model => model.get('order')],
 			[b,a, model => model.get('name')],
 		]);

@@ -1,4 +1,4 @@
-import cfg from '../../setup/node';
+import '../../setup/node';
 import bool from '../../../src/utils/to-bool';
 
 describe('utils • string-to-bool', function(){

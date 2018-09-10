@@ -20,11 +20,11 @@ import unflat from './unflat';
 
 import compareObjects from './compare-objects';
 import mergeObjects from './merge-objects';
-
+import triggerMethod, { triggerMethodOn } from './trigger-method/index.js';
+import mergeOptions from './merge-options';
 
 import { 
-	isModel, isModelClass, isCollection, isCollectionClass, isView, isViewClass,
-	triggerMethod, triggerMethodOn
+	isModel, isModelClass, isCollection, isCollectionClass, isView, isViewClass
 } from '../vendors/helpers';
 
 export {
@@ -33,6 +33,6 @@ export {
 	flat, getByPath, getOption, hasFlag, isKnownCtor, 
 	mix, paramsToObject, setByPath, toBool, unflat,
 	isModel, isModelClass, isCollection, isCollectionClass, isView, isViewClass,
-	triggerMethod, triggerMethodOn,
+	triggerMethod, triggerMethodOn, mergeOptions,
 	compareObjects, mergeObjects
 };

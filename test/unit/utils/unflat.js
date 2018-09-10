@@ -1,6 +1,6 @@
 import '../../setup/node';
 import unflat from '../../../src/utils/unflat';
-import flat from '../../../src/utils/flat';
+
 
 describe('utils • unflat',function(){
 	let testArr = [1,2,3];

@@ -1,7 +1,9 @@
-import { MnObject } from '../../vendors/marionette';
-const base = MnObject.prototype;
+import { triggerMethod, mergeOptions } from '../../utils/index.js';
+import { instanceGetOption } from '../../utils/get-option/index.js';
+
+
 export default {
-	getOption: base.getOption,
-	mergeOptions: base.mergeOptions,
-	triggerMethod: base.triggerMethod,
+	getOption: instanceGetOption,
+	mergeOptions: mergeOptions,
+	triggerMethod: triggerMethod,
 };

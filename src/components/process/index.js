@@ -1,5 +1,5 @@
 import mix from '../../utils/mix';
-import { triggerMethodOn } from '../../vendors/helpers';
+import { triggerMethodOn } from '../../utils/index.js';
 import camelCase from '../../utils/camel-case';
 import result from '../../utils/better-result';
 import register from './register';

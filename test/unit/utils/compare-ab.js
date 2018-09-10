@@ -1,6 +1,6 @@
 import '../../setup/node';
 import compare from '../../../src/utils/compare-ab';
-import Model from '../../../src/bb/model';
+import { Model } from '../../../src/vendors/backbone.js';
 import { View } from 'backbone.marionette';
 
 

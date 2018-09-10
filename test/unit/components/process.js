@@ -1,10 +1,9 @@
 
 import '../../setup/node';
 import Process from '../../../src/components/process';
-import { Events } from 'backbone';
 import mix from '../../../src/utils/mix';
 
-describe('utils • better-result',function(){
+describe('utils • better-result', function(){
 	const Base = mix({
 		constructor(opts = {}){
 			this.cid = _.uniqueId('test');
