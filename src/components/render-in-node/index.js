@@ -19,28 +19,25 @@ config.Region = BaseNodeRegion;
 function normalizeElement(selector) {
 	let body = document.getElementsByTagName('body')[0];
 	let el;
-	if(selector && selector.jquery){
+	if (selector == null) {
+		selector = body;
+	} else if(selector && selector.jquery){
 		el = selector.get(0);
 	} else if (_.isString(selector)) {
 		el = document.querySelector(selector);
 	}
-	if (el == body) {
-		return;
-	} else if (el instanceof Element) {
+	if (el instanceof Element) {
 		return el;
 	} else {
 		throw new Error('el must be in Dom');		
 	}
 }
 
-export default function showInNode(view, _el, { replaceElement = false, destroySelfOnEmpty = config.destroySelfOnEmpty, destroyOnEmpty = config.destroyOnEmpty  } = {}) {
+export default function showInNode(view, { el, replaceElement = false, destroySelfOnEmpty = config.destroySelfOnEmpty, destroyOnEmpty = config.destroyOnEmpty  } = {}) {
 	const NodeRegion = config.Region;
-	let el = normalizeElement(el);
-	if (el == null) {
-		const body = document.getElementsByTagName('body');
-		if (body == null) {
-			throw new Error('document body is undefined');
-		}
+	el = normalizeElement(el);
+	const body = document.getElementsByTagName('body');
+	if (el === body) {
 		el = document.createElement('div');
 		body.appendChild(el);
 		replaceElement = true;
