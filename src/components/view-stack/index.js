@@ -1,6 +1,6 @@
 import { Events } from '../../vendors/backbone.js';
-import { getOption, triggerMethod } from '../../utils/index.js';
-
+import { getOption } from '../../utils/index.js';
+import { triggerMethod } from '../../vendors/helpers';
 const ViewStack = function(options = {}){
 	this.cid = _.uniqueId('stack');
 	this.unremovableKey = `_${this.cid}_preventRemove`;
