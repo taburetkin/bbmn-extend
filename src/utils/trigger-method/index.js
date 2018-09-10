@@ -21,5 +21,5 @@ export default function triggerMethod(event, ...args) {
 }
 
 export function triggerMethodOn(context, event, ...args) {
-	return triggerMethod.call(context, event, ...args)
+	return triggerMethod.call(context, event, ...args);
 }

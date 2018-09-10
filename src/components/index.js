@@ -11,6 +11,7 @@ import ViewManager from './view-manager';
 import store from './store';
 import AppError from './app-error';
 import ViewStack from './view-stack';
+import renderInNode, { config as renderInNodeConfig } from './render-in-node/index.js';
 export {
 	historyWatcher,
 	navigator,
@@ -24,5 +25,7 @@ export {
 	ViewManager,
 	store,
 	AppError,
-	ViewStack
+	ViewStack,
+	renderInNode,
+	renderInNodeConfig,
 };
