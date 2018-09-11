@@ -34,8 +34,7 @@ export default Base => Base.extend({
 		this.addChildViews(customs);
 		this.triggerMethod('customs:render');
 	},
-	getCustoms() {
-		if(!this._customs.length) return;
+	getCustoms() {		
 		return this._prepareCustoms(this._customs.slice(0));
 	},
 	_prepareCustoms(rawcustoms){
