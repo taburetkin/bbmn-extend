@@ -109,7 +109,7 @@ export default Base => Base.extend({
 		let { notValidated, clone } = options;
 		let valueKey = notValidated ? 'notValidated' : 'value';
 		let value = this._cntrl[valueKey];
-		if (key !== null) {
+		if (key != null) {
 			return getByPath(value, key);
 		} else {
 			return clone ? this._clone(value) : value;
