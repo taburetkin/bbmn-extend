@@ -226,5 +226,6 @@ export default Base => {
 			}		
 		},
 	});
-
+	
+	return Mixed;
 };
