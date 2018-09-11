@@ -368,4 +368,4 @@ export default Base => Base.extend({
 		trigger.call(this, 'control:ready');
 	},
 
-});
+}, { ControlMixin: true });

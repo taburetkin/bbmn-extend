@@ -91,4 +91,4 @@ export default (Base) => Base.extend({
 	getCssClassEvents(cfg){
 		return this._getCssClassEvents(cfg);
 	}
-});
+}, { CssClassModifiersMixin: true });
