@@ -19,7 +19,7 @@ export default Base => {
 		shouldShowError: false,
 
 		constructor(){
-			Base.apply(this, arguments);
+			Mixed.apply(this, arguments);
 			if(!this.cssClassModifiers) {
 				this.cssClassModifiers = [];
 			}
