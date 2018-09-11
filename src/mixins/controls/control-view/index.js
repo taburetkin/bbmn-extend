@@ -223,7 +223,7 @@ export default Base => {
 				this.errorView.hideError();
 			}		
 		},
-	});
+	}, { ControlViewMixin: true });
 
 	return Mixed;
 };
