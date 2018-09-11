@@ -21,7 +21,10 @@ function normalizeElement(selector) {
 	let el;
 	if (selector == null) {
 		el = body;
-	} else if(selector && selector.jquery){
+	} else if( selector instanceof Element) {
+		el = selector;
+	}
+	else if(selector && selector.jquery){
 		el = selector.get(0);
 	} else if (_.isString(selector)) {
 		el = document.querySelector(selector);
@@ -33,7 +36,7 @@ function normalizeElement(selector) {
 	}
 }
 
-export default function showInNode(view, { el, replaceElement = false, destroySelfOnEmpty = config.destroySelfOnEmpty, destroyOnEmpty = config.destroyOnEmpty  } = {}) {
+export default function renderInNode(view, { el, replaceElement = false, destroySelfOnEmpty = config.destroySelfOnEmpty, destroyOnEmpty = config.destroyOnEmpty  } = {}) {
 	const NodeRegion = config.Region;
 	el = normalizeElement(el);
 	const body = document.querySelector('body');
