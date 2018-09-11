@@ -5,11 +5,11 @@ import { cssClassModifiers } from '../../view/index.js';
 
 export default Base => {
 	let Mixed = Base;
-	if (!Base.ControlMixin) {
-		Mixed = ControlMixin(Base);
+	if (!Mixed.ControlMixin) {
+		Mixed = ControlMixin(Mixed);
 	}
-	if (!Base.CssClassModifiersMixin) {
-		Mixed = cssClassModifiers(Base);
+	if (!Mixed.CssClassModifiersMixin) {
+		Mixed = cssClassModifiers(Mixed);
 	}
 
 	Mixed.extend({
@@ -29,9 +29,7 @@ export default Base => {
 				'control:invalid': this._onControlInvalid
 			});		
 		},	
-		addCssClassModifier(modifier){
-			this.cssClassModifiers.push(modifier);
-		},
+
 		getCustoms(){
 			let customs = [];
 			if (this.getOption('isControlWrapper')) {
@@ -226,6 +224,6 @@ export default Base => {
 			}		
 		},
 	});
-	
+
 	return Mixed;
 };
