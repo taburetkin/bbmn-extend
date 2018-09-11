@@ -102,7 +102,7 @@ export default Base => Base.extend({
 		return this.isValid() && compareObjects(current, value);
 	},
 	getControlValue(key, options = {}){
-		this._initControl();
+		
 		if(_.isObject(key)) {
 			options = key;
 			key = undefined;
