@@ -8,4 +8,4 @@ export default Base => Base.extend({
 	isDestroyed(){
 		return this._isDestroyed || this._isDestroying;
 	}
-});
+}, { DestroyMixin: true });

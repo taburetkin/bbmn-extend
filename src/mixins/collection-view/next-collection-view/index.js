@@ -89,4 +89,4 @@ export default CollectionView => CollectionView.extend({
 		view.destroy();
 		delete this._emptyViewInstance;
 	},
-});
+}, { CollectionViewMixin_4x: true});
