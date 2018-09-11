@@ -12,7 +12,7 @@ export default Base => {
 		Mixed = cssClassModifiers(Mixed);
 	}
 
-	Mixed.extend({
+	return Mixed.extend({
 		renderAllCustoms: true,
 		isControlWrapper: true,
 		skipFirstValidationError: true,
@@ -225,5 +225,5 @@ export default Base => {
 		},
 	}, { ControlViewMixin: true });
 
-	return Mixed;
+
 };
