@@ -1,4 +1,4 @@
-import { flat, unflat, setByPath, compareObjects, betterResult } from '../../../utils/index.js';
+import { flat, unflat, setByPath, getByPath, compareObjects, betterResult } from '../../../utils/index.js';
 
 function takeValue(key, first = {}, second = {}){
 	if(!_.isObject(first) || !_.isString(key)) return;
@@ -101,10 +101,19 @@ export default Base => Base.extend({
 		let current = this.getControlValue();
 		return this.isValid() && compareObjects(current, value);
 	},
-	getControlValue({ notValidated, clone } = {}){
-		let key = notValidated ? 'notValidated' : 'value';
-		let value = this._cntrl[key];
-		return clone ? this._clone(value) : value;
+	getControlValue(key, options = {}){
+		if(_.isObject(key)) {
+			options = key;
+			key = undefined;
+		}
+		let { notValidated, clone } = options;
+		let valueKey = notValidated ? 'notValidated' : 'value';
+		let value = this._cntrl[valueKey];
+		if (key !== null) {
+			return getByPath(value, key);
+		} else {
+			return clone ? this._clone(value) : value;
+		}
 	},
 	setControlValue(value, options = {}){
 		let  { key, notValidated } = options;
