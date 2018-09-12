@@ -48,7 +48,7 @@ export default Base => {
 			);
 			return customs;
 		},
-		buildViewByKey(key, { skipTextCheck, options } = {}){
+		bubildViewByKey(key, { skipTextCheck, options } = {}){
 			let view;
 			let value;
 
@@ -88,7 +88,7 @@ export default Base => {
 			return this.errorView;
 		},
 		buildErrorView(){
-			return buildViewByKey('errorView', { allowTextView: false });
+			return buildViewByKey.call(this, 'errorView', { allowTextView: false });
 		},
 
 
@@ -97,7 +97,7 @@ export default Base => {
 			return this.buildHeaderView();
 		},
 		buildHeaderView(){
-			return buildViewByKey('header', { allowTextView: true, options: { tagName: 'header' }});
+			return buildViewByKey.call(this, 'header', { allowTextView: true, options: { tagName: 'header' }});
 		},
 
 
@@ -111,7 +111,7 @@ export default Base => {
 		},
 
 		buildFooterView(){
-			return buildViewByKey('footer', { allowTextView: true, options: { tagName: 'footer' }});
+			return buildViewByKey.call(this, 'footer', { allowTextView: true, options: { tagName: 'footer' }});
 		},
 
 		buildButtonsView(){
@@ -120,7 +120,7 @@ export default Base => {
 			}
 
 			let options = this.buildButtonsOptions();
-			let view = buildViewByKey('buttonsView', { allowTextView: false, options });
+			let view = buildViewByKey.call(this, 'buttonsView', { allowTextView: false, options });
 			if (!view) { return; }
 
 			this._buttonsView = view;
@@ -168,7 +168,7 @@ export default Base => {
 		},
 
 		getControlView(){
-			this.control = buildViewByKey('controlView', { allowTextView: false, options: { parentControl: this } });			
+			this.control = buildViewByKey.call(this, 'controlView', { allowTextView: false, options: { parentControl: this } });			
 			return this.control;
 		},
 
