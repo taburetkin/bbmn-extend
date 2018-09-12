@@ -1,8 +1,10 @@
-import { Model } from '../../../vendors/backbone';
-import getNestedResult from './get-nested-result';
-import getPropertySchema from './get-property-schema';
-import getDisplayConfig from './get-display-config';
-import getByPath from '../../../utils/get-by-path';
+import { Model } from '../../../vendors/backbone.js';
+import getNestedResult from './get-nested-result.js';
+import getPropertySchema from './get-property-schema.js';
+import getDisplayConfig from './get-display-config.js';
+//import getByPath from '../../../utils/get-by-path/index.js';
+import { getByPath } from '../../../utils/index.js';
+
 export default Base => {
 	const originalGet = Model.prototype.get;
 	const Mixed = Base.extend({

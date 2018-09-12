@@ -1,5 +1,3 @@
-//import { isInPage } from './utils';
-
 export default {
 
 	//desc: setups the collection for ViewManager instance

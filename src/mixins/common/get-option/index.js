@@ -1,5 +1,6 @@
-import result from '../../../utils/better-result';
-import getOption from '../../../utils/get-option';
+// import result from '../../../utils/better-result';
+// import getOption from '../../../utils/get-option';
+import { betterResult as result, getOption } from '../../../utils/index.js';
 
 const Mixin = (Base) => Base.extend({
 

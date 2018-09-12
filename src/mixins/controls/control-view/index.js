@@ -1,4 +1,4 @@
-import { isView, isViewClass } from '../../../utils/index.js';
+import { isView, isViewClass, buildViewByKey } from '../../../utils/index.js';
 import ControlMixin from '../control/index.js';
 import { cssClassModifiers } from '../../view/index.js';
 
@@ -48,7 +48,7 @@ export default Base => {
 			);
 			return customs;
 		},
-		_buildKeyView(key, { skipTextCheck, options } = {}){
+		buildViewByKey(key, { skipTextCheck, options } = {}){
 			let view;
 			let value;
 
@@ -88,16 +88,16 @@ export default Base => {
 			return this.errorView;
 		},
 		buildErrorView(){
-			return this._buildKeyView('error', { skipTextCheck: true });
+			return buildViewByKey('errorView', { allowTextView: false });
 		},
 
 
 
-		getHeaderView(){
+		getHeaderView(){			
 			return this.buildHeaderView();
 		},
 		buildHeaderView(){
-			return this._buildKeyView('header');
+			return buildViewByKey('header', { allowTextView: true, options: { tagName: 'header' }});
 		},
 
 
@@ -111,20 +111,19 @@ export default Base => {
 		},
 
 		buildFooterView(){
-			return this._buildKeyView('footer');
+			return buildViewByKey('footer', { allowTextView: true, options: { tagName: 'footer' }});
 		},
 
 		buildButtonsView(){
-			if (this.buttonsView) {
-				this.stopListening(this.buttonsView);
+			if (this._buttonsView) {
+				this.stopListening(this._buttonsView);
 			}
 
 			let options = this.buildButtonsOptions();
-
-			let view = this._buildKeyView('buttons', { skipTextCheck: true, options });
+			let view = buildViewByKey('buttonsView', { allowTextView: false, options });
 			if (!view) { return; }
 
-			this.buttonsView = view;
+			this._buttonsView = view;
 			this.settleButtonsListeners(view);
 
 			return view;
@@ -169,8 +168,7 @@ export default Base => {
 		},
 
 		getControlView(){
-			let view = this._buildKeyView('control', { skipTextCheck: true, options: { parentControl: this } });
-			this.control = view;
+			this.control = buildViewByKey('controlView', { allowTextView: false, options: { parentControl: this } });			
 			return this.control;
 		},
 
@@ -185,13 +183,13 @@ export default Base => {
 		},
 		
 		disableButtons(){
-			if(this.buttonsView && _.isFunction(this.buttonsView.disableButton)) {
-				this.buttonsView.disableButton('resolve');
+			if(this._buttonsView && _.isFunction(this._buttonsView.disableButton)) {
+				this._buttonsView.disableButton('resolve');
 			}
 		},
 		enableButtons(){
-			if(this.buttonsView && _.isFunction(this.buttonsView.enableButton)) {
-				this.buttonsView.enableButton('resolve');
+			if(this._buttonsView && _.isFunction(this._buttonsView.enableButton)) {
+				this._buttonsView.enableButton('resolve');
 			}
 		},
 		_showValidateError(error){

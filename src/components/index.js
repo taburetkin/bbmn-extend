@@ -13,7 +13,7 @@ import AppError from './app-error/index.js';
 import ViewStack from './view-stack/index.js';
 import renderInNode, { config as renderInNodeConfig } from './render-in-node/index.js';
 import modals from './modals/index.js';
-
+import TextView from './text-view/index.js';
 export {
 	historyWatcher,
 	navigator,
@@ -31,4 +31,5 @@ export {
 	renderInNode,
 	renderInNodeConfig,
 	modals,
+	TextView,
 };

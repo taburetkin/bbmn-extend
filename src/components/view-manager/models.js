@@ -1,4 +1,4 @@
-import { isInPage } from './utils';
+import { isInPage } from './utils.js';
 
 
 export default {

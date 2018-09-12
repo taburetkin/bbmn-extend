@@ -1,4 +1,4 @@
-import { Model, Collection, View } from './backbone';
+import { Model, Collection, BackboneView as View } from './backbone.js';
 
 
 export function isClass(arg, Base){

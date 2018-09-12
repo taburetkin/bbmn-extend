@@ -1,7 +1,7 @@
 import * as mixins from './mixins';
 import * as components from './components';
-import * as utils from './utils';
+import * as utils from './utils/index.js';
 
 export {
-	mixins, utils, components
+	mixins, components, utils
 };

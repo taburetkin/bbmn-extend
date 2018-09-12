@@ -1,7 +1,7 @@
-import getInputType from './get-input-type';
+import getInputType from './get-input-type.js';
 
-import getOption from '../../../utils/get-option';
-
+//import getOption from '../../../utils/get-option';
+import { getOption } from '../../../utils/index.js';
 
 export default function setInputAttributes(inputView, opts = {}) {
 

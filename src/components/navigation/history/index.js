@@ -1,5 +1,5 @@
-import { history } from '../../../vendors/backbone';
-import errorHandler from '../route-error-handler';
+import { history } from '../../../vendors/backbone.js';
+import errorHandler from '../route-error-handler/index.js';
 
 // supports passing options to the callback
 // by using new version of loadUrl

@@ -1,5 +1,5 @@
-import { Model, Collection, View, Router } from '../../vendors/backbone';
-import { MnObject } from '../../vendors/marionette';
+import { Model, Collection, BackboneView as View, Router } from '../../vendors/backbone.js';
+import { MnObject } from '../../vendors/marionette.js';
 import Mn from 'backbone.marionette';
 
 let ctors = [

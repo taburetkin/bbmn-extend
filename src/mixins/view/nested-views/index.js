@@ -1,6 +1,7 @@
-import result from '../../../utils/better-result';
-import normalizeRegion from './normalize-region';
-import { isView, isViewClass } from '../../../vendors/helpers';
+//import result from '../../../utils/better-result';
+import { betterResult as result } from '../../../utils/index.js';
+import normalizeRegion from './normalize-region.js';
+import { isView, isViewClass } from '../../../vendors/helpers.js';
 export default Base => Base.extend({
 	constructor(){
 		this._nestedViews = {};

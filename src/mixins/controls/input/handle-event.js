@@ -1,5 +1,6 @@
-import camelCase from '../../../utils/camel-case';
-import events from './events';
+//import camelCase from '../../../utils/camel-case';
+import { camelCase } from '../../../utils/index.js';
+import events from './events/index.js';
 export default function handleInputEvent(control, eventName, event) {
 	let options = _.extend({
 		context: control,

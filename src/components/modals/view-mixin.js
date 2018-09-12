@@ -1,6 +1,9 @@
 import { isView, isViewClass, mix } from '../../utils/index.js';
+
+
 import { customs, nextCollectionView } from '../../mixins/collection-view/index.js';
 import { destroy } from '../../mixins/view/index.js';
+import TextView from '../text-view/index.js';
 
 export default CollectionView => {
 	let Mixed = CollectionView;
@@ -72,12 +75,8 @@ export default CollectionView => {
 			}
 			else if(_.isString(view)){			
 				let tagName = ['header','footer'].indexOf(key) > -1 ? key : 'div';
-				let View = this.getOption('textView');
-				if (!isViewClass(View)) {
-					console.warn('textView class not passed in options');
-				} else {
-					_view = new View({ template: () => view, tagName });
-				}
+				let View = this.getOption('textView') || TextView;
+				_view = new View({ text: view, tagName });
 			} else if(isViewClass(view)) {
 				let options = this.getOption(key+'Options');
 				_view = new view(options);

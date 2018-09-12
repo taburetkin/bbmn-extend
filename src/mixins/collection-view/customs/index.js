@@ -67,21 +67,33 @@ export default Base => Base.extend({
 	},
 	addChildViews(children = []){
 		if (!children.length) { return; }
-		let items = _.filter(children, f => !!f);
-		let notComplete = false;
-		while(items.length){
-			let args = items.pop();
+
+		let awaitingRender = false;
+
+		while(children.length) {
+
+			let args = children.pop();
+			if (!args) { continue; }
+
 			if (!_.isArray(args)) {
 				args = [args, { index: 0 }];
 			}
-			let [ view, options = {} ] = args;
-			options.preventRender = !!items.length;
+
+			let [ view, index, options = {} ] = args;
+			if (_.isObject(index)) {
+				options = index;
+				index = undefined;
+			}
+			if (index != null && !('index' in options)) {
+				options.index = index;
+			}
+			options.preventRender = !!children.length;
 			if (!isView(view)) { continue; }
 
 			this.addChildView(view, options);
-			notComplete = options.preventRender;
+			awaitingRender = options.preventRender;
 		}
-		if (notComplete) {
+		if (awaitingRender) {
 			this.sort();
 		}
 	},

@@ -1,6 +1,7 @@
-import handleEvent from './handle-event';
-import eventHandlers from './events';
-import getOption from '../../../utils/get-option';
+import handleEvent from './handle-event.js';
+import eventHandlers from './events/index.js';
+//import getOption from '../../../utils/get-option';
+import { getOption } from '../../../utils/index.js';
 
 const _getOption = (context, key, checkAlso) => 
 	getOption(context, key, { args:[context], checkAlso });
