@@ -1,4 +1,5 @@
 import { BackboneView } from '../../vendors/backbone.js';
+import triggerMethod from '../../utils/trigger-method/index.js';
 
 export default BackboneView.extend({
 	constructor({ text } = {}){
@@ -18,5 +19,6 @@ export default BackboneView.extend({
 		if(this.isRendered()) {
 			this.render();
 		}
-	}
+	},
+	triggerMethod
 });
