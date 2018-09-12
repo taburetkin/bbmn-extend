@@ -16,7 +16,9 @@ _.extend(ViewStack.prototype, Events, {
 
 	add(view, options){
 		if(!_.isObject(view)) { return; }
-		
+		if (this.getOption('clearBeforeAdd')) {
+			this.removeAll();
+		}
 		this.triggerMethod('before:add');
 
 		this.stack.push(view);
@@ -202,15 +204,20 @@ _.extend(ViewStack.prototype, Events, {
 	isDestroyed(){
 		return this._isDestroyed || this._isDestroying;
 	},
+	removeAll(){
+		while(this.stack.length){
+			this.destroyLast();
+		}
+	},
 	destroy(){
 		if(this._isDestroyed || this._isDestroying) { return; }		
 		this._isDestroying = true;
 
 		this.triggerMethod('before:destroy');
+
+		this.removeAll();
+
 		let $doc = this.getDocument();
-		while(this.stack.length){
-			this.destroyLast();
-		}
 		$doc.off('keyup', this._onKeyUp);
 		$doc.off('click', this._outsideClick);
 
