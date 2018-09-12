@@ -1,4 +1,4 @@
-import Process from '../../../components/process';
+import Process from '../../../components/process/index.js';
 
 
 const defaultStartableOptions  = {
@@ -108,5 +108,5 @@ export default Base => Base.extend({
 		return stop.then(() => this.start(...args));
 	}
 }, {
-	Startable: true
+	StartableMixin: true
 });

@@ -1,13 +1,13 @@
 import { MnObject } from '../../../vendors/marionette.js';
 import mix from '../../../utils/mix';
-// import GetOptionMixin from '../../../mixins/common/get-option';
-// import StartableMixin from '../../../mixins/common/startable';
-// import ChildrenableMixin from '../../../mixins/common/childrenable';
-import { 
-	getOption as GetOptionMixin, 
-	startable as StartableMixin, 
-	childrenable as ChildrenableMixin 
-} from '../../../mixins/common/index.js';
+import GetOptionMixin from '../../../mixins/common/get-option';
+import StartableMixin from '../../../mixins/common/startable';
+import ChildrenableMixin from '../../../mixins/common/childrenable';
+// import { 
+// 	getOption as GetOptionMixin, 
+// 	startable as StartableMixin, 
+// 	childrenable as ChildrenableMixin 
+// } from '../../../mixins/common/index.js';
 
 import RoutesMixin from './routes-mixin';
 

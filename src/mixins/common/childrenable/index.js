@@ -138,4 +138,4 @@ export default Base => Base.extend({
 
 
 
-});
+}, { ChildrenableMixin: true });
