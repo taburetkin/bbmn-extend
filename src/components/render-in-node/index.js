@@ -47,4 +47,5 @@ export default function renderInNode(view, { el, replaceElement = false, destroy
 	}
 	const region = new NodeRegion({ el, replaceElement, destroySelfOnEmpty, destroyOnEmpty });
 	region.show(view);
+	return region;
 }
