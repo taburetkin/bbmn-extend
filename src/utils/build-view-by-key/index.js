@@ -10,22 +10,22 @@ function get(context, key){
 	}
 }
 
-function buildView(view, options){
+export default function buildViewByKey(key, { allowTextView = true, options } = {}) {
+	
+	if(!_.isString(key)) { return; }
+
+	let view = get(this, key);
+	let _options = get(this, key + 'Options');
+
+	if (allowTextView && _.isString(view)) {
+		_options = _.extend({}, _options, { text: view });
+		view = TextView;
+	}
+	options = _.extend({}, options, _options);
+
 	if (isView(view)) {
 		return view;
 	} else if (isViewClass(view)) {
 		return new view(options);
-	}
-}
-
-export default function buildViewByKey(key, { allowTextView = true, options } = {}) {
-	if(!_.isString(key)) { return; }
-	let view = get(this, key);
-	let _options = get(this, key + 'Options');
-	if (allowTextView && _.isString(view)) {
-		_options = _.extend(_options, { text: view });
-		view = TextView;
-	}
-	options = _.extend({}, options, _options);
-	return buildView(view, options);
+	}	
 }
