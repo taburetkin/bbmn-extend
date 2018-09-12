@@ -20,7 +20,8 @@ export { default as unflat } from './unflat/index.js';
 
 export { default as compareObjects } from './compare-objects/index.js';
 export { default as mergeObjects } from './merge-objects/index.js';
-export { default as triggerMethod, triggerMethodOn } from './trigger-method/index.js';
+export { default as triggerMethod } from './trigger-method/index.js';
+export { default as triggerMethodOn } from './trigger-method-on/index.js';
 
 export { default as mergeOptions } from './merge-options/index.js';
 

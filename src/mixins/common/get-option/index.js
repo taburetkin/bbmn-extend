@@ -1,8 +1,7 @@
-// import result from '../../../utils/better-result';
-// import getOption from '../../../utils/get-option';
-import { betterResult as result, getOption } from '../../../utils/index.js';
+import result from '../../../utils/better-result/index.js';
+import getOption from '../../../utils/get-option/index.js';
 
-const Mixin = (Base) => Base.extend({
+const Mixin = Base => Base.extend({
 
 	//property first approach
 	getProperty(key, opts){

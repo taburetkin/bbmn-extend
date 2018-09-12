@@ -1,4 +1,5 @@
-import extend from '../../utils/extend';
+import extend from '../../utils/extend/index.js';
+
 const errorProps = ['description', 'fileName', 'lineNumber', 'name', 'message', 'number', 'url'];
 function normalizeAppErrorOptions(data = {}){
 	if(_.isString(data)){

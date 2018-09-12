@@ -1,4 +1,6 @@
-import { camelCase, getOption } from '../index.js';
+//import { camelCase, getOption } from '../index.js';
+import camelCase from '../camel-case/index.js';
+import getOption from '../get-option/index.js';
 
 export default function triggerMethod(event, ...args) {
 	// get the method name from the event name
@@ -20,6 +22,4 @@ export default function triggerMethod(event, ...args) {
 	return result;
 }
 
-export function triggerMethodOn(context, event, ...args) {
-	return triggerMethod.call(context, event, ...args);
-}
+

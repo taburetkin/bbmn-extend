@@ -3,7 +3,7 @@ import renderInNode from '../../components/render-in-node/index.js';
 import { View as MnView } from '../../vendors/marionette.js';
 import { ViewStack } from '../../components/index.js';
 
-import ViewMixin from './view-mixin';
+import ViewMixin from './view-mixin.js';
 
 export default {
 	

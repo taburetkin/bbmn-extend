@@ -1,10 +1,10 @@
-import mix from '../../utils/mix';
-import { triggerMethodOn } from '../../utils/index.js';
-import camelCase from '../../utils/camel-case';
-import result from '../../utils/better-result';
-import register from './register';
+import mix from '../../utils/mix/index.js';
+import triggerMethodOn from '../../utils/trigger-method-on/index.js';
+import camelCase from '../../utils/camel-case/index.js';
+import result from '../../utils/better-result/index.js';
+import register from './register.js';
 
-import { isPromisable, race, asArray, valueToPromise } from './helpers';
+import { isPromisable, race, asArray, valueToPromise } from './helpers.js';
 
 const Process = mix({
 	constructor: function Process(context, name, opts){

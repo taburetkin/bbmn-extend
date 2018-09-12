@@ -1,5 +1,6 @@
-//import isKnownCtor from '../../../utils/is-known-ctor';
-import { isKnownCtor } from '../../../utils/index.js';
+
+import isKnownCtor from '../../../utils/is-known-ctor/index.js';
+
 export default Base => Base.extend({
 
 	constructor(opts){
