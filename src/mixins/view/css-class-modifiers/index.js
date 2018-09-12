@@ -13,8 +13,8 @@ export default (Base) => Base.extend({
 		Base.apply(this, arguments);
 		this._setupCssClassModifiers();		
 	},
-	addCssClassModifier(modifier){
-		this.cssClassModifiers.push(modifier);
+	addCssClassModifier(...modifiers){
+		this.cssClassModifiers.push(...modifiers);
 	},
 	refreshCssClass(){
 		let className = this._getCssClassString();
