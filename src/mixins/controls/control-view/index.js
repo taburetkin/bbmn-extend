@@ -94,10 +94,10 @@ export default Base => {
 
 
 		getHeaderView(){			
-			return this.buildHeaderView();
+			return this.buildHeaderView({ tagName: 'header' });
 		},
-		buildHeaderView(){
-			return buildViewByKey.call(this, 'header', { allowTextView: true, options: { tagName: 'header' }});
+		buildHeaderView(options){
+			return buildViewByKey.call(this, 'header', { allowTextView: true, options });
 		},
 
 
