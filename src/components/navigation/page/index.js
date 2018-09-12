@@ -1,7 +1,8 @@
 import { MnObject } from '../../../vendors/marionette.js';
 import mix from '../../../utils/mix';
 import GetOptionMixin from '../../../mixins/common/get-option';
-import StartableMixin from '../../../mixins/common/startable';
+//import StartableMixin from '../../../mixins/common/startable';
+import StartableMixin from '../../../mixins/common/startable/index.js';
 import ChildrenableMixin from '../../../mixins/common/childrenable';
 // import { 
 // 	getOption as GetOptionMixin, 

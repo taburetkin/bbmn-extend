@@ -2,6 +2,8 @@ import Process from '../../process';
 import BaseRouter from '../router';
 import errorHandler from '../route-error-handler';
 
+import { startable } from '../../../mixins/common/index.js';
+
 export default BaseRouter.extend({
 	
 	classicMode:false,
@@ -35,6 +37,7 @@ export default BaseRouter.extend({
 		//BaseRouter.prototype.handleError(error, action);
 	},
 	startPage(page, ...args){
+		console.log('startable:', startable);
 		return this.beforePageStart(page)
 			.then(() => page.start(...args))
 			.then(() => this.afterPageStart(page, ...args));
