@@ -1,8 +1,14 @@
-import { MnObject } from '../../../vendors/marionette';
+import { MnObject } from '../../../vendors/marionette.js';
 import mix from '../../../utils/mix';
-import GetOptionMixin from '../../../mixins/common/get-option';
-import StartableMixin from '../../../mixins/common/startable';
-import ChildrenableMixin from '../../../mixins/common/childrenable';
+// import GetOptionMixin from '../../../mixins/common/get-option';
+// import StartableMixin from '../../../mixins/common/startable';
+// import ChildrenableMixin from '../../../mixins/common/childrenable';
+import { 
+	getOption as GetOptionMixin, 
+	startable as StartableMixin, 
+	childrenable as ChildrenableMixin 
+} from '../../../mixins/common/index.js';
+
 import RoutesMixin from './routes-mixin';
 
 const BasePage = mix(MnObject).with(GetOptionMixin, ChildrenableMixin, StartableMixin, RoutesMixin);
@@ -41,13 +47,11 @@ export default BasePage.extend({
 	},
 
 	getSiblings(opts = {}){
+
 		let parent = this.getParent();
 		let options = _.extend({ exclude: [this] }, opts);
 		return parent && parent.getChildren(options) || [];
-		// if(_.isFunction(opts.map))
-		// 	return _(pages).chain().map(opts.map).filter(f => !!f).value();
-		// else
-		// 	return pages;
+
 	},
 	getChildrenHashes(){
 		return this.getChildren({ map: i => i.getHash(), visible: true, });
@@ -68,10 +72,12 @@ export default BasePage.extend({
 			return pages;
 		}
 	},
+
 	getAllHashes(opts = {}){
 		let options = _.extend({ map: i => i.getHash(), visible: true, }, opts);
 		return this.getAllPages(options);
 	},
+
 	getHash(){
 		let context = this.getMainRouteContext();
 
@@ -91,8 +97,8 @@ export default BasePage.extend({
 
 
 	_childFilter(item, index, opts = {}) {
-
-		if(!BasePage.prototype._childFilter.apply(this, arguments))
+		let base = BasePage.prototype._childFilter;
+		if(base && !base.apply(this, arguments))
 			return;
 
 		let { visible } = opts;
