@@ -91,7 +91,8 @@ export default Base => Base.extend({
 	},
 	initControlValue(value){
 		this._cntrl.initial = value;
-		this.setControlValue(value, { silent: true });
+		this._cntrl.value = value;
+		//this.setControlValue(value, { silent: true });
 	},
 	getControlName(){
 		return this._cntrl.name;
