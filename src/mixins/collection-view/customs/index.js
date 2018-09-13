@@ -62,9 +62,12 @@ export default Base => Base.extend({
 			view = view.call(this, this);
 		}
 		if (isView(view)) {
-			this.setupCustom(view);
+			this._setupCustom(view);
 			return [view, options]; 
 		}
+	},
+	_setupCustom(view){
+		this.setupCustom(view);
 	},
 	setupCustom: _.noop,
 	addChildViews(children = []){

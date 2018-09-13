@@ -57,8 +57,10 @@ export default Base => Base.extend({
 		children.splice(index, 1);
 	},
 	_addChildControl(control){
+		let controlName = control.getControlName();
 		let children = this.getChildrenControls();
-		children.push(control);
+		let found = _.find(children, child => child.getControlName() === controlName);
+		!found && children.push(control);
 		// this.listenTo(control, 'control:invalid', (error) => {
 		// 	this._onControlValidateFail(error, this.getControlValue({ notValidated: true })).catch(() => {});
 		// });
@@ -84,6 +86,9 @@ export default Base => Base.extend({
 	},
 	initParentControl(options){
 		let parent = takeValue('proxyTo', options, this) || takeValue('parentControl', options, this);
+		this.setParentControl(parent);
+	},
+	setParentControl(parent){
 		this._cntrl.parent = parent;
 		if (parent && _.isFunction(parent._addChildControl)) {
 			parent._addChildControl(this);

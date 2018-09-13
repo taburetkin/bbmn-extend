@@ -40,6 +40,17 @@ export default Base => {
 			customs = this.injectSystemViews(customs);
 			return this._prepareCustoms(customs);
 		},
+		_setupCustom(view){
+			this._setupChildControl(view);
+			this.setupCustom(view);
+		},
+		_setupChildControl(view){
+			if(this._isFunction(view.setParentControl)) {
+				view.setParentControl(this);
+			}
+			this.setupChildControl(view);
+		},
+		setupChildControl: _.noop,
 		injectSystemViews(customs = []){
 			customs.unshift(this.getHeaderView());
 			customs.push(
