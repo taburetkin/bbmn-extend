@@ -84,8 +84,8 @@ export default Base => {
 		getErrorView(){
 			if (!this.getOption('shouldShowError')) { return; }
 			if (this.getOption('showValidateError', {force:false})) { return; }
-			this.errorView = this.buildErrorView();
-			return this.errorView;
+			this._errorView = this.buildErrorView();
+			return this._errorView;
 		},
 		buildErrorView(){
 			return buildViewByKey.call(this, 'errorView', { allowTextView: false });
@@ -208,8 +208,8 @@ export default Base => {
 			if (_.isFunction(show)) {
 				show.call(this, error);
 			} else {
-				if (!this.errorView) return;
-				this.errorView.showError(error);
+				if (!this._errorView) return;
+				this._errorView.showError(error);
 			}		
 		},
 		_hideValidateError(){
@@ -217,8 +217,8 @@ export default Base => {
 			if (_.isFunction(hide)) {
 				hide.call(this);
 			} else {
-				if (!this.errorView) return;
-				this.errorView.hideError();
+				if (!this._errorView) return;
+				this._errorView.hideError();
 			}		
 		},
 	}, { ControlViewMixin: true });
