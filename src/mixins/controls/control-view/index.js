@@ -45,7 +45,7 @@ export default Base => {
 			this.setupCustom(view);
 		},
 		_setupChildControl(view){
-			if(this._isFunction(view.setParentControl)) {
+			if(_.isFunction(view.setParentControl)) {
 				view.setParentControl(this);
 			}
 			this.setupChildControl(view);
