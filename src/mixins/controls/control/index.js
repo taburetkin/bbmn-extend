@@ -331,6 +331,9 @@ export default Base => Base.extend({
 			let isControlWraper = this.getOption('isControlWrapper');
 			isControlWraper && (controlName = undefined);
 			this.setControlValue(value, { key: controlName, skipChildValidate: controlName });
+			if(isControlWraper) {
+				this.controlDone();
+			}
 		},
 		'invalid'(controlName, value, error){
 			let isControlWraper = this.getOption('isControlWrapper');

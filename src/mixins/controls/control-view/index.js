@@ -179,7 +179,7 @@ export default Base => {
 		},
 
 		getControlView(){
-			this.control = buildViewByKey.call(this, 'controlView', { allowTextView: false, options: { parentControl: this, value: this.getControlValue() } });			
+			this.control = buildViewByKey.call(this, 'controlView', { allowTextView: false, options: { parentControl: this, value: this.getControlValue() } });
 			return this.control;
 		},
 
