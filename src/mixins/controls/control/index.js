@@ -375,7 +375,7 @@ export default Base => Base.extend({
 			parent.handleChildControlEvent(name, controlName, ...args);
 		} else {
 			let parentTrigger = getTriggerMethod(parent);
-			parentTrigger.call(this, namedEvent, ...args);
+			parentTrigger.call(parent, namedEvent, ...args);
 		}
 
 	},
