@@ -1,4 +1,6 @@
 import { buildViewByKey } from '../../../utils/index.js';
 export default Base => Base.extend({
-	buildViewByKey
+	buildViewByKey(...args){
+		return buildViewByKey.call(this, ...args);
+	},
 });
