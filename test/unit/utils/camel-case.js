@@ -1,7 +1,7 @@
 import '../../setup/node';
 import camelCase from '../../../src/utils/camel-case';
 
-describe('utils • camel-case',function(){
+describe.only('utils • camel-case',function(){
 	describe('when passing one argument with optional last boolean', function(){
 
 		it('should return undefined if there is no arguments',() => {
@@ -24,8 +24,13 @@ describe('utils • camel-case',function(){
 			expect(camelCase('as:camel:case', true)).to.equal('AsCamelCase');
 		});	
 
+		it('should omit empty chunks',() => {
+			expect(camelCase('as::camel::case')).to.equal('asCamelCase');
+		});	
+
+
 	});
-	describe.only('when passing multiple arguments with optional last bollean', function(){
+	describe('when passing multiple arguments with optional last bollean', function(){
 
 		it('should return empty string if all arguments is empty and there is no last boolean',() => {
 			expect(camelCase(undefined, null)).to.be.equal('');
@@ -47,6 +52,9 @@ describe('utils • camel-case',function(){
 		});			
 		it('should return joined camel cased string of parameters with small first letter if there is last boolean is false',() => {
 			expect(camelCase('as','camel','case', false)).to.be.equal('asCamelCase');
-		});			
+		});
+		it('should omit empty chunks',() => {
+			expect(camelCase('as',undefined,'camel', null, 'case','','two')).to.equal('asCamelCaseTwo');
+		});	
 	});
 });

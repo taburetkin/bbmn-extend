@@ -18,7 +18,7 @@ export default function camelCase(...args) {
 	if (!text) return text;
 
 	if (!_.isString(text)) return text.toString();
-	
+	text = text.replace(/:{2,}/gmi,':');
 	var splitter = first === true ? /(^|:)(\w)/gi : /(:)(\w)/gi;
 	text = text.replace(splitter, (match, prefix, text) => text.toUpperCase());
 	if(!first)
