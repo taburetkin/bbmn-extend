@@ -42,7 +42,7 @@ export default (Base) => Base.extend({
 	{
 		let modifiers = this.getCssClassModifiers();
 		
-		let hash = _(modifiers).reduce((hash, modifier) => {
+		let classes = _(modifiers).reduce((hash, modifier) => {
 			if(modifier == null || modifier === '') { return hash; }
 			let cls;
 			if (_.isString(modifier)) {
@@ -52,10 +52,10 @@ export default (Base) => Base.extend({
 			}
 			cls && (hash[cls] = true);
 			return hash;
-		});
+		}, {});
 
-		return _.chain(hash)
-			.keys(hash)
+		return _.chain(classes)
+			.keys(classes)
 			.uniq()
 			.value()
 			.join(' ');
