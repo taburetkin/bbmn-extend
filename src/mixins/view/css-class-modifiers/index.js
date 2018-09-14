@@ -41,16 +41,25 @@ export default (Base) => Base.extend({
 	_getCssClassString()
 	{
 		let modifiers = this.getCssClassModifiers();
-		let classes = _(modifiers).map((cls) => {
-			return _.isString(cls) 
-				? cls 
-				: _.isFunction(cls) 
-					? cls.call(this, this.model, this) 
-					: null;
+		
+		let hash = _(modifiers).reduce((hash, modifier) => {
+			if(modifier == null || modifier === '') { return hash; }
+			let cls;
+			if (_.isString(modifier)) {
+				cls = modifier;
+			} else if (_.isFunction(modifier)) {
+				cls = modifier.call(this, this.model, this);
+			}
+			cls && hash[cls];
+			return hash;
 		});
-		let ready = _(classes).filter((f) => f != null && f != '');
-		let className = _.uniq(ready).join(' ');
-		return (className || '').trim();
+		
+		return _.chain(hash)
+			.keys(hash)
+			.uniq()
+			.value()
+			.join(' ');
+
 	},
 
 	_setupCssClassModifiers(){
