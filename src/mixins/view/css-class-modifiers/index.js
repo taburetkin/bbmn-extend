@@ -50,10 +50,10 @@ export default (Base) => Base.extend({
 			} else if (_.isFunction(modifier)) {
 				cls = modifier.call(this, this.model, this);
 			}
-			cls && hash[cls];
+			cls && (hash[cls] = true);
 			return hash;
 		});
-		
+
 		return _.chain(hash)
 			.keys(hash)
 			.uniq()
