@@ -50,6 +50,17 @@ export default BasePage.extend({
 		return parent && parent.getChildren(options) || [];
 
 	},
+	getHashes(){
+		let parent = this.getParent();
+		let root = this.getRoot();
+
+		return {
+			root: root && root.getHash && root.getHash || undefined,
+			parent: parent && parent.getHash && parent.getHash() || undefined,
+			children: this.getChildrenHashes(),
+			siblings: this.getSiblingsHashes()
+		};
+	},
 	getChildrenHashes(){
 		return this.getChildren({ map: i => i.getHash(), visible: true, });
 	},
