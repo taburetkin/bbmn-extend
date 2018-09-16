@@ -1,5 +1,6 @@
 export { default as betterResult } from './better-result/index.js';
 export { default as camelCase } from './camel-case/index.js';
+export { default as takeFirst } from './take-first/index.js';
 
 export { default as comparator } from './comparator/index.js';
 export { default as compareAB } from './compare-ab/index.js';

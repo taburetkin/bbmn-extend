@@ -4,10 +4,15 @@ export default Base => Base.extend({
 	
 	renderAllCustoms: false,
 	shouldMergeCustoms: false,
+	renderCollection: true,
 
 	constructor(){
-		this._customs = [];
+		this._customs = [];		
 		Base.apply(this, arguments);
+		if (this.getOption('renderCollection') === false && this.collection) {
+			this._collection = this.collection;
+			delete this.collection;
+		}
 		this._initializeCustoms();
 	},
 	_initializeCustoms(){

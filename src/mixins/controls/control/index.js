@@ -1,13 +1,5 @@
 import { flat, unflat, setByPath, getByPath, compareObjects, betterResult } from '../../../utils/index.js';
-
-function takeValue(key, first = {}, second = {}){
-	if(!_.isObject(first) || !_.isString(key)) return;
-	if (key in first) {
-		return first[key];
-	} else {
-		return second[key];
-	}
-}
+import takeValue from '../../../utils/take-first/index.js';
 
 function getTriggerMethod(context){
 	if(!context) { return () => {}; }
