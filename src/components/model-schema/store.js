@@ -21,7 +21,10 @@ const store = {
 	isNotInitialized(arg){
 		return !this.getStore(arg);
 	},
-	initialize({ name, schema = {} } = {}) {
+	initialize(name, schema = {}) {
+		if (!this.isNotInitialized(name)) {
+			throw new Error('Schema already initialized');
+		}
 		let ctor = _.isFunction(name) && name || undefined;
 		name = this.getStoreName(name);
 
