@@ -38,6 +38,7 @@ const store = {
 		this.schemas[name] = {
 			name, ctor, schema
 		};
+		return schema;
 	},
 	getStore(arg){
 		if (_.isString(arg)) {
