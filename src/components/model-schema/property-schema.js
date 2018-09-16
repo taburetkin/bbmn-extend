@@ -1,6 +1,6 @@
 import { betterResult } from '../../utils/index.js';
 
-export function PropertySchema({ name, property, modelSchema }){
+export default function PropertySchema({ name, property, modelSchema }){
 	this.name = name;
 	this.schema = _.extend({}, property);	
 	this.modelSchema = modelSchema;
