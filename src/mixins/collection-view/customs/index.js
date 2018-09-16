@@ -15,6 +15,9 @@ export default Base => Base.extend({
 		}
 		this._initializeCustoms();
 	},
+	getCollection(){
+		return this.collection || this._collection;
+	},
 	_initializeCustoms(){
 
 		let optionsCustoms = betterResult(this.options, 'customs', { args: [this], context: this });
