@@ -68,6 +68,9 @@ export default BasePage.extend({
 		return this.getSiblings({ map: i => i.getHash(), visible: true, });
 	},
 
+	getRoot(){
+		return this.root;
+	},
 	getAllPages(opts = {}){
 		
 		let options = _.extend({}, opts, { includeSelf: true });
