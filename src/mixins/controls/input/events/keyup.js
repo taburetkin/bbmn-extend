@@ -2,6 +2,8 @@ import getOption from './_get-option';
 export default function(eventContext) {
 	let { context, event } = eventContext;
 
+	if (context.triggerMethod('keyup', event) === false) { return; }
+
 	if (event.keyCode == 13) {
 		
 		let shouldDone = getOption(context, 'doneOnEnter', true);
@@ -14,4 +16,6 @@ export default function(eventContext) {
 		}
 
 	}
+
+
 }

@@ -2,6 +2,10 @@ import getOption from './_get-option';
 import isChar from './_is-char';
 export default function(eventContext) {
 	let { context, event } = eventContext;
+
+	if (context.triggerMethod('keydown', event) === false) { return; }
+
+
 	let prevent = false;
 	let stop = false;
 
