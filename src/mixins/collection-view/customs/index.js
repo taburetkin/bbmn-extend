@@ -36,9 +36,14 @@ export default Base => Base.extend({
 		}
 	},
 	renderCustoms(){
-		let customs = this.getCustoms();
 		this.triggerMethod('before:customs:render');
-		this.addChildViews(customs);
+		
+		_.each(this._renderedCustoms, view => view.destroy());
+		
+		let customs = this.getCustoms();
+		
+		this._renderedCustoms = this.addChildViews(customs);
+
 		this.triggerMethod('customs:render');
 	},
 	_renderCustoms(){
@@ -94,7 +99,7 @@ export default Base => Base.extend({
 		if (!children.length) { return; }
 
 		let awaitingRender = false;
-
+		let rendered = [];
 		while(children.length) {
 
 			let args = children.pop();
@@ -116,10 +121,12 @@ export default Base => Base.extend({
 			if (!isView(view)) { continue; }
 
 			this.addChildView(view, options);
+			rendered.push(view);
 			awaitingRender = options.preventRender;
 		}
 		if (awaitingRender) {
 			this.sort();
 		}
+		return rendered;
 	},
 }, { CustomsMixin: true });
