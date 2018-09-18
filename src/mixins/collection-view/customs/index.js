@@ -35,12 +35,15 @@ export default Base => Base.extend({
 			this.on('render', this._renderCustoms);
 		}
 	},
-	_renderCustoms(){
-		if (!this.getOption('renderAllCustoms')) return;
+	renderCustoms(){
 		let customs = this.getCustoms();
 		this.triggerMethod('before:customs:render');
 		this.addChildViews(customs);
 		this.triggerMethod('customs:render');
+	},
+	_renderCustoms(){
+		if (!this.getOption('renderAllCustoms')) return;
+		this.renderCustoms();
 	},
 	getCustoms() {		
 		return this._prepareCustoms(this._customs.slice(0));
