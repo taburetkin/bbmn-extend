@@ -37,7 +37,7 @@ export default Base => Base.extend({
 	},
 	renderCustoms(){
 		this.triggerMethod('before:customs:render');
-		
+
 		_.each(this._renderedCustoms, view => view.destroy());
 		
 		let customs = this.getCustoms();

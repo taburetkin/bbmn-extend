@@ -2,6 +2,8 @@ import { BackboneView } from '../../vendors/backbone.js';
 import triggerMethod from '../../utils/trigger-method/index.js';
 
 export default BackboneView.extend({
+	supportsDestroyLifecycle: true,
+
 	constructor({ text } = {}){
 		BackboneView.apply(this, arguments);
 		this.setText(text);
@@ -20,5 +22,26 @@ export default BackboneView.extend({
 			this.render();
 		}
 	},
-	triggerMethod
+	triggerMethod,
+	destroy(){
+		if(this._isDestroyed || this._isDestroying) { return; }
+		this._isDestroying = true;
+
+		this.triggerMethod('before:destroy', this);
+		
+		if (this._isAttached) {
+			this.triggerMethod('before:detach', this);
+		}
+		
+		this.remove();
+		
+		if (this._isAttached) {
+			this._isAttached = false;
+			this.triggerMethod('detach', this);
+		}
+		
+		this._isDestroyed = true;
+	
+		this.triggerMethod('destroy', this);
+	}
 });
