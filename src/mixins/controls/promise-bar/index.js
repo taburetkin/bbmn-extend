@@ -56,7 +56,8 @@ export default Base => Base.extend({
 			className: name, 
 			name, 
 			triggerNameEvent: this.getOption('triggerNameEvent'), 
-			stopEvent: true 
+			stopEvent: true,
+			text: options.text || name,
 		};
 		options = _.extend(defs, options);
 		return options;

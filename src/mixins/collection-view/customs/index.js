@@ -74,8 +74,8 @@ export default Base => Base.extend({
 					options = view.options;
 				view = view.view;
 			} else if(isViewClass(view.view)) {
-				let viewOpions = view.options;
-				view = new view.view(viewOpions);
+				let viewOptions = view.options;
+				view = new view.view(viewOptions);
 			}
 		}
 		if (isView(view)) {
