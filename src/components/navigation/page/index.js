@@ -55,11 +55,22 @@ export default BasePage.extend({
 		let root = this.getRoot();
 
 		return {
+			path: this.getPathHash(),
+			this: this.getHash(),
 			root: root && root.getHash && root.getHash() || undefined,
 			parent: parent && parent.getHash && parent.getHash() || undefined,
 			children: this.getChildrenHashes(),
 			siblings: this.getSiblingsHashes()
 		};
+	},
+	getPathHash(){
+		let self = this.getHash();
+		let path = [self];
+		let parent = this.getParent();
+		if (parent && _.isFunction(parent.getPathHash)) {
+			path.unshift(...parent.getPathHash());
+		}
+		return path;
 	},
 	getChildrenHashes(){
 		return this.getChildren({ map: i => i.getHash(), visible: true, });
