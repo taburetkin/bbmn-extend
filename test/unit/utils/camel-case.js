@@ -1,7 +1,7 @@
 import '../../setup/node';
 import camelCase from '../../../src/utils/camel-case';
 
-describe.only('utils • camel-case',function(){
+describe('utils • camel-case',function(){
 	describe('when passing one argument with optional last boolean', function(){
 
 		it('should return undefined if there is no arguments',() => {

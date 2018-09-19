@@ -28,6 +28,8 @@ export { default as mergeOptions } from './merge-options/index.js';
 
 export { default as buildViewByKey } from './build-view-by-key/index.js';
 
+
+
 export { 
 	isModel, isModelClass, isCollection, isCollectionClass, isView, isViewClass
 } from '../vendors/helpers';
