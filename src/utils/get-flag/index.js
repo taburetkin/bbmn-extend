@@ -77,8 +77,12 @@ export default function getFlag(value, flag, options = {}){
 		}
 	} else if(returnAs === 'object') {
 		return _.reduce(founded, (result, item, index) => {
-			let value = isArray ? item : item.value;
-			let key = isArray ? index : item.key;
+			let value = isArray 
+				? item 
+				: takeObjectKeys ? item.key : item.value;
+			let key = isArray 
+				? index 
+				: takeObjectKeys ? item.value : item.key;
 			result[key] = value;
 			return result;
 		}, {});

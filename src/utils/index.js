@@ -29,6 +29,7 @@ export { default as mergeOptions } from './merge-options/index.js';
 
 export { default as buildViewByKey } from './build-view-by-key/index.js';
 
+export { default as enums } from './enums/index.js';
 
 
 export { 

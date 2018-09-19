@@ -87,7 +87,7 @@ describe('utils • get-flag',function(){
 			expect(getFlag(['asd','Qwe','zxc'], 'qwe')).to.be.equal('Qwe');
 		});
 	});
-	describe.only('when check argument is an object', function(){
+	describe('when check argument is an object', function(){
 		const check = {
 			one: 'uno',
 			Two: 'duos',
@@ -96,12 +96,31 @@ describe('utils • get-flag',function(){
 		it('should return string value if flag is string', function(){
 			expect(getFlag(check, 'two ,three')).to.be.equal('duos, Tres');
 		});
+		it('should return string keys if flag is string and takeObjectKeys is true', function(){
+			expect(getFlag(check, 'two ,three', { takeObjectKeys: true })).to.be.equal('Two, three');
+		});
+
 		it('should return array of values if returnAs is set to array', function(){
 			expect(getFlag(check, 'two ,three', { returnAs: 'array'})).to.be.eql(['duos', 'Tres']);
 		});
-		it('should return array of keys if returnAs is set to array and useObjectValues is false', function(){
-			expect(getFlag(check, 'duos ,tres', { returnAs:'array', useObjectValues: true })).to.be.eql(['Two', 'three']);
+		it('should return array of keys if returnAs is set to array and takeObjectKeys is true', function(){
+			expect(getFlag(check, 'two ,three', { returnAs: 'array', takeObjectKeys: true })).to.be.eql(['Two', 'three']);
 		});
+		it('should return array of key value pairs if returnAs is set to array and doNotPluck is true', function(){
+			expect(getFlag(check, 'two ,three', { returnAs: 'array', doNotPluck: true })).to.be.eql([{key:'Two', value:'duos'}, {key:'three', value:'Tres'}]);
+		});		
 
-	});	
+		it('should return array of values if returnAs is set to array and useObjectValues is false', function(){
+			expect(getFlag(check, 'duos ,tres', { returnAs:'array', useObjectValues: true })).to.be.eql(['duos', 'Tres']);
+		});
+		it('should return array of keys if returnAs is set to array and useObjectValues is false and takeObjectKeys is true', function(){
+			expect(getFlag(check, 'duos ,tres', { returnAs:'array', useObjectValues: true, takeObjectKeys: true })).to.be.eql(['Two', 'three']);
+		});
+		it('should return object if returnAs is set to object', function(){
+			expect(getFlag(check, 'two ,three', { returnAs:'object' })).to.be.eql({'Two':'duos', 'three':'Tres'});
+		});
+		it('should return key key object if returnAs is set to object and takeObjectKeys is true', function(){
+			expect(getFlag(check, 'two ,three', { returnAs:'object', takeObjectKeys: true })).to.be.eql({'duos':'Two', 'Tres':'three'});
+		});
+	});
 });
