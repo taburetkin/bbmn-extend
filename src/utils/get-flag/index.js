@@ -1,6 +1,6 @@
 import isEmptyValue from '../is-empty-value/index.js';
 
-function normalizeStringArray(arr, options = {}){
+function normalizeStringArray(arr){
 	return _.reduce(arr, (result,item) => {
 		if(item == null) return;
 		result.push(item.toString());
