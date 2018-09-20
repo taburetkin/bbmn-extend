@@ -1,9 +1,12 @@
 import { betterResult } from '../../utils/index.js';
 
-export default function PropertySchema({ name, property, modelSchema }){
+export default function PropertySchema({ name, property, modelSchema, order = 0 }){
 	this.name = name;
 	this.schema = _.extend({}, property);	
 	this.modelSchema = modelSchema;
+	if (this.schema.order != null)
+		order = this.schema.order;
+	this.order = order;
 }
 _.extend(PropertySchema.prototype, {
 	getValidation() {
