@@ -1,4 +1,4 @@
-import BaseModel from '../base-model/index.js';
+import BaseModel from '../base-object/index.js';
 import getOption from '../../mixins/common/get-option/index.js';
 
 const Schema = getOption(BaseModel);
