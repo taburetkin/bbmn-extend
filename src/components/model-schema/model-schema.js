@@ -1,11 +1,12 @@
+import Schema from './schema';
 import PropertySchema from './property-schema.js';
 import isEmptyValue from '../../utils/is-empty-value/index.js';
 
-export default function ModelSchema(properties = {}){
-	this.properties = {};
-	this.setProperties(properties);
-}
-_.extend(ModelSchema.prototype, {
+export default Schema.extend({
+	constructor(properties = {}){
+		Schema.apply(this,arguments);
+		this.setProperties(properties);
+	},
 	propertySchema: PropertySchema,
 	_createProperty(property){
 		let props = this.getProperties();

@@ -1,14 +1,25 @@
 import { betterResult } from '../../utils/index.js';
+import Schema from './schema';
 
-export default function PropertySchema({ name, property, modelSchema, order = 0 }){
-	this.name = name;
-	this.schema = _.extend({}, property);	
-	this.modelSchema = modelSchema;
-	if (this.schema.order != null)
-		order = this.schema.order;
-	this.order = order;
-}
-_.extend(PropertySchema.prototype, {
+// export default function PropertySchema({ name, property, modelSchema, order = 0 }){
+// 	this.name = name;
+// 	this.schema = _.extend({}, property);	
+// 	this.modelSchema = modelSchema;
+// 	if (this.schema.order != null)
+// 		order = this.schema.order;
+// 	this.order = order;
+// }
+export default Schema.extend({
+	constructor(options = {}){
+		Schema.apply(this, arguments);
+		let { name, property, modelSchema, order = 0 } = options;
+		this.name = name;
+		this.schema = _.extend({}, property);	
+		this.modelSchema = modelSchema;
+		if (this.schema.order != null)
+			order = this.schema.order;
+		this.order = order;
+	},
 	getValidation() {
 		return this.schema.validation || {};
 	},
