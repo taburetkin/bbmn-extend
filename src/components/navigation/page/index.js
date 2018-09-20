@@ -5,7 +5,7 @@ import StartableMixin from '../../../mixins/common/startable/index.js';
 import ChildrenableMixin from '../../../mixins/common/childrenable/index.js';
 
 
-import RoutesMixin from './routes-mixin';
+import RoutesMixin from './routes-mixin.js';
 
 
 const BasePage = mix(MnObject).with(GetOptionMixin, ChildrenableMixin, StartableMixin, RoutesMixin);

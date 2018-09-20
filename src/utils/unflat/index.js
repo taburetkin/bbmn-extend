@@ -1,4 +1,4 @@
-import setByPath from '../set-by-path';
+import setByPath from '../set-by-path/index.js';
 
 export default function unFlat(obj) {
 

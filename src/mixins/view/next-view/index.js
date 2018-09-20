@@ -1,4 +1,4 @@
-import ViewManager from '../../../components/view-manager';
+import ViewManager from '../../../components/view-manager/index.js';
 
 export default BaseView => BaseView.extend({
 	

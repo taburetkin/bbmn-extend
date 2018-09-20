@@ -1,13 +1,13 @@
-import mix from '../../../utils/mix';
-import GetOptionMixin from '../../../mixins/common/get-option';
-import paramStringToObject from '../../../utils/params-to-object';
+import mix from '../../../utils/mix/index.js';
+import GetOptionMixin from '../../../mixins/common/get-option/index.js';
+import paramStringToObject from '../../../utils/params-to-object/index.js';
 import { Router as BbRouter } from '../../../vendors/backbone.js';
 
-import buildRouteContextFromArguments from './build-route-context';
+import buildRouteContextFromArguments from './build-route-context.js';
 
-import  { createActionContext } from './action-context';
-import { processCallback } from './process-callback';
-import errorHandler from '../route-error-handler';
+import  { createActionContext } from './action-context.js';
+import { processCallback } from './process-callback.js';
+import errorHandler from '../route-error-handler/index.js';
 
 
 const BaseRouter = mix(BbRouter).with(GetOptionMixin);

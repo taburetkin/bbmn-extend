@@ -1,5 +1,5 @@
-import toNumber from './to-number';
-import toBoolean from '../to-bool';
+import toNumber from './to-number.js';
+import toBoolean from '../to-bool/index.js';
 
 
 //this is under development yet and can be change in any time

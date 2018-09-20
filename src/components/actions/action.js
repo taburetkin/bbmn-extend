@@ -1,4 +1,6 @@
-import { extend, getByPath } from 'bbmn/utils';
+import extend from '../../utils/extend/index.js';
+import getByPath from '../../utils/get-by-path/index.js';
+
 const Action = function(options = {}){
 	let { name, action } = options;
 	this.options = _.omit(options, 'name', 'callback');

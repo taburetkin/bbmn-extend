@@ -1,5 +1,5 @@
-import { isView, isViewClass, betterResult } from '../../../utils/index.js';
-
+import { isView, isViewClass } from '../../../vendors/helpers.js';
+import betterResult from '../../../utils/better-result/index.js';
 export default Base => Base.extend({
 	
 	renderAllCustoms: false,

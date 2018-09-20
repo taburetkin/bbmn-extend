@@ -1,4 +1,4 @@
-import getOption from './_get-option';
+import getOption from './_get-option.js';
 export default function(eventContext) {
 	let { context } = eventContext;
 

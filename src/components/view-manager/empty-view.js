@@ -1,4 +1,4 @@
-import { isViewClass } from '../../vendors/helpers';
+import { isViewClass } from '../../vendors/helpers.js';
 
 const EmptyViewMixin = {
 	removeEmptyViewInstance(opts = {}){

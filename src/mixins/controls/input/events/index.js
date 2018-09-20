@@ -1,9 +1,9 @@
-import keydown from './keydown';
-import keyup from './keyup';
-import paste from './paste';
-import blur from './blur';
-import focus from './focus';
-import input from './input';
+import keydown from './keydown.js';
+import keyup from './keyup.js';
+import paste from './paste.js';
+import blur from './blur.js';
+import focus from './focus.js';
+import input from './input.js';
 //import jsChange from './js-change';
 export default {
 	keydown, 

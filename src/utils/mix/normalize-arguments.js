@@ -1,5 +1,5 @@
 
-import createMixinFromObject from './create-mixin-from-object';
+import createMixinFromObject from './create-mixin-from-object.js';
 
 export default function normalizeArguments(args, opts = {}) {
 	let raw = {};

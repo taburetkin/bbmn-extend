@@ -1,4 +1,4 @@
-import defaultOptions from './options';
+import defaultOptions from './options.js';
 
 const trueValues = ['true','1','-1','yes'];
 const falseValues = ['false','0','no'];

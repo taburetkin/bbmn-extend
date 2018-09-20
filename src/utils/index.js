@@ -31,10 +31,12 @@ export { default as buildViewByKey } from './build-view-by-key/index.js';
 
 export { default as enums } from './enums/index.js';
 
+export { default as skipTake } from './skip-take/index.js';
+
 
 export { 
 	isModel, isModelClass, isCollection, isCollectionClass, isView, isViewClass
-} from '../vendors/helpers';
+} from '../vendors/helpers.js';
 
 /*
 export default {

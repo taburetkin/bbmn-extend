@@ -1,4 +1,4 @@
-import { isModel } from '../../vendors/helpers';
+import { isModel } from '../../vendors/helpers.js';
 export default function traverse(fields, root)
 {
 	root = root || '';

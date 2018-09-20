@@ -1,5 +1,5 @@
-import getProperty from '../get-by-path/get-property';
-import { isModel } from '../../vendors/helpers';
+import getProperty from '../get-by-path/get-property.js';
+import { isModel } from '../../vendors/helpers.js';
 function setProperty(context, name, value) {
 	if (isModel(context)) {
 		context.set(name, value, { silent: true });

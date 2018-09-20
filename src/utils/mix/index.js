@@ -1,7 +1,7 @@
-import defaultOptions from './options';
-import withMethod from './with';
+import defaultOptions from './options.js';
+import withMethod from './with.js';
 
-import extend from '../extend';
+import extend from '../extend/index.js';
 
 
 

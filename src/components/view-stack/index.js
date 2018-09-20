@@ -1,5 +1,5 @@
 import { Events } from '../../vendors/backbone.js';
-import { triggerMethod } from '../../utils/index.js';
+import triggerMethod from '../../utils/trigger-method/index.js';
 import { instanceGetOption as getOption} from '../../utils/get-option/index.js';
 
 const ViewStack = function(options = {}){

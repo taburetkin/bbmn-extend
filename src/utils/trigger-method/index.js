@@ -1,4 +1,4 @@
-//import { camelCase, getOption } from '../index.js';
+
 import camelCase from '../camel-case/index.js';
 import getOption from '../get-option/index.js';
 

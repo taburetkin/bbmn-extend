@@ -1,8 +1,7 @@
-import { isViewClass } from '../../utils/index.js';
+import { isViewClass } from '../../vendors/helpers.js';
 import renderInNode from '../../components/render-in-node/index.js';
 import { View as MnView } from '../../vendors/marionette.js';
-import { ViewStack } from '../../components/index.js';
-
+import ViewStack from '../../components/view-stack/index.js';
 import ViewMixin from './view-mixin.js';
 
 export default {

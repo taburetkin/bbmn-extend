@@ -1,5 +1,5 @@
-import getOption from './_get-option';
-import isChar from './_is-char';
+import getOption from './_get-option.js';
+import isChar from './_is-char.js';
 export default function(eventContext) {
 	let { context, event } = eventContext;
 

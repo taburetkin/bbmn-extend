@@ -2,8 +2,8 @@ import { Model } from '../../../vendors/backbone.js';
 import getNestedResult from './get-nested-result.js';
 import getPropertySchema from './get-property-schema.js';
 import getDisplayConfig from './get-display-config.js';
-//import getByPath from '../../../utils/get-by-path/index.js';
-import { getByPath } from '../../../utils/index.js';
+import getByPath from '../../../utils/get-by-path/index.js';
+
 
 export default Base => {
 	const originalGet = Model.prototype.get;

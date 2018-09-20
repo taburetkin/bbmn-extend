@@ -1,4 +1,4 @@
-import camelCase from '../camel-case';
+import camelCase from '../camel-case/index.js';
 function transformStringArray(arr, opts = {}){
 	let { ignoreCase = true, toCamelCase = false } = opts;
 	return _(arr).map(value => {

@@ -1,4 +1,4 @@
-import isKnownCtor from '../is-known-ctor';
+import isKnownCtor from '../is-known-ctor/index.js';
 export default function betterResult(obj, key, opts = {})
 {
 	let { context, args, checkAlso, force } = opts;

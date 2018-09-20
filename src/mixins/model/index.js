@@ -1,4 +1,4 @@
-import smartGet from './smart-get';
+import smartGet from './smart-get/index.js';
 export {
 	smartGet
 };

@@ -1,9 +1,10 @@
 import ControlMixin from '../control/index.js';
 import setInputAttributes from './set-attributes.js';
 import setInputEvents from './set-events.js';
-// import getOption from '../../../utils/get-option';
-// import convert from '../../../utils/convert-string';
-import { convertString as convert, getOption } from '../../../utils/index.js';
+import getOption from '../../../utils/get-option/index.js';
+import convert from '../../../utils/convert-string/index.js';
+
+//import { convertString as convert, getOption } from '../../../utils/index.js';
 export default Base => {
 
 	let Mixin = Base.ControlMixin ? Base : ControlMixin(Base);

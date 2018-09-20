@@ -1,4 +1,4 @@
-import traverse from './traverse';
+import traverse from './traverse.js';
 
 export default function flattenObject(obj) {
 	if (obj == null || !_.isObject(obj)) return;

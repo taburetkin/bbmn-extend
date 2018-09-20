@@ -1,4 +1,4 @@
-import { betterResult } from '../../utils/index.js';
+import betterResult from '../../utils/better-result/index.js';
 import Action from './action.js';
 import ActionStore from './store.js';
 

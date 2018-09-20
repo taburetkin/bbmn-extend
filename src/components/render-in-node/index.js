@@ -1,4 +1,4 @@
-import { Region } from '../../vendors/marionette';
+import { Region } from '../../vendors/marionette.js';
 
 export const config = {
 	destroySelfOnEmpty: false,
