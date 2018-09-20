@@ -21,5 +21,6 @@ _.extend(PropertySchema.prototype, {
 	getLabel(value, hash){
 		let label = this.getDisplay().label;
 		return betterResult({ label },'label', { args: [value, hash] });
-	}
+	},
+	getEditView(){},
 });
