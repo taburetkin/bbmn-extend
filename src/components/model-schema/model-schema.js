@@ -4,6 +4,7 @@ import isEmptyValue from '../../utils/is-empty-value/index.js';
 
 export default Schema.extend({
 	constructor(properties = {}){
+		this.properties = {};
 		Schema.apply(this,arguments);
 		this.setProperties(properties);
 	},
