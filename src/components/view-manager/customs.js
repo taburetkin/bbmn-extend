@@ -1,5 +1,5 @@
-import { isView, isViewClass } from '../../vendors/helpers';
-import result from '../../utils/better-result';
+import { isView, isViewClass } from '../../vendors/helpers.js';
+import result from '../../utils/better-result/index.js';
 
 export default {
 
@@ -44,7 +44,8 @@ export default {
 		}
 
 	},
-	_injectCustoms(items, detached, destroyed){
+	//also accepts destroyed as third argument
+	_injectCustoms(items, detached){
 
 		if (this.collection && !items.length) {
 			items = [];
@@ -63,10 +64,7 @@ export default {
 			if(!view) return;
 
 			if(!this._checkCustomCondition(view, custom)){
-				// if (custom.rebuild) {
-				// 	destroyed.push(view);
-				// } else {
-				// }
+
 				detached.push(custom);
 				return;
 			}

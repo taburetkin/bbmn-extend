@@ -1,4 +1,4 @@
-import { session, local } from './store';
+import { session, local } from './store.js';
 
 const getStore = (opts = {}) => opts.local === true ? local : session;
 

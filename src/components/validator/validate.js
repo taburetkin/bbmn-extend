@@ -1,5 +1,5 @@
 import rules from './rules.js';
-
+import isEmptyValue from '../../utils/is-empty-value/index.js';
 
 function normalizeValidationContext(context){
 	if (context === 'required') {
@@ -11,51 +11,89 @@ function normalizeValidationContext(context){
 	}
 }
 
-function getIndexedValidator(key) {
-	for(let x = 0; x < rules.length; x++){
-		let rule = rules[x];
-		if (rule.name === key){
-			return { rule, index: x };
-		}
-	}
-}
+function getRuleContexts(rule = {}){
+	let founded = _.reduce(rule, (taken, ruleValue, name) => {
+		let found = _.findWhere(rules, { name });
+		if(!found) return taken;
 
+		let message = rule[name + 'Message'];
+		taken.push({
+			rule: found,
+			ruleValue,
+			message,
+			index: found.index
+		});
 
-function getValidators(rule = {}){
-	let founded = _.reduce(rule, (validators, value, key) => {
-		let validator = getIndexedValidator(key);
-		if(!validator) { return validators; }
-		validators[validator.index] = {
-			customMessage: rule[key + 'Message'],
-			[key]: value,
-			rule: validator.rule
-		};
-		return validators;
+		return taken;
+
 	}, []);
-	return _.filter(founded, f => !!f);
+	founded.sort((a,b) => a.index - b.index);
+	return founded;
 }
 
-function check(value, allValues, { message, validate } = {}, customMessage) {
-	if (!_.isFunction(validate)) return;
-	let result = validate(value, allValues);
+function check(value, ruleContext = {}) {
+	
+	let { rule = {}, ruleValue, allValues } = ruleContext;
+	let message = ruleContext.message || rule.message;
+	let buildMessage = _.isFunction(message) ? message : ({ error } = {}) => isEmptyValue(message) ? error : message;
+
+	let validate = rule.validate;
+	let validateOptions = {
+		ruleName: rule.name,
+		ruleValue,
+		[rule.name]: ruleValue,
+		allValues,
+		message: buildMessage({ value, allValues, ruleValue })
+	};
+	if (!_.isFunction(validate)) return Promise.resolve(value);
+
+	
+	let result = validate(value, validateOptions);
+
 	if (!result) {
 		return Promise.resolve(value);
 	} else if(result && _.isFunction(result.then)) {
 		return result.then(
 			() => Promise.resolve(value),
-			() => Promise.reject(customMessage || message)
+			(error) => Promise.reject(buildMessage({ error, value, allValues, ruleValue }))
 		);
 	} else {
-		return Promise.reject(customMessage || message);
+		return Promise.reject(buildMessage({ error: result, value, allValues, ruleValue }));
 	}
 }
 
 
 
-function validate(value, rule = {}, opts = {}){
+export default function validate(value, rule, { allValues } = {}){
 	rule = normalizeValidationContext(rule);
-	let validators = getValidators(rule);
-	_.each(validators, item => {
-		//let validate = 
+	let contexts = getRuleContexts(rule);
+	
+
+	return new Promise((resolve, reject) => {
+		let errors = [];
+
+		let rulesPromise = _.reduce(contexts, (promise, ruleContext) => {
+
+			promise = promise.then(() => {
+				return check(value, _.extend({}, ruleContext, { allValues, errors }));
+			}).catch(error => {
+				errors.push(error);
+			});
+
+			return promise;
+
+		}, Promise.resolve(value));
+
+		rulesPromise.then(() => {
+			if(errors.length){
+				reject(errors);
+			} else {
+				resolve(value);
+			}
+		});
+
 	});
 }
+
+
+

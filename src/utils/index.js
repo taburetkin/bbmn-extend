@@ -11,6 +11,7 @@ export { default as flat } from './flat/index.js';
 export { default as getByPath } from './get-by-path/index.js';
 export { default as getOption } from './get-option/index.js';
 export { default as hasFlag } from './has-flag/index.js';
+export { default as getFlag } from './get-flag/index.js';
 export { default as isKnownCtor } from './is-known-ctor/index.js';
 
 export { default as mix } from './mix/index.js';
@@ -28,9 +29,14 @@ export { default as mergeOptions } from './merge-options/index.js';
 
 export { default as buildViewByKey } from './build-view-by-key/index.js';
 
+export { default as enums } from './enums/index.js';
+
+export { default as skipTake } from './skip-take/index.js';
+
+
 export { 
 	isModel, isModelClass, isCollection, isCollectionClass, isView, isViewClass
-} from '../vendors/helpers';
+} from '../vendors/helpers.js';
 
 /*
 export default {

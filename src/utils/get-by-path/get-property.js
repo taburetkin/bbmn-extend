@@ -1,4 +1,4 @@
-import { isModel } from '../../vendors/helpers';
+import { isModel } from '../../vendors/helpers.js';
 function getProperty(context, name)
 {
 	if(context == null || !_.isObject(context) || name == null || name == '') return;

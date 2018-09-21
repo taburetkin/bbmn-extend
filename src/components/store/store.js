@@ -1,4 +1,4 @@
-import fake from './fake';
+import fake from './fake.js';
 
 let session = (typeof sessionStorage === 'undefined') 
 	? fake : sessionStorage;

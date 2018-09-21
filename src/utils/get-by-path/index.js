@@ -1,4 +1,4 @@
-import getByPathArray from './get-by-path-array';
+import getByPathArray from './get-by-path-array.js';
 
 export default function getByPath(obj, path) {
 

@@ -1,6 +1,6 @@
-import Process from '../../process';
-import BaseRouter from '../router';
-import errorHandler from '../route-error-handler';
+import Process from '../../process/index.js';
+import BaseRouter from '../router/index.js';
+import errorHandler from '../route-error-handler/index.js';
 
 export default BaseRouter.extend({
 	

@@ -1,13 +1,13 @@
-import extend from '../../utils/extend';
-import borrow from './borrow';
-import collection from './collection';
-import common from './common';
-import customs from './customs';
-import models from './models';
-import render from './render';
-import emptyView from './empty-view';
+import extend from '../../utils/extend/index.js';
+import borrow from './borrow.js';
+import collection from './collection.js';
+import common from './common.js';
+import customs from './customs.js';
+import models from './models.js';
+import render from './render.js';
+import emptyView from './empty-view.js';
 
-import { Events } from '../../vendors/backbone';
+import { Events } from '../../vendors/backbone.js';
 
 const MergeOptions = [
 	'createView',

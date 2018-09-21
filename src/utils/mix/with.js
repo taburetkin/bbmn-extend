@@ -1,6 +1,6 @@
 
 
-import normalizeArguments from './normalize-arguments';
+import normalizeArguments from './normalize-arguments.js';
 
 export default function withMethod(...args) {
 

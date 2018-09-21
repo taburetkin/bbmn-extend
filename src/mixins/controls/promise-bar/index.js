@@ -1,5 +1,4 @@
-//import View from 'base/collection-view';
-//import Button from 'components/button';
+
 export default Base => Base.extend({
 	constructor(options){
 		if (!this.cssClassModifiers) {

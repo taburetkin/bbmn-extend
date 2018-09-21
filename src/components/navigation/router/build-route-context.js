@@ -1,4 +1,4 @@
-import result from '../../../utils/better-result';
+import result from '../../../utils/better-result/index.js';
 
 function get(router, opts = {}, key, update){
 	

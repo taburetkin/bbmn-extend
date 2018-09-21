@@ -1,4 +1,5 @@
-import { isView, isViewClass, mix } from '../../utils/index.js';
+import { isView, isViewClass } from '../../vendors/helpers.js';
+import mix from '../../utils/mix/index.js';
 
 
 import { customs, nextCollectionView } from '../../mixins/collection-view/index.js';

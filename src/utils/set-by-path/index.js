@@ -1,7 +1,7 @@
-import setByPathArray from './set-by-path-array';
-import normalizeOptions from './normalize-options';
-import triggerModelChangeEvents from './trigger-model-change-events';
-import ensureArguments from './ensure-arguments';
+import setByPathArray from './set-by-path-array.js';
+import normalizeOptions from './normalize-options.js';
+import triggerModelChangeEvents from './trigger-model-change-events.js';
+import ensureArguments from './ensure-arguments.js';
 export default function setByPath(context, path, value, opts = {}) {
 
 	let argumentsErrors = ensureArguments(context, path);

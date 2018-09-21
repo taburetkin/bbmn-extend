@@ -1,26 +1,27 @@
-
-function isEmpty(arg) {
-	return arg == null || arg === '' || arg.toString().trim() === '';
-}
+import isEmpty from '../../utils/is-empty-value/index.js';
 
 
 
 
-export default [
+const rules = [
 	{
 		name: 'required',
 		message: 'required',
-		validate: (value) => !isEmpty(value)
+		validate: (value) => {
+			if (isEmpty(value)) {
+				return 'required';
+			}
+		}
 	},
 	{
 		name: 'email',
 		message: 'not a email',
 		validate: (value) => {
-			if(isEmpty(value)) {
-				return true;
-			}
+			
+			if(isEmpty(value)) { return; }
+
 			if (!_.isString(value)) {
-				return false;
+				return 'type:mismatch';
 			}
 
 			let chunks = value.split('@');
@@ -32,27 +33,27 @@ export default [
 				|| !/^[a-z0-9\-_.+]+$/gmi.test(left)
 				|| !/^[a-z0-9\-_]+\.[a-z0-9\-_]+(\.[a-z0-9\-_]+)*$/gmi.test(right)
 			) {
-				return false;
+				return 'pattern:mismatch';
 			} else {
-				return true;
+				return;
 			}
 		}
 	},
 	{
 		name:'valueIn',
-		message: 'given value is not allowed',
+		message: 'given value is not one of allowed values',
 		validate: (value, { valueIn } = {}) => {
-			if(_.isArray(valueIn)) {
-				return valueIn.indexOf(value) > -1;
+			if(_.isArray(valueIn) && valueIn.indexOf(value) === -1) {
+				return 'value:not:in';
 			}
 		}
 	},
 	{
 		name:'valueNotIn',
-		message: 'given value is forbiden',
+		message: 'given value is one of forbiden values',
 		validate: (value, { valueNotIn } = {}) => {
-			if(_.isArray(valueNotIn)) {
-				return valueNotIn.indexOf(value) === -1;
+			if(_.isArray(valueNotIn) && valueNotIn.indexOf(value) > -1) {
+				return 'value:in';
 			}
 		}
 	},
@@ -60,10 +61,13 @@ export default [
 		name:'shouldBeEqual',
 		message: 'given value is not equal',
 		validate: (value, { shouldBeEqual, allValues } = {}) => {
-			if(_.isFunction(shouldBeEqual)) {
-				return value === shouldBeEqual(allValues);
-			} else {
-				return value === shouldBeEqual;
+			
+			let compare = _.isFunction(shouldBeEqual) 
+				? shouldBeEqual(allValues) 
+				: shouldBeEqual;
+
+			if (value !== compare) {
+				return 'value:not:equal';
 			}
 		}
 	},	
@@ -71,6 +75,16 @@ export default [
 		name:'shouldNotBeEqual',
 		message: 'given value is forbiden',
 		validate: (value, { shouldNotBeEqual, allValues } = {}) => {
+
+			let compare = _.isFunction(shouldNotBeEqual) 
+				? shouldNotBeEqual(allValues) 
+				: shouldNotBeEqual;
+
+			if (value !== compare) {
+				return 'value:equal';
+			}
+
+
 			if(_.isFunction(shouldNotBeEqual)) {
 				return value !== shouldNotBeEqual(allValues);
 			} else {
@@ -80,28 +94,31 @@ export default [
 	},
 	{
 		name:'minLength',
-		message: 'length is less than',
+		message: ({ ruleValue } = {}) => 'length is less than ' + ruleValue,
 		validate: (value, { minLength } = {}) => {
-			if (_.isNumber(minLength)) {
-				return (value || '').toString().length >= minLength;
+			if (_.isNumber(minLength) && (value || '').toString().length < minLength) {
+				return 'min:length';
 			}
 		}
 	},
 	{
 		name:'maxLength',
-		message: 'length is greater than',
+		message: ({ ruleValue } = {}) => 'length is greater than ' + ruleValue,
 		validate: (value, { maxLength } = {}) => {
-			if (_.isNumber(maxLength)) {
-				return (value || '').toString().length <= maxLength;
+			if (_.isNumber(maxLength) && (value || '').toString().length > maxLength) {
+				return 'max:length';
 			}
 		}
 	},
 	{
 		name:'minValue',
-		message: 'value is less than',
+		message: ({ ruleValue } = {}) => 'value is less than ' + ruleValue,
 		validate: (value, { minValue } = {}) => {
-			if (minValue != null) {
-				return value >= minValue;
+			if (_.isNumber(minValue)) {
+				let numValue = parseFloat(value, 10);
+				if (isEmpty(numValue) || numValue < minValue) {
+					return 'min:value';
+				}
 			}
 		}
 	},
@@ -112,6 +129,12 @@ export default [
 			if (maxValue !=null) {
 				return value <= maxValue;
 			}
+			if (_.isNumber(maxValue)) {
+				let numValue = parseFloat(value, 10);
+				if (isEmpty(numValue) || numValue > maxValue) {
+					return 'max:value';
+				}
+			}			
 		}
 	},
 	{
@@ -119,13 +142,36 @@ export default [
 		message: 'value is not in pattern',
 		validate: (value, { pattern } = {}) => {
 			value = (value || '').toString();
-			if (isEmpty(pattern) && !_.isString(pattern) && !_.isRegExp(pattern)) {
-				return;
-			}
-			if (_.isString(pattern)) {
+
+			if(_.isString(pattern) && !isEmpty(pattern)) {
 				pattern = new RegExp(pattern);
 			}
-			return pattern.test(value);
+			if(!_.isRegExp(pattern)) { return; }
+
+			if (!pattern.test(value)) {
+				return 'pattern';
+			}
 		}
 	},
+	{
+		name: 'validate',
+		validate: (value, options = {}) => {
+			let { ruleValue } = options;
+			if(!_.isFunction(ruleValue)) return;
+			return ruleValue(value, options);
+		},
+	},	
 ];
+
+reIndex(false);
+
+export function reIndex(sortBefore = true) {
+	if (sortBefore) {
+		rules.sort((a,b) => a.index - b.index);
+	}
+	_.each(rules, (rule, index) => {
+		rule.index = index;
+	});
+}
+
+export default rules;

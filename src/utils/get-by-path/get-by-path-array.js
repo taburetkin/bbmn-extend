@@ -1,5 +1,5 @@
 
-import getProperty from './get-property';
+import getProperty from './get-property.js';
 
 function getByPathArray(context, propertyName, pathArray) {
 	

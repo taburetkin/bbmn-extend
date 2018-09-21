@@ -1,7 +1,7 @@
-import { isView, isViewClass, buildViewByKey } from '../../../utils/index.js';
+import { isView, isViewClass } from '../../../vendors/helpers.js';
+import buildViewByKey from '../../../utils/build-view-by-key/index.js';
 import ControlMixin from '../control/index.js';
-import { cssClassModifiers } from '../../view/index.js';
-
+import cssClassModifiers from '../../view/css-class-modifiers/index.js';
 
 export default Base => {
 	let Mixed = Base;
@@ -13,11 +13,13 @@ export default Base => {
 	}
 
 	return Mixed.extend({
+
 		renderAllCustoms: true,
 		isControlWrapper: true,
 		skipFirstValidationError: true,
 		shouldShowError: false,
-
+		validateOnReady: false,
+		
 		constructor(){
 			Mixed.apply(this, arguments);
 			if(!this.cssClassModifiers) {
@@ -27,7 +29,10 @@ export default Base => {
 			this.on({
 				'control:valid': this._onControlValid,
 				'control:invalid': this._onControlInvalid
-			});		
+			});
+			if(this.getOption('validateOnReady')){
+				this.once('customs:render', () => this.makeControlReady());
+			}			
 		},	
 
 		getCustoms(){

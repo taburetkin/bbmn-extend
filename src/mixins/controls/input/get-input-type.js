@@ -1,5 +1,5 @@
 //import getOption from '../../../utils/get-option';
-import { getOption } from '../../../utils/index.js';
+import getOption from '../../../utils/get-option/index.js';
 const _getOption = (context, key, checkAlso) => getOption(context, key, { args:[context], checkAlso });
 
 export default function getInputType(inputView, opts = {}){

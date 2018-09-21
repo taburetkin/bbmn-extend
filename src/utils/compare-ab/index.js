@@ -1,6 +1,6 @@
 
-import getModel from './get-model';
-import getView from './get-view';
+import getModel from './get-model.js';
+import getView from './get-view.js';
 export default function compareAB(a, b, func){
 	if(_.isArray(func)) {
 

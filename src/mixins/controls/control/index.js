@@ -1,4 +1,9 @@
-import { flat, unflat, setByPath, getByPath, compareObjects, betterResult } from '../../../utils/index.js';
+import flat from '../../../utils/flat/index.js';
+import unflat from '../../../utils/unflat/index.js';
+import setByPath from '../../../utils/set-by-path/index.js';
+import getByPath from '../../../utils/get-by-path/index.js';
+import compareObjects from '../../../utils/compare-objects/index.js';
+import betterResult from '../../../utils/better-result/index.js';
 import takeValue from '../../../utils/take-first/index.js';
 
 function getTriggerMethod(context){

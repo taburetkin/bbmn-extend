@@ -1,4 +1,4 @@
-import knownCtors from './ctors';
+import knownCtors from './ctors.js';
 
 function isKnownCtor(arg) {
 	let isFn = _.isFunction(arg);

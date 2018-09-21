@@ -1,4 +1,4 @@
-import { historyNavigate, executeHandler } from '../history';
+import { historyNavigate, executeHandler } from '../history/index.js';
 
 function normalizeOptions(type = 'route', opts = {}){
 	if(_.isObject(type)) {
