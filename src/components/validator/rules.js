@@ -7,7 +7,11 @@ const rules = [
 	{
 		name: 'required',
 		message: 'required',
-		validate: (value) => !isEmpty(value)
+		validate: (value) => {
+			if (isEmpty(value)) {
+				return 'required';
+			}
+		}
 	},
 	{
 		name: 'email',
