@@ -2,7 +2,7 @@ import rules, { reIndex } from './rules.js';
 
 import isEmptyValue from '../../utils/is-empty-value/index.js';
 
-import validate from './validate';
+import validate from './validate.js';
 
 function removeRule(name){
 	let found = _.findIndex(rules, { name });
