@@ -15,11 +15,15 @@ import * as navigator from './navigation/navigator/index.js';
 import * as history from './navigation/history/index.js';
 
 import Process from './process/index.js';
-import ViewManager from './view-manager/index.js';
-import store from './store/index.js';
-import ViewStack from './view-stack/index.js';
 import renderInNode, { config as renderInNodeConfig } from './render-in-node/index.js';
+import store from './store/index.js';
+
+export { default as validator } from './validator/index.js';
+
 import TextView from './text-view/index.js';
+import ViewManager from './view-manager/index.js';
+import ViewStack from './view-stack/index.js';
+
 export {
 	actions,
 	AppError,
@@ -34,7 +38,7 @@ export {
 	historyWatcher,
 	navigator,
 	history,
-	
+
 	Process,
 	ViewManager,
 	store,

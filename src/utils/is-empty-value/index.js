@@ -1,3 +1,8 @@
-export default function isEmptyValue(arg) {
-	return arg == null || arg === '';
+export default function isEmptyValue(arg, { allowWhiteSpace = false } = {}) {
+	if (arg == null || isNaN(arg)) return true;
+	if (!_.isString(arg)) return false;
+	if (arg === '') return true;
+	
+	return !allowWhiteSpace && arg.trim() === '';
+	
 }
