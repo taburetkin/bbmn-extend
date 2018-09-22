@@ -270,6 +270,9 @@ export default Base => Base.extend({
 	},
 	makeValid(value, options){
 		this._cntrl.isValid = true;
+		if(!this.isSameControlValue(value)){
+			this._setControlValue(value, { silent: true, skipValidation: true });
+		}
 		this._tryTriggerEvent('valid', [value], options);
 	},
 
