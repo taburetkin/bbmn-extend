@@ -37,5 +37,19 @@ export default {
 	getRule(name){
 		return _.findWhere(rules, { name });
 	},
+	setMessage(name, message){
+		if(!_.isString(name) || isEmptyValue(name)) {
+			throw new Error('name must be not empty string');
+		}
+		if(!(_.isString(message) || _.isFunction(message))) {
+			throw new Error('message must be not empty string or a function returning a string');
+		}
+		let rule = _.findWhere(rules, { name });
+		if (!rule) { return; }
+		rule.message = message;
+	},
+	setMessages(hash = {}){
+		_.each(hash, (message, name) => this.setMessage(name, message));
+	},
 	validate
 };
