@@ -19,15 +19,24 @@ function setRule(rule){
 }
 
 export default {
-	setRule(name, rule){
-		if(isEmptyValue(rule)) return;
+	setRule(name, rule = {}){
+		if(_.isObject(name)) {
+			rule = name;
+			name = rule.name;
+		}
+
+		if(isEmptyValue(name)) {
+			throw new Error('rule name not specified');
+		}
 
 		if(rule == null){
 			return removeRule(name);
 		} else if (!_.isObject(rule)) {
 			throw new Error('validation rule must be an object');
 		} else {
-			rule.name = name;
+			if (rule.name != name) {
+				rule.name = name;
+			}
 			return setRule(rule);
 		}
 	},
