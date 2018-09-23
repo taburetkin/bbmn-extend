@@ -51,5 +51,6 @@ export default {
 	setMessages(hash = {}){
 		_.each(hash, (message, name) => this.setMessage(name, message));
 	},
-	validate
+	validate,
+	_rules: rules,
 };
