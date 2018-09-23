@@ -33,7 +33,10 @@ function getRuleContexts(rule = {}){
 
 function check(value, ruleContext = {}) {
 	
-	let { rule = {}, ruleValue, allValues } = ruleContext;
+	let { rule = {}, ruleValue, allValues, errors = [] } = ruleContext;
+	if (rule.skipIfInvalid && errors.length) {
+		return Promise.reject();
+	}
 	let message = ruleContext.message || rule.message;
 	let buildMessage = _.isFunction(message) ? message : ({ error } = {}) => isEmptyValue(message) ? error : message;
 
@@ -43,7 +46,8 @@ function check(value, ruleContext = {}) {
 		ruleValue,
 		[rule.name]: ruleValue,
 		allValues,
-		message: buildMessage({ value, allValues, ruleValue })
+		message: buildMessage({ value, allValues, ruleValue }),
+		errors,
 	};
 	if (!_.isFunction(validate)) return Promise.resolve(value);
 
@@ -77,7 +81,8 @@ export default function validate(value, rule, { allValues } = {}){
 			promise = promise.then(() => {
 				return check(value, _.extend({}, ruleContext, { allValues, errors }));
 			}).catch(error => {
-				errors.push(error);
+				if(error != null)
+					errors.push(error);
 			});
 
 			return promise;
