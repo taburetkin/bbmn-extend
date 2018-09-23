@@ -13,6 +13,9 @@ function removeRule(name){
 }
 
 function setRule(rule){
+	if (rule.index == null) {
+		rule.index = rules.length;
+	}
 	rules.push(rule);
 	reIndex();
 	return rule;
