@@ -33,7 +33,12 @@ export default Base => {
 			if(!this.cssClassModifiers) {
 				this.cssClassModifiers = [];
 			}
+			this._setControlValidInvalidListeners();
 			this.addCssClassModifier('control-wrapper');
+		},	
+		_setControlValidInvalidListeners(){
+			if(this._controlValidInvalidListeners) { return true; }
+
 			this.on({
 				'control:valid': this._onControlValid,
 				'control:invalid': this._onControlInvalid
@@ -41,8 +46,9 @@ export default Base => {
 			if(this.getOption('validateOnReady')){
 				this.once('customs:render', () => this.makeControlReady());
 			}			
-		},	
 
+			this._controlValidInvalidListeners = true;
+		},
 		getCustoms(){
 			let customs = [];
 			if (this.getOption('isControlWrapper')) {

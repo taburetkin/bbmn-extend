@@ -9,6 +9,10 @@ const EditPropertyMixin = bbmn.mixins.controls.editSchema.Property;
 const InputMixin = bbmn.mixins.controls.input;
 const mix = bbmn.utils.mix;
 const buildViewByKey = bbmn.utils.buildViewByKey;
+const nextCollectionView = bbmn.mixins.collectionView.nextCollectionView;
+
+const CollectionView = nextCollectionView(Mn.CollectionView);
+
 //here we defining our model
 const RegisterModel = Model.extend({
   urlRoot:'http://someApiServer.com/register'
@@ -17,7 +21,7 @@ const RegisterModel = Model.extend({
 //now, we supply schema for our model
 ModelSchemas.initialize(RegisterModel, {
   login:{
-    validate: {      
+    validation: {      
       email: true,
       required: true,
     },
@@ -30,7 +34,7 @@ ModelSchemas.initialize(RegisterModel, {
 		},
   },
   password: {
-    validate: {
+    validation: {
       minLength: 6,      
     },
     display: {
@@ -42,8 +46,8 @@ ModelSchemas.initialize(RegisterModel, {
 		},
   },
   passwordConfirm: {
-    validate: {
-      shouldBeEqual: values => values.password
+    validation: {
+      shouldBeEqual: values => values && values.password
     },
     display: {
       label: 'enter your password again'
@@ -59,10 +63,10 @@ ModelSchemas.initialize(RegisterModel, {
 
 
 //this is a simple button view
-const Button = mix(Mn.CollectionView).with(ButtonMixin);
+const Button = mix(CollectionView).with(ButtonMixin);
 
 //this is a promise bar component for our controls
-const PromiseBar = mix(Mn.CollectionView).with(PromiseBarMixin).extend({
+const PromiseBar = mix(CollectionView).with(PromiseBarMixin).extend({
   buttonView: Button
 });
 
@@ -90,7 +94,7 @@ const ErrorView = mix(Mn.View).with(CssClassModifiersMixin).extend({
 
 
 // this is main wrapper for all viewControls
-const ControlView = ControlViewMixin(Mn.CollectionView).extend({
+const ControlView = ControlViewMixin(CollectionView).extend({
 	renderAllCustoms: true,
 	buttonsView: PromiseBar,
 	textView: Mn.View,
@@ -109,14 +113,8 @@ const BaseInput = InputMixin(Mn.View);
 
 const Input = ControlView.extend({
   className:'control-input 2',
-		getControlView(){
-      console.log('wtf?');
-			this.control = buildViewByKey.call(this, 'controlView', { allowTextView: false, options: { parentControl: this, value: this.getControlValue() } });
-			return this.control;
-		},  
 	controlView: BaseInput,
 	controlViewOptions(){
-    console.log('{}')
 		let inputAttributes = this.getOption('inputAttributes');
 
 		let options = {
@@ -125,33 +123,44 @@ const Input = ControlView.extend({
 		if (inputAttributes) {
 			options.attributes = inputAttributes;			
 		}
-    console.log('*****', options);
+
 		return options;
 	},
 });
 
 const EditProperty = EditPropertyMixin(ControlView).extend({
   getControlView(){
-    console.log('?????')
-    let View = Input;
+
+	let View = Input;
+	let schema = this.getSchema();
+	let options = { 
+		value: this.getControlValue(),
+		valueOptions: schema.getType(),
+		inputAttributes:{
+			name: schema.name,
+		},
+	};        
+	return new View(options);
+  },
+  getValidateRule(){
+	if (!this._validateRule) {
 		let schema = this.getSchema();
-    let options = { 
-      value: this.getControlValue(),
-      valueOptions: schema.getType(),
-      inputAttributes:{
-        name: schema.name,
-      },
-		};        
-		return new View(options);
-  }
-})
+		this._validateRule = _.extend({}, schema.getType(), schema.getValidation());
+	}
+	return this._validateRule;
+  },
+});
 
 const EditModel = EditModelMixin(ControlView).extend({
   editPropertyClass: EditProperty
 });
 
 let test = new EditModel({
+  validateOnReady: true,
+  propertyLabelAsHeader: true,
+
   cssClassModifiers: ['big register'],
+
   schema: ModelSchemas.get(RegisterModel),
   buttons: [{name:'resolve', text:'sign in'}],
   value: {},
