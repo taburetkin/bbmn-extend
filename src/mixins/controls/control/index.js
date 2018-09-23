@@ -353,13 +353,26 @@ export default Base => Base.extend({
 
 		let cce = this.getOption('childControlEvents', { args: [this] }) || {};
 		let def = this.defaultChildControlEvents || {};
+		let defHandler = def[event];
 		let handler = cce[childEvent];
+		let handlerArguments = [];
 		if (_.isFunction(handler)) {
-			handler.apply(this, args);
+			handlerArguments = args;
+			//handler.apply(this, args);
+		} else if(_.isFunction(defHandler)){
+			handler = defHandler;
+			handlerArguments = [controlName, ...args];
 		} else {
-			let defHandler = def[event];
-			_.isFunction(defHandler) && defHandler.call(this, controlName, ...args);
+			return;
 		}
+		
+		let delay = this.getOption('debounceChildControlEvents');
+		if(_.isNumber(delay) && delay > 0){
+			handler = _.debounce(handler, delay);
+		}
+
+		handler.apply(this, handlerArguments);
+
 	},
 	defaultChildControlEvents:{
 		'change'(controlName, value){
