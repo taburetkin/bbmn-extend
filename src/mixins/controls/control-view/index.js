@@ -2,15 +2,23 @@ import { isView, isViewClass } from '../../../vendors/helpers.js';
 import buildViewByKey from '../../../utils/build-view-by-key/index.js';
 import ControlMixin from '../control/index.js';
 import cssClassModifiers from '../../view/css-class-modifiers/index.js';
+import customsMixin from '../../collection-view/customs/index.js';
 
 export default Base => {
 	let Mixed = Base;
+
 	if (!Mixed.ControlMixin) {
 		Mixed = ControlMixin(Mixed);
 	}
+
 	if (!Mixed.CssClassModifiersMixin) {
 		Mixed = cssClassModifiers(Mixed);
 	}
+
+	if (!Mixed.CustomsMixin) {
+		Mixed = customsMixin(Mixed);
+	}
+
 
 	return Mixed.extend({
 

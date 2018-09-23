@@ -104,6 +104,7 @@ export default Base => Base.extend({
 		let current = this.getControlValue();
 		return this.isValid() && compareObjects(current, value);
 	},
+
 	getControlValue(key, options = {}){
 		
 		if(_.isObject(key)) {
@@ -119,6 +120,7 @@ export default Base => Base.extend({
 			return clone ? this._clone(value) : value;
 		}
 	},
+
 	setControlValue(value, options = {}){
 		let  { key, notValidated } = options;
 		value = this._prepareValueBeforeSet(value, { key });
@@ -130,6 +132,7 @@ export default Base => Base.extend({
 		if (notValidated) { return resolve; }
 		return this._setControlValue(value, options);
 	},
+
 	_prepareValueBeforeSet(value, { key } = {}){
 		value = this.prepareValueBeforeSet(value);
 		if (key == null) { return value; }
@@ -185,12 +188,36 @@ export default Base => Base.extend({
 	},
 	_validate(value, options){
 
+		//let validate = this._validateControl(value, options);
 		let validate = this._validateControlPromise(value, options);
+
 		return validate.then(
 			() => this._onControlValidateSuccess(value, options),
 			error => this._onControlValidateFail(error, value, options)
 		);
 	},
+	_validateControl(value, options){
+		let validate = this.getOption('controlValidate', { force: false });
+				
+		//if there is no validation defined, resolve
+		if (!_.isFunction(validate)) {
+			
+			return Promise.resolve(value);
+		}
+
+		let values = this.getParentControlValue({ notValidated: true });
+		let validateResult = validate.call(this, value, values, options);
+
+		let promise = Promise.resolve(value);
+		if (validateResult && validateResult.then) {
+			promise = validateResult;
+		} else if (validateResult) {
+			promise = Promise.reject(validateResult);
+		}
+		return promise;
+	},
+
+
 	_validateChildrenControlsPromise({ isControlWrapper, skipChildValidate} = {}, errors = {}){
 
 		let children = this.getChildrenControls();
@@ -221,6 +248,7 @@ export default Base => Base.extend({
 		}, childrenPromise);		
 
 	},
+
 	_validateControlPromise(value, options){
 		
 		const { skipChildValidate } = options;
@@ -244,18 +272,30 @@ export default Base => Base.extend({
 				}
 			
 				let validate = this.getOption('controlValidate', { force: false });
+				
+				//if there is no validation defined, resolve
+				if (!_.isFunction(validate)) {
+					resolve(value);
+					return;
+				}
+
 				let values = this.getParentControlValue({ notValidated: true });
-				let validateResult = _.isFunction(validate) && validate.call(this, value, values, options) || undefined;
+				let validateResult = validate.call(this, value, values, options);
+
 				let promise = Promise.resolve(value);
 				if (validateResult && validateResult.then) {
 					promise = validateResult;
-				} else if(validateResult) {
+				} else if (validateResult) {
 					promise = Promise.reject(validateResult);
 				}
 
 				promise.then(
-					() => resolve(value),
-					error => reject(error)
+					() => {
+						resolve(value);
+					},
+					error => {
+						reject(error);
+					}
 				);
 
 			});
@@ -336,10 +376,11 @@ export default Base => Base.extend({
 			}
 		},
 		'invalid'(controlName, value, error){
-			let isControlWraper = this.getOption('isControlWrapper');
-			isControlWraper && (controlName = undefined);
-			this.setControlValue(value, { key: controlName, silent: true });
-			this.makeInvalid(error);
+			if(this.getOption('isControlWrapper')){
+				controlName = undefined;
+			}
+			this.setControlValue(value, { key: controlName, silent: true, notValidated: true });
+			this.makeInvalid(error, this.getControlValue({ notValidated: true }));
 		},
 	},
 

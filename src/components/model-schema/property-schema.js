@@ -1,5 +1,5 @@
 import { betterResult } from '../../utils/index.js';
-import Schema from './schema';
+import Schema from './schema.js';
 
 // export default function PropertySchema({ name, property, modelSchema, order = 0 }){
 // 	this.name = name;

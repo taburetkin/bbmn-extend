@@ -124,11 +124,8 @@ const rules = [
 	},
 	{
 		name:'maxValue',
-		message: 'value is greater than',
+		message: ({ ruleValue } = {}) => 'value is greater than ' + ruleValue,
 		validate: (value, { maxValue } = {}) => {
-			if (maxValue !=null) {
-				return value <= maxValue;
-			}
 			if (_.isNumber(maxValue)) {
 				let numValue = parseFloat(value, 10);
 				if (isEmpty(numValue) || numValue > maxValue) {
