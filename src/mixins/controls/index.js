@@ -3,7 +3,7 @@ import control from './control/index.js';
 import controlView from './control-view/index.js';
 import input from './input/index.js';
 import promiseBar from './promise-bar/index.js';
-import editSchema from './edit-schema/index.js';
+import * as editSchema from './edit-schema/index.js';
 export {
-	button, control, controlView, input, promiseBar
+	button, control, controlView, input, promiseBar, editSchema
 };
