@@ -41,7 +41,7 @@ export default Schema.extend({
 		let valueOptions = this.getType(options);
 		let editOptions = this._getByKey('edit', options);
 		let label = this.getLabel(options.value, options.allValue);
-		let compiled = _.extend({}, options, { valueOptions, editOptions, label });
+		let compiled = _.extend({ name: this.name, label }, options, { valueOptions, editOptions });
 		return compiled;
 	},
 });
