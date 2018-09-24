@@ -68,7 +68,7 @@ function check(value, ruleContext = {}) {
 
 
 
-export default function validate(value, rule, { allValues } = {}){
+export default function validate(value, rule, { allValues = {} } = {}){
 	rule = normalizeValidationContext(rule);
 	let contexts = getRuleContexts(rule);
 	

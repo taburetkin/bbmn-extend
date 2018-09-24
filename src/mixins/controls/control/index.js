@@ -189,14 +189,14 @@ export default Base => Base.extend({
 	_validate(value, options){
 
 		//let validate = this._validateControl(value, options);
-		let validate = this._validateControlPromise(value, options);
+		let validate = this._validatePromise(value, options);
 
 		return validate.then(
 			() => this._onControlValidateSuccess(value, options),
 			error => this._onControlValidateFail(error, value, options)
 		);
 	},
-	_validateControl(value, options){
+	_validateControlPromise(value, options){
 		let validate = this.getOption('controlValidate', { force: false });
 				
 		//if there is no validation defined, resolve
@@ -249,7 +249,7 @@ export default Base => Base.extend({
 
 	},
 
-	_validateControlPromise(value, options){
+	_validatePromise(value, options){
 		
 		const { skipChildValidate } = options;
 		const isControlWrapper = betterResult(this, 'isControlWrapper', { args:[this]});
@@ -271,23 +271,7 @@ export default Base => Base.extend({
 					return;
 				}
 			
-				let validate = this.getOption('controlValidate', { force: false });
-				
-				//if there is no validation defined, resolve
-				if (!_.isFunction(validate)) {
-					resolve(value);
-					return;
-				}
-
-				let values = this.getParentControlValue({ notValidated: true });
-				let validateResult = validate.call(this, value, values, options);
-
-				let promise = Promise.resolve(value);
-				if (validateResult && validateResult.then) {
-					promise = validateResult;
-				} else if (validateResult) {
-					promise = Promise.reject(validateResult);
-				}
+				let promise = this._validateControlPromise(value, options);
 
 				promise.then(
 					() => {
