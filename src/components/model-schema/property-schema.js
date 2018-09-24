@@ -1,14 +1,10 @@
-import { betterResult } from '../../utils/index.js';
-import Schema from './schema';
 
-// export default function PropertySchema({ name, property, modelSchema, order = 0 }){
-// 	this.name = name;
-// 	this.schema = _.extend({}, property);	
-// 	this.modelSchema = modelSchema;
-// 	if (this.schema.order != null)
-// 		order = this.schema.order;
-// 	this.order = order;
-// }
+import betterResult from '../../utils/better-result/index.js';
+import flat from '../../utils/flat/index.js';
+import unflat from '../../utils/unflat/index.js';
+import Schema from './schema.js';
+
+
 export default Schema.extend({
 	constructor(options = {}){
 		Schema.apply(this, arguments);
@@ -20,18 +16,32 @@ export default Schema.extend({
 			order = this.schema.order;
 		this.order = order;
 	},
-	getValidation() {
-		return this.schema.validation || {};
+	_getByKey(key, options = {}){
+		let hash = betterResult(this.schema, key, { args: [options], default: {} });
+		return unflat(flat(hash));
 	},
-	getType() {
-		return this.schema.value || {};
+	getValidation(options) {
+		return this._getByKey('validation', options);
 	},
-	getDisplay(){
-		return this.schema.display || {};
+	getType(options) {
+		let type = this._getByKey('value', options);
+		if(!('multiple' in type)) {
+			type.multiple = false;
+		}
+		return type;
 	},
-	getLabel(value, hash){
+	getDisplay(options){
+		return this._getByKey('display', options);
+	},
+	getLabel(value, allValues){
 		let label = this.getDisplay().label;
-		return betterResult({ label },'label', { args: [value, hash] });
+		return betterResult({ label },'label', { args: [value, allValues] });
 	},
-	getEditView(){},
+	getEdit(options = {}){
+		let valueOptions = this.getType(options);
+		let editOptions = this._getByKey('edit', options);
+		let label = this.getLabel(options.value, options.allValue);
+		let compiled = _.extend({ name: this.name, label }, options, { valueOptions, editOptions });
+		return compiled;
+	},
 });

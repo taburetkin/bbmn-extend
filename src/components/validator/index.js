@@ -13,21 +13,33 @@ function removeRule(name){
 }
 
 function setRule(rule){
+	if (rule.index == null) {
+		rule.index = rules.length;
+	}
 	rules.push(rule);
 	reIndex();
 	return rule;
 }
 
 export default {
-	setRule(name, rule){
-		if(isEmptyValue(rule)) return;
+	setRule(name, rule = {}){
+		if(_.isObject(name)) {
+			rule = name;
+			name = rule.name;
+		}
+
+		if(isEmptyValue(name)) {
+			throw new Error('rule name not specified');
+		}
 
 		if(rule == null){
 			return removeRule(name);
 		} else if (!_.isObject(rule)) {
 			throw new Error('validation rule must be an object');
 		} else {
-			rule.name = name;
+			if (rule.name != name) {
+				rule.name = name;
+			}
 			return setRule(rule);
 		}
 	},
@@ -37,5 +49,20 @@ export default {
 	getRule(name){
 		return _.findWhere(rules, { name });
 	},
-	validate
+	setMessage(name, message){
+		if(!_.isString(name) || isEmptyValue(name)) {
+			throw new Error('name must be not empty string');
+		}
+		if(!(_.isString(message) || _.isFunction(message))) {
+			throw new Error('message must be not empty string or a function returning a string');
+		}
+		let rule = _.findWhere(rules, { name });
+		if (!rule) { return; }
+		rule.message = message;
+	},
+	setMessages(hash = {}){
+		_.each(hash, (message, name) => this.setMessage(name, message));
+	},
+	validate,
+	_rules: rules,
 };

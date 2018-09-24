@@ -5,4 +5,7 @@ import Backbone from 'https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/b
 import Radio from 'https://cdnjs.cloudflare.com/ajax/libs/backbone.radio/2.0.0/backbone.radio.min.js';
 import Mn from 'https://cdnjs.cloudflare.com/ajax/libs/backbone.marionette/3.5.1/backbone.marionette.min.js';
 */
+
+global.inBrowser = true;
+
 import bbmn from '../../src/index.js'

@@ -42,7 +42,7 @@ const store = {
 	},
 	getStore(arg){
 		if (_.isString(arg)) {
-			return this.names[name];
+			return this.schemas[arg];
 		} else if (_.isFunction(arg)) {
 			return this.getStoreByCtor(arg);
 		}

@@ -1,4 +1,4 @@
-
+import betterResult from '../../../utils/better-result/index.js';
 const defaultCssConfig = {
 	beforeRender: true,
 	modelChange: true,
@@ -29,9 +29,10 @@ export default (Base) => Base.extend({
 	},	
 
 	_getCssClassModifiers(){
-		let optsModifiers = this.getOption('cssClassModifiers',{deep:false, args:[this.model, this]});
-		let propsModifiers = this.getProperty('cssClassModifiers',{deep:false, args:[this.model, this]});
-		let modifiers = [this.getOption('className')].concat(optsModifiers || [], propsModifiers || []);
+		let optsModifiers = betterResult(this.options || {}, 'cssClassModifiers', { args:[this.model, this], default: [] });
+		let propsModifiers = betterResult(this, 'cssClassModifiers', { args:[this.model, this], default: [] });
+		let className = betterResult(this, 'className', { args:[this.model, this], default: [] });
+		let modifiers = [className].concat(optsModifiers, propsModifiers);
 		return modifiers;
 	},
 	//override this if you need other logic
@@ -48,17 +49,20 @@ export default (Base) => Base.extend({
 			if (_.isString(modifier)) {
 				cls = modifier;
 			} else if (_.isFunction(modifier)) {
-				cls = modifier.call(this, this.model, this);
+				let builded = modifier.call(this, this.model, this);
+				cls = _.isString(builded) && builded || undefined;
 			}
 			cls && (hash[cls] = true);
 			return hash;
 		}, {});
 
-		return _.chain(classes)
-			.keys(classes)
-			.uniq()
-			.value()
-			.join(' ');
+		return _.keys(classes).join(' ');
+
+		// return _.chain(classes)
+		// 	.keys(classes)
+		// 	.uniq()
+		// 	.value()
+		// 	.join(' ');
 
 	},
 

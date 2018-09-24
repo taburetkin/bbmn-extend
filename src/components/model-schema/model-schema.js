@@ -1,4 +1,4 @@
-import Schema from './schema';
+import Schema from './schema.js';
 import PropertySchema from './property-schema.js';
 import isEmptyValue from '../../utils/is-empty-value/index.js';
 

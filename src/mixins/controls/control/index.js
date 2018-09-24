@@ -104,6 +104,7 @@ export default Base => Base.extend({
 		let current = this.getControlValue();
 		return this.isValid() && compareObjects(current, value);
 	},
+
 	getControlValue(key, options = {}){
 		
 		if(_.isObject(key)) {
@@ -119,6 +120,7 @@ export default Base => Base.extend({
 			return clone ? this._clone(value) : value;
 		}
 	},
+
 	setControlValue(value, options = {}){
 		let  { key, notValidated } = options;
 		value = this._prepareValueBeforeSet(value, { key });
@@ -130,6 +132,7 @@ export default Base => Base.extend({
 		if (notValidated) { return resolve; }
 		return this._setControlValue(value, options);
 	},
+
 	_prepareValueBeforeSet(value, { key } = {}){
 		value = this.prepareValueBeforeSet(value);
 		if (key == null) { return value; }
@@ -185,12 +188,36 @@ export default Base => Base.extend({
 	},
 	_validate(value, options){
 
-		let validate = this._validateControlPromise(value, options);
+		//let validate = this._validateControl(value, options);
+		let validate = this._validatePromise(value, options);
+
 		return validate.then(
 			() => this._onControlValidateSuccess(value, options),
 			error => this._onControlValidateFail(error, value, options)
 		);
 	},
+	_validateControlPromise(value, options){
+		let validate = this.getOption('controlValidate', { force: false });
+				
+		//if there is no validation defined, resolve
+		if (!_.isFunction(validate)) {
+			
+			return Promise.resolve(value);
+		}
+
+		let values = this.getParentControlValue({ notValidated: true });
+		let validateResult = validate.call(this, value, values, options);
+
+		let promise = Promise.resolve(value);
+		if (validateResult && validateResult.then) {
+			promise = validateResult;
+		} else if (validateResult) {
+			promise = Promise.reject(validateResult);
+		}
+		return promise;
+	},
+
+
 	_validateChildrenControlsPromise({ isControlWrapper, skipChildValidate} = {}, errors = {}){
 
 		let children = this.getChildrenControls();
@@ -221,7 +248,8 @@ export default Base => Base.extend({
 		}, childrenPromise);		
 
 	},
-	_validateControlPromise(value, options){
+
+	_validatePromise(value, options){
 		
 		const { skipChildValidate } = options;
 		const isControlWrapper = betterResult(this, 'isControlWrapper', { args:[this]});
@@ -243,19 +271,15 @@ export default Base => Base.extend({
 					return;
 				}
 			
-				let validate = this.getOption('controlValidate', { force: false });
-				let values = this.getParentControlValue({ notValidated: true });
-				let validateResult = _.isFunction(validate) && validate.call(this, value, values, options) || undefined;
-				let promise = Promise.resolve(value);
-				if (validateResult && validateResult.then) {
-					promise = validateResult;
-				} else if(validateResult) {
-					promise = Promise.reject(validateResult);
-				}
+				let promise = this._validateControlPromise(value, options);
 
 				promise.then(
-					() => resolve(value),
-					error => reject(error)
+					() => {
+						resolve(value);
+					},
+					error => {
+						reject(error);
+					}
 				);
 
 			});
@@ -270,6 +294,9 @@ export default Base => Base.extend({
 	},
 	makeValid(value, options){
 		this._cntrl.isValid = true;
+		if(!this.isSameControlValue(value)){
+			this._setControlValue(value, { silent: true, skipValidation: true });
+		}
 		this._tryTriggerEvent('valid', [value], options);
 	},
 
@@ -310,13 +337,37 @@ export default Base => Base.extend({
 
 		let cce = this.getOption('childControlEvents', { args: [this] }) || {};
 		let def = this.defaultChildControlEvents || {};
-		let handler = cce[childEvent];
-		if (_.isFunction(handler)) {
-			handler.apply(this, args);
-		} else {
-			let defHandler = def[event];
-			_.isFunction(defHandler) && defHandler.call(this, controlName, ...args);
+		if(!this._debouncedChildControlEvents) {
+			this._debouncedChildControlEvents = {};
 		}
+		let dcce = this._debouncedChildControlEvents;
+
+		let defHandler = def[event];
+		let handler = cce[childEvent];
+		let handlerArguments = [];
+		let handlerName;
+		if (_.isFunction(handler)) {
+			handlerArguments = args;
+			handlerName = childEvent;
+			//handler.apply(this, args);
+		} else if(_.isFunction(defHandler)){
+			handlerName = '_default:' + event;
+			handler = defHandler;
+			handlerArguments = [controlName, ...args];
+		} else {
+			return;
+		}
+		
+		let delay = this.getOption('debounceChildControlEvents');
+		if(_.isNumber(delay) && delay > 0){
+			if(!dcce[handlerName]){
+				dcce[handlerName] = _.debounce(handler, delay);
+			}
+			handler = dcce[handlerName];
+		}
+
+		handler.apply(this, handlerArguments);
+
 	},
 	defaultChildControlEvents:{
 		'change'(controlName, value){
@@ -333,10 +384,11 @@ export default Base => Base.extend({
 			}
 		},
 		'invalid'(controlName, value, error){
-			let isControlWraper = this.getOption('isControlWrapper');
-			isControlWraper && (controlName = undefined);
-			this.setControlValue(value, { key: controlName, silent: true });
-			this.makeInvalid(error);
+			if(this.getOption('isControlWrapper')){
+				controlName = undefined;
+			}
+			this.setControlValue(value, { key: controlName, silent: true, notValidated: true });
+			this.makeInvalid(error, this.getControlValue({ notValidated: true }));
 		},
 	},
 

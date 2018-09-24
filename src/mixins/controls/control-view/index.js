@@ -1,16 +1,24 @@
-import { isView, isViewClass } from '../../../vendors/helpers.js';
+//import { isView, isViewClass } from '../../../vendors/helpers.js';
 import buildViewByKey from '../../../utils/build-view-by-key/index.js';
 import ControlMixin from '../control/index.js';
 import cssClassModifiers from '../../view/css-class-modifiers/index.js';
+import customsMixin from '../../collection-view/customs/index.js';
 
 export default Base => {
 	let Mixed = Base;
+
 	if (!Mixed.ControlMixin) {
 		Mixed = ControlMixin(Mixed);
 	}
+
 	if (!Mixed.CssClassModifiersMixin) {
 		Mixed = cssClassModifiers(Mixed);
 	}
+
+	if (!Mixed.CustomsMixin) {
+		Mixed = customsMixin(Mixed);
+	}
+
 
 	return Mixed.extend({
 
@@ -25,7 +33,12 @@ export default Base => {
 			if(!this.cssClassModifiers) {
 				this.cssClassModifiers = [];
 			}
+			this._setControlValidInvalidListeners();
 			this.addCssClassModifier('control-wrapper');
+		},	
+		_setControlValidInvalidListeners(){
+			if(this._controlValidInvalidListeners) { return true; }
+
 			this.on({
 				'control:valid': this._onControlValid,
 				'control:invalid': this._onControlInvalid
@@ -33,8 +46,9 @@ export default Base => {
 			if(this.getOption('validateOnReady')){
 				this.once('customs:render', () => this.makeControlReady());
 			}			
-		},	
 
+			this._controlValidInvalidListeners = true;
+		},
 		getCustoms(){
 			let customs = [];
 			if (this.getOption('isControlWrapper')) {
@@ -64,31 +78,7 @@ export default Base => {
 			);
 			return customs;
 		},
-		bubildViewByKey(key, { skipTextCheck, options } = {}){
-			let view;
-			let value;
 
-			if(!skipTextCheck) {
-				value = this.getOption(key);
-				if (_.isString(value)) {
-					let tagName = (key == 'header' || key == 'footer') ? key : 'div';
-					view = this.buildTextView(value, tagName);
-					if(view) { return view; }
-				}
-			}
-
-			if (value == null) {
-				view = this.getOption(key+'View');
-			} else {
-				view = value;
-			}
-			
-			if(isView(view)) { return view; }
-			if(isViewClass(view)) {
-				let _options = _.extend({}, this.getOption(key+'ViewOptions'), options);
-				return new view(_options);
-			}
-		},
 		buildTextView(text, tagName){
 			let View = this.getOption('textView');
 			if (!View) { return; }
