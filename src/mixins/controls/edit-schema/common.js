@@ -8,7 +8,7 @@ export default {
 		}
 
 		
-		if(_.isObject(schema)) {
+		if(schema == null || _.isObject(schema)) {
 			return this.createSchema(Schema, schema);
 		}
 		
