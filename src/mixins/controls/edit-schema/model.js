@@ -42,6 +42,7 @@ export default Base => {
 				controlName: name,
 				schema,
 				value: this.getPropertyValue(name),
+				allValues: this.getControlValue({ notValidated: true }),
 				propertyLabelAsHeader: this.getOption('propertyLabelAsHeader')
 			};
 			let options = this.getEditPropertyOptions(def);
@@ -54,7 +55,7 @@ export default Base => {
 			return this.getOption('editPropertyClass');
 		},
 		getEditPropertyOptions(defaultOptions){
-			return _.extend({}, this.getOption('editPropertyOptions'), defaultOptions);
+			return _.extend({}, defaultOptions, this.getOption('editPropertyOptions'));
 		},
 		createEditProperty(EditProperty, options){
 			return new EditProperty(options);

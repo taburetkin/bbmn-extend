@@ -16,12 +16,15 @@ export default Base => {
 		schemaClass: PropertySchema,
 		debounceChildControlEvents: 0,
 
-		getValidateRule(){
-			if (!this._validateRule) {
-				let schema = this.getSchema();
-				this._validateRule = _.extend({}, schema.getType(), schema.getValidation());
-			}
-			return this._validateRule;
+
+		getDefaultValidateRule(options){
+			let schema = this.getSchema();
+			let rule = _.extend({}, schema.getType(options), schema.getValidation(options));
+			return rule;
+		},
+		getValidateRule(options = {}){
+			let rule = this.getDefaultValidateRule(options);
+			return rule;
 		},
 		
 		getHeaderView(){
@@ -34,29 +37,25 @@ export default Base => {
 			}
 		},
 		getControlView(){
-			// let View = this.getControlViewClass(this.getSchema());
-			// if (!View) return;
-			// let options = this.getControlViewOptions();
-			// return new View(options);
+			let options = {
+				value: this.getControlValue(),
+				allValues: this.getParentControlValue(),				
+			};
+			let editOptions = this.getSchema().getEdit(options);
+			return this.buildPropertyView(editOptions);
 		},
 		controlValidate(value, allValues){
-			let rule = this.getValidateRule();
+			let rule = this.getValidateRule({ value, allValues });
 			if(!rule || !_.size(rule)) return;
 			return validator.validate(value, rule, { allValues });
 		},
+		
+		// must be overrided
+		// accepts:	options arguments.
+		// returns:	should return Control instance
+		buildPropertyView(){
+			throw new Error('buildPropertyView not implemented. You should build view by your own');
+		},
 
-		// getControlViewClass(){
-		// 	return Input;
-		// },
-		// getControlViewOptions(){
-		// 	let schema = this.getSchema();
-		// 	return { 
-		// 		value: this.getControlValue(),
-		// 		valueOptions: schema.getType(),
-		// 		inputAttributes:{
-		// 			name: schema.name,
-		// 		},
-		// 	};
-		// },
 	});
 };
