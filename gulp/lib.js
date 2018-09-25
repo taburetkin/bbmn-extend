@@ -24,7 +24,7 @@ let getRollupConfig = (format) => ({
 		resolve({
 			module: true,
 		}),
-		babel(babelConfig)
+		//babel(babelConfig)
 	],
 	external: ['backbone', 'backbone.marionette', 'underscore'],
 	output: {

@@ -1,5 +1,5 @@
 import { isInPage } from './utils.js';
-
+import { isModel } from '../../vendors/helpers.js';
 
 export default {
 
@@ -88,7 +88,7 @@ export default {
 
 			let model = items[index];
 			let item = model;
-			let isModel = model instanceof Backbone.Model;
+			let isModel = isModel(model);
 			let isNew = false;
 
 			if (isModel) {
@@ -182,7 +182,7 @@ export default {
 	},
 
 	_removeItem(item){
-		let model = item instanceof Backbone.Model ? item : item.model;
+		let model = isModel(item) ? item : item.model;
 		let context = this._store.byModel[model.id] || this._store.byModel[model.cid];
 		delete this._store.byModel[model.id];
 		delete this._store.byModel[model.cid];

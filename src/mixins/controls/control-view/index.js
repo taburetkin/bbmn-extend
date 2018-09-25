@@ -3,6 +3,7 @@ import buildViewByKey from '../../../utils/build-view-by-key/index.js';
 import ControlMixin from '../control/index.js';
 import cssClassModifiers from '../../view/css-class-modifiers/index.js';
 import customsMixin from '../../collection-view/customs/index.js';
+import TextView from '../../../components/text-view/index.js';
 
 export default Base => {
 	let Mixed = Base;
@@ -94,7 +95,7 @@ export default Base => {
 			return this._errorView;
 		},
 		buildErrorView(){
-			return buildViewByKey.call(this, 'errorView', { allowTextView: false });
+			return buildViewByKey.call(this, 'errorView');
 		},
 
 
@@ -103,7 +104,7 @@ export default Base => {
 			return this.buildHeaderView({ tagName: 'header' });
 		},
 		buildHeaderView(options){
-			return buildViewByKey.call(this, 'header', { allowTextView: true, options });
+			return buildViewByKey.call(this, 'header', { TextView, options });
 		},
 
 
@@ -117,7 +118,7 @@ export default Base => {
 		},
 
 		buildFooterView(){
-			return buildViewByKey.call(this, 'footer', { allowTextView: true, options: { tagName: 'footer' }});
+			return buildViewByKey.call(this, 'footer', { TextView, options: { tagName: 'footer' }});
 		},
 
 		buildButtonsView(){
@@ -126,7 +127,7 @@ export default Base => {
 			}
 
 			let options = this.buildButtonsOptions();
-			let view = buildViewByKey.call(this, 'buttonsView', { allowTextView: false, options });
+			let view = buildViewByKey.call(this, 'buttonsView', { options });
 			if (!view) { return; }
 
 			this._buttonsView = view;
@@ -174,7 +175,7 @@ export default Base => {
 		},
 
 		getControlView(){
-			this.control = buildViewByKey.call(this, 'controlView', { allowTextView: false, options: { parentControl: this, value: this.getControlValue() } });
+			this.control = buildViewByKey.call(this, 'controlView', { options: { parentControl: this, value: this.getControlValue() } });
 			return this.control;
 		},
 

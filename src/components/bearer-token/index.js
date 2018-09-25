@@ -1,5 +1,5 @@
-import { Model, ajax as _nativeAjax } from '../../vendors/backbone.js';
-import Backbone from 'backbone';
+import { Backbone, Model, ajax as _nativeAjax } from '../../vendors/backbone.js';
+//import Backbone from 'backbone';
 
 // import Model from '../../b b/model';
 

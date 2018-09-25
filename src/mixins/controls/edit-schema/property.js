@@ -28,7 +28,7 @@ export default Base => {
 		},
 		
 		getHeaderView(){
-			let view = buildViewByKey.call(this, 'header', { allowTextView: true });
+			let view = buildViewByKey.call(this, 'header', { TextView });
 			if(view) { return view; }
 
 			if(this.getOption('propertyLabelAsHeader')) {

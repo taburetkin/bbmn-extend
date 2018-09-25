@@ -1,5 +1,5 @@
 import { destroyView, renderView, viewIsGood } from './utils.js';
-
+import { isView } from '../../vendors/helpers.js';
 
 
 
@@ -181,7 +181,7 @@ export default {
 		this.view._proxyChildViewEvents(view);		
 	},
 	_getChildViewClass(model){
-		if(this.modelView === Backbone.View || this.modelView.prototype instanceof Backbone.View)
+		if(isView(this.modelView))
 			return this.modelView;
 		else {
 			return this.modelView(model);

@@ -1,7 +1,7 @@
 import mix from '../../../utils/mix/index.js';
 import GetOptionMixin from '../../../mixins/common/get-option/index.js';
 import paramStringToObject from '../../../utils/params-to-object/index.js';
-import { Router as BbRouter } from '../../../vendors/backbone.js';
+import { Backbone, Router as BbRouter } from '../../../vendors/backbone.js';
 
 import buildRouteContextFromArguments from './build-route-context.js';
 
