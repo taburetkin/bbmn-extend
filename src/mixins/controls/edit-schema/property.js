@@ -1,10 +1,12 @@
 import validator from '../../../components/validator/index.js';
+import PropertySchema from '../../../components/model-schema/property-schema.js';
+import TextView from '../../../components/text-view/index.js';
+
+import mix from '../../../utils/mix/index.js';
+import buildViewByKey from '../../../utils/build-view-by-key/index.js';
+
 import ControlView from '../control-view/index.js';
 import common from './common.js';
-import mix from '../../../utils/mix/index.js';
-import PropertySchema from '../../../components/model-schema/property-schema.js';
-import buildViewByKey from '../../../utils/build-view-by-key/index.js';
-import TextView from '../../../components/text-view/index.js';
 
 export default Base => {
 	const Mixed = mix(Base).with(ControlView, common);

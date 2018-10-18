@@ -1,9 +1,9 @@
 import ControlView from '../control-view/index.js';
 import common from './common.js';
 import mix from '../../../utils/mix/index.js';
-import ModelSchema from '../../../components/model-schema/model-schema.js';
 import EditProperty from './property.js';
 
+import ModelSchema from '../../../components/model-schema/model-schema.js';
 
 export default Base => {
 	const Mixed = mix(Base).with(ControlView, common);
